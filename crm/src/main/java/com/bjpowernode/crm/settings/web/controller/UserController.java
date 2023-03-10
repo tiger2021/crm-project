@@ -1,7 +1,9 @@
 package com.bjpowernode.crm.settings.web.controller;
 
 
+import com.bjpowernode.crm.commons.Contants;
 import com.bjpowernode.crm.commons.domain.ReturnObject;
+import com.bjpowernode.crm.commons.utils.DataUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +37,6 @@ public class UserController {
 
 
     //当需要返回json的时候需要加注解@ResponseBody
-
-
-
     @RequestMapping("/settings/qx/user/login.do")
     public @ResponseBody Object login(String loginAct, String loginPwd, String isRemPwd, HttpServletRequest request){
         Map<String,Object> map=new HashMap<>();
@@ -55,29 +54,27 @@ public class UserController {
             //用户名或密码错误
             returnObject.setCode("0");
             returnObject.setMessage("用户名或密码错误");
-
-
         }else{
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String now = sdf.format(new Date());
+            //调用时间的工具类
+            String now = DataUtils.formateDateTime(new Date());
             if(now.compareTo(user.getExpireTime())>0){
                 //账户已失效
-                returnObject.setCode("0");
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
                 returnObject.setMessage("账户已失效");
 
-            } else if (user.getLockState().equals("0")) {
+            } else if (user.getLockState().equals(Contants.RETURN_OBJECT_CODE_FAIL)) {
                 //账户处于锁定状态
-                returnObject.setCode("0");
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
                 returnObject.setMessage("账户处于锁定状态");
 
             } else if (!user.getAllowIps().contains(request.getRemoteAddr())) {
                 //用户的ip地址不在被允许访问的范围内
-                returnObject.setCode("0");
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
                 returnObject.setMessage("用户的ip地址不在被允许访问的范围内");
 
             }else{
                 //成功登录
-                returnObject.setCode("1");
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
                 returnObject.setMessage("成功登录");
             }
 
