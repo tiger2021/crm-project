@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--引入js标签库--%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%
 	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
@@ -12,6 +15,15 @@
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	$(function (){
+		//给整个网页添加价盘按下事件,event中封装的是键盘按下时间
+		$(window).keydown(function(event){
+			//判断按下的是否为enter建
+			if(event.keyCode==13){
+				//模拟点击登录按钮
+				$("#loginBtn").click();
+			}
+		})
+
 		$("#loginBtn").click(function (){
 			//获取用户输入的数据
 			 var loginAct = $.trim($("#loginAct").val());
@@ -26,6 +38,10 @@
 			if(loginPwd==""){
 				alert("密码不能为空");
 			}
+
+			//提示用户正在提交请求
+			// $("#msg").text("正在努力验证...")
+
 
 			//发送Ajax异步请求
 			$.ajax({
@@ -46,7 +62,15 @@
 						$("#msg").text(data.message);
 
 					}
+				},
+				beforeSend:function (){ // 	当Ajax向后台发送请求之前，会自动执行该函数
+					        //如果该函数执行之后返回true，则Ajax会真正向后台发送请求，否则，Ajax不会向后台发送请求
+					       //表单验证一般写在这儿，也可以不写在这儿
+					$("#msg").text("正在努力验证...");
+					return true;
 				}
+
+
 
 			})
 		})
@@ -69,14 +93,20 @@
 			<form action="workbench/index.html" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;">
-						<input class="form-control" id="loginAct" type="text" placeholder="用户名">
+						<input class="form-control" id="loginAct" type="text" value="${cookie.loginAct.value}" placeholder="用户名">
 					</div>
 					<div style="width: 350px; position: relative;top: 20px;">
-						<input class="form-control" id="loginPwd" type="password" placeholder="密码">
+						<input class="form-control" id="loginPwd" type="password" value="${cookie.loginPwd.value}" placeholder="密码">
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						<label>
-							<input id="isRemPwd" type="checkbox"> 十天内免登录
+							<c:if test="${not empty cookie.loginAct.value and not empty cookie.loginPwd.value}">
+								<input id="isRemPwd" type="checkbox" checked> 十天内免登录
+							</c:if>
+							<c:if test="${empty cookie.loginAct.value or empty cookie.loginPwd.value}">
+								<input id="isRemPwd" type="checkbox"> 十天内免登录
+							</c:if>
+
 						</label>
 						&nbsp;&nbsp;
 						<span id="msg"></span>
