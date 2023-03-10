@@ -100,7 +100,6 @@ public class UserController {
                     response.addCookie(c2);
                 }
             }
-
         }
         return returnObject;
     }
@@ -120,7 +119,7 @@ public class UserController {
         //销毁session
         session.invalidate();
 
-        //重定向
+        //重定向,下面的代码是借助springMVC重定向的：response.sedRedirect("/crm/")
         return "redirect:/";
     }
 
