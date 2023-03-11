@@ -21,7 +21,74 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 
 	$(function(){
-		
+		//给“创建”添加单击事件
+		$("#createActivityBtn").click(function(){
+
+			//打开创建市场活动的模态窗口
+			$("#createActivityModal").modal("show");
+
+		})
+
+		//给“保存”按钮添加单击事件
+		$("#saveActivityBtn").click(function (){
+			//获取表单数据
+			var owner=$("#create-marketActivityOwner").val();
+			var name=$.trim($("#create-marketActivityName").val());
+			var startDate=$("#create-startTime").val();
+			var endDate=$("#create-endTime").val();
+			var cost=$("#create-cost").val();
+			var description=$("#create-describe").val();
+
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不饿能为空");
+				return;
+			}
+			if(name==""){
+				alert("活动名称不能为空");
+				return;
+			}
+			if(startDate!="" && endDate!=""){
+				if(startDate>endDate){
+					alert("结束日期不能比开始日期小");
+					return;
+				}
+			}
+			//创建正则表达式用来验证成本
+			var regExp=/^(([1-9]\d*)|0)$/;
+			if(!regExp.test(cost)){
+				alert("成本只能为非负整数");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/activity/saveCreateActivity.do",
+				data:{
+					 owner:owner,
+					 name:name,
+					 startDate:startDate,
+					 endDate:endDate,
+					 cost:cost,
+					 description:description
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#createActivityModal").modal("hide");
+					}else{
+						alert(data.message);
+						$("#createActivityModal").modal("show");
+					}
+				}
+					})
+
+
+
+		})
 		
 		
 	});
@@ -88,7 +155,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" id="saveActivityBtn">保存</button>
 				</div>
 			</div>
 		</div>
@@ -245,7 +312,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>

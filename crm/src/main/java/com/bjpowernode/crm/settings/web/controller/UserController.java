@@ -3,10 +3,9 @@ package com.bjpowernode.crm.settings.web.controller;
 
 import com.bjpowernode.crm.commons.contants.Contants;
 import com.bjpowernode.crm.commons.domain.ReturnObject;
-import com.bjpowernode.crm.commons.utils.DataUtils;
+import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +54,7 @@ public class UserController {
             returnObject.setMessage("用户名或密码错误");
         }else{
             //调用时间的工具类
-            String now = DataUtils.formateDateTime(new Date());
+            String now = DateUtils.formateDateTime(new Date());
             if(now.compareTo(user.getExpireTime())>0){
                 //账户已失效
                 returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);

@@ -7,7 +7,7 @@ import java.util.Date;
  * @Author 小镇做题家
  * @create 2023/3/10 13:51
  */
-public class DataUtils {
+public class DateUtils {
 
     /**
      * @description: 返回带有时分秒的时间的字符串
