@@ -23,6 +23,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	$(function(){
 		//给“创建”添加单击事件
 		$("#createActivityBtn").click(function(){
+			//清空创建市场活动的模态窗口form表单中的内容
+			//get(0)的作用是将jQuery对象转换为dom对象，然后用dom对象中的reset函数
+			$("#createActivityForm").get(0).reset();
 
 			//打开创建市场活动的模态窗口
 			$("#createActivityModal").modal("show");
@@ -86,9 +89,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				}
 					})
 
-
-
 		})
+
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历
+		$("#create-startTime").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
+
+		$("#create-endTime").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
 		
 		
 	});
@@ -109,7 +131,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="createActivityForm">
 					
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -129,11 +151,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control" id="create-startTime" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control" id="create-endTime" readonly>
 							</div>
 						</div>
                         <div class="form-group">
