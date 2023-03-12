@@ -92,6 +92,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					if(data.code=="1"){
 						//成功，关闭模态窗口
 						$("#createActivityModal").modal("hide");
+						queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 					}else{
 						alert(data.message);
 						$("#createActivityModal").modal("show");
@@ -118,7 +119,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给“查询”按钮添加点击事件
 		$("#queryActivityBtn").click(function (){
-			queryActivityByConditionForPage(1,10);
+			queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 		})
 
 		
