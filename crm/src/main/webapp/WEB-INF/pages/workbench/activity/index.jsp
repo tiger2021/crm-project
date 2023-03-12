@@ -122,6 +122,10 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 		})
 
+		//给“全选”按钮添加单击事件
+		$("#checkAll").click(function (){
+			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		})
 		
 	});
 
@@ -195,6 +199,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		})
 	}
+
 	
 </script>
 </head>
@@ -429,7 +434,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll" /></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
