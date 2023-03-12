@@ -20,6 +20,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 <script type="text/javascript">
 
+
+	<%--入口函数，整个页面加载完成之后，执行该函数中的语句--%>
 	$(function(){
 		//给“创建”添加单击事件
 		$("#createActivityBtn").click(function(){
@@ -111,7 +113,47 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			todayBtn:true,   //是否显示“今天”按钮
 			clearBtn:true    //是否显示“清空按钮”
 		});
-		
+
+
+		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的市场活动
+		//收集参数
+		var name=$("#query-name").val();
+		var owner=$("#query-owner").val();
+		var startDate=$("#query-startDate").val();
+		var endDate=$("#query-endDate").val();
+		var beginNo=1;
+		var pageSize=10;
+
+		//向后台发送Ajax请求
+		$.ajax({
+			url:"workbench/activity/queryActivityByConditionForPage.do",
+			type:"post",
+			data: {
+				name:name,
+				owner:owner,
+				startDate:startDate,
+				endDate:endDate,
+				beginNo:beginNo,
+				pageSize:pageSize
+			},
+			success:function (data){
+				//显示查询出的市场活动的总记录数
+				$("#totalRowsB").text(data.totalRows);
+				//遍历List，拼接字符串
+				var htmlStr="";
+				$.each(data.activityList,function (index,activity){
+					htmlStr+="<tr class=\"active\">"
+					htmlStr+="<td><input type=\"checkbox\" value=\""+activity.id+"\"/></td>"
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+activity.name+"</a></td>"
+					htmlStr+="<td>"+activity.owner+"</td>"
+					htmlStr+="<td>"+activity.startDate+"</td>"
+					htmlStr+="<td>"+activity.endDate+"</td>"
+					htmlStr+="</tr>"
+				});
+				$("#tBody").html(htmlStr);
+			}
+		})
+
 		
 	});
 	
@@ -132,7 +174,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form" id="createActivityForm">
-					
+
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -303,28 +345,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-owner">
 				    </div>
 				  </div>
 
 
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+				      <div class="input-group-addon" >开始日期</div>
+					  <input class="form-control" type="text" id="query-startDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control" type="text" id="query-endDate">
 				    </div>
 				  </div>
 				  
@@ -355,28 +397,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
-                            <td>zhangsan</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
-                            <td>zhangsan</td>
-                            <td>2020-10-10</td>
-                            <td>2020-10-20</td>
-                        </tr>
+					<tbody id="tBody">
+<%--						<tr class="active">--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>2020-10-10</td>--%>
+<%--                            <td>2020-10-20</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 30px;">
 				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
+					<button type="button" class="btn btn-default" style="cursor: default;">共<b id="totalRowsB"></b>条记录</button>
 				</div>
 				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
 					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>

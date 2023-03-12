@@ -5,11 +5,9 @@ import com.bjpowernode.crm.commons.domain.ReturnObject;
 import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
-import com.bjpowernode.crm.settings.mapper.UserMapper;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.service.ActivityService;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -77,6 +77,30 @@ public class ActivityCOntroller {
 
         //向前端返回信息
         return returnObject;
+    }
+
+    @RequestMapping("/workbench/activity/queryActivityByConditionForPage.do")
+    @ResponseBody
+    public Object queryActivityByConditionForPage(String name,String owner,String startDate,
+                                                  String endDate,int beginNo,int pageSize){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("name",name);
+        map.put("owner",owner);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        map.put("beginNo",beginNo);
+        map.put("pageSize",pageSize);
+
+        //调用service，查询数据
+        List<Activity> activityList = activityService.queryActivityByConditionForPage(map);
+        int totalRows = activityService.queryCountOfActivityByConditionForPage(map);
+
+        //将查询到的数据封装到map中，并返回给前端
+        Map<String,Object> resMap=new HashMap<>();
+        resMap.put("activityList",activityList);
+        resMap.put("totalRows",totalRows);
+        return resMap;
     }
 
 }
