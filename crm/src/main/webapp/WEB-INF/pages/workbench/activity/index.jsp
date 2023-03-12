@@ -124,7 +124,22 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给“全选”按钮添加单击事件
 		$("#checkAll").click(function (){
+			//选中tBody标签中的input中类型为checkbox的对象，prop是给属性赋值的
 			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		})
+        //给列表中的所有checkBox添加点击事件
+		$("#tBody").on("click","input[type='checkbox']",function (){
+			//判断列表中的所有checkbox是否全部是选中状态或取消状态
+			//获取列表中所有被选中的checkbox的数量
+			// $("#tBody input[type='checkbox']:checked").size()
+			//获取列表中所有的checkbox的数量
+			// $("#tBody input[type='checkbox']").size()
+			if($("#tBody input[type='checkbox']").size()
+					==$("#tBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				$("#checkAll").prop("checked",false);
+			}
 		})
 		
 	});
