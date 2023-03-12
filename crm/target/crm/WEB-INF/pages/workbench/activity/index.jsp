@@ -93,18 +93,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		})
 
-		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历
-		$("#create-startTime").datetimepicker({
-			language:'zh-CN',  //日历上显示的语言
-			format:'yyyy-mm-dd',  //日期的格式
-			minView:'month',   //可以选择的最小视图
-			initialDate:new Date(),    //初始化显示的日期
-			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
-			todayBtn:true,   //是否显示“今天”按钮
-			clearBtn:true    //是否显示“清空按钮”
-		});
-
-		$("#create-endTime").datetimepicker({
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
 			language:'zh-CN',  //日历上显示的语言
 			format:'yyyy-mm-dd',  //日期的格式
 			minView:'month',   //可以选择的最小视图
@@ -116,6 +106,19 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 
 		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的市场活动
+		queryActivityByConditionForPage();
+
+		//给“查询”按钮添加点击事件
+		$("#queryActivityBtn").click(function (){
+			queryActivityByConditionForPage();
+		})
+
+		
+	});
+
+
+	//定义查询市场活动的函数
+	function queryActivityByConditionForPage(){
 		//收集参数
 		var name=$("#query-name").val();
 		var owner=$("#query-owner").val();
@@ -153,9 +156,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$("#tBody").html(htmlStr);
 			}
 		})
-
-		
-	});
+	}
 	
 </script>
 </head>
@@ -193,11 +194,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime" readonly>
+								<input type="text" class="form-control mydate" id="create-startTime" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime" readonly>
+								<input type="text" class="form-control mydate" id="create-endTime" readonly>
 							</div>
 						</div>
                         <div class="form-group">
@@ -257,11 +258,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control mydate" id="edit-startTime" value="2020-10-10" readonly>
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control mydate" id="edit-endTime" value="2020-10-20" readonly>
 							</div>
 						</div>
 						
@@ -360,17 +361,17 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon" >开始日期</div>
-					  <input class="form-control" type="text" id="query-startDate" />
+					  <input class="form-control mydate" type="text" id="query-startDate" readonly />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="query-endDate">
+					  <input class="form-control mydate" type="text" id="query-endDate" readonly>
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryActivityBtn">查询</button>
 				  
 				</form>
 			</div>
