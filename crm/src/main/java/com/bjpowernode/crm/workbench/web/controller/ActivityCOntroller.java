@@ -82,14 +82,14 @@ public class ActivityCOntroller {
     @RequestMapping("/workbench/activity/queryActivityByConditionForPage.do")
     @ResponseBody
     public Object queryActivityByConditionForPage(String name,String owner,String startDate,
-                                                  String endDate,int beginNo,int pageSize){
+                                                  String endDate,int pageNo,int pageSize){
         //封装参数
         Map<String,Object> map=new HashMap<>();
         map.put("name",name);
         map.put("owner",owner);
         map.put("startDate",startDate);
         map.put("endDate",endDate);
-        map.put("beginNo",beginNo);
+        map.put("pageNo",pageNo);
         map.put("pageSize",pageSize);
 
         //调用service，查询数据
