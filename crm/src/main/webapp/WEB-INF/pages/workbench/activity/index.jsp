@@ -157,6 +157,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					$.each(checkedIds,function (index,obj){
 						ids+="id="+this.value+"&";
 					});
+
+					//删除拼接的字符最后多出来的&
+					ids=ids.substr(0,ids.length-1);
 					//发送Ajax请求
 					$.ajax({
 						url:"workbench/activity/deleteActivityByIds.do",
