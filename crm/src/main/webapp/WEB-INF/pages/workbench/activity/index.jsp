@@ -141,6 +141,42 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$("#checkAll").prop("checked",false);
 			}
 		});
+
+		//给删除按钮添加单击事件
+		$("#deleteActivityBtn").click(function (){
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择需要删除的数据");
+			}else{
+				//提示用户是否确定要删除这些数据
+				if(window.confirm("情定要删除吗？")==true){
+					/*将需要删除的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
+                    * 所以在发送Ajax请求的时候不能写为json的格式
+                    * */
+					var ids="";
+					$.each(checkedIds,function (index,obj){
+						ids+="id="+this.value+"&";
+					});
+					//发送Ajax请求
+					$.ajax({
+						url:"workbench/activity/deleteActivityByIds.do",
+						type:"post",
+						data:ids,
+						success:function (data){
+							if(data.code=="1"){
+								//刷新市场活动页面
+								queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+							}else{
+								//显示提示信息
+								alert(data.message);
+							}
+						}
+					})
+				}
+
+
+			}
+		});
 		
 	});
 
@@ -440,7 +476,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteActivityBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				<div class="btn-group" style="position: relative; top: 18%;">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#importActivityModal" ><span class="glyphicon glyphicon-import"></span> 上传列表数据（导入）</button>
