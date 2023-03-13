@@ -209,10 +209,10 @@
     left join tbl_user u3 on a.edit_by=u3.id
     <where>
       <if test="name!=null and name!=''">
-        and a.name like '%'#{name}'%'
+        and a.name like "%"#{name}"%"
       </if>
       <if test="owner!=null and owner!=''">
-        and u1.name like '%'#{owner}'%'
+        and u1.name like "%"#{owner}"%"
       </if>
       <if test="startDate!=null and startDate!=''">
         and a.start_date&gt;=#{startDate}
@@ -234,10 +234,10 @@
     left join tbl_user u3 on a.edit_by=u3.id
     <where>
       <if test="name!=null and name!=''">
-        and a.name like '%'#{name}'%'
+        and a.name like "%"#{name}"%"
       </if>
       <if test="owner!=null and owner!=''">
-        and u1.name like '%'#{owner}'%'
+        and u1.name like "%"#{owner}"%"
       </if>
       <if test="startDate!=null and startDate!=''">
         and a.start_date &gt;=#{startDate}
@@ -247,5 +247,12 @@
       </if>
     </where>
   </select>
+
+  <delete id="deleteActivityByIds" parameterType="string">
+    delete from tbl_activity where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
 
 </mapper>

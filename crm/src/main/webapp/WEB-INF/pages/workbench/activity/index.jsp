@@ -127,7 +127,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			//选中tBody标签中的input中类型为checkbox的对象，prop是给属性赋值的
 			$("#tBody input[type='checkbox']").prop("checked",this.checked);
 		})
-        //给列表中的所有checkBox添加点击事件
+        //给列表中的所有checkBox添加点击事件,注意固有元素和动态生成元素的区别，选择器的书写格式会不同
 		$("#tBody").on("click","input[type='checkbox']",function (){
 			//判断列表中的所有checkbox是否全部是选中状态或取消状态
 			//获取列表中所有被选中的checkbox的数量
@@ -140,7 +140,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}else{
 				$("#checkAll").prop("checked",false);
 			}
-		})
+		});
 		
 	});
 
@@ -180,6 +180,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					htmlStr+="</tr>"
 				});
 				$("#tBody").html(htmlStr);
+
+				//取消全选按钮
+				$("#checkAll").prop("checked",false);
 
 				//计算总页数
 				var totalPages=1;

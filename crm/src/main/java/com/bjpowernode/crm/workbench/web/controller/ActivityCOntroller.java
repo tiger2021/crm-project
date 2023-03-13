@@ -103,4 +103,24 @@ public class ActivityCOntroller {
         return resMap;
     }
 
+    @RequestMapping("/workbench/activity/deleteActivityByIds.do")
+    @ResponseBody
+    public Object deleteActivityByIds(String[] id){
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            int ret = activityService.deleteActivityByIds(id);
+            if(ret==0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("当前系统繁忙，请稍后删除");
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("当前系统繁忙，请稍后删除");
+        }
+        return returnObject;
+    }
+
 }
