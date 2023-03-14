@@ -31,6 +31,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 	<%--入口函数，整个页面加载完成之后，执行该函数中的语句--%>
 	$(function(){
+
 		//给“创建”添加单击事件
 		$("#createActivityBtn").click(function(){
 			//清空创建市场活动的模态窗口form表单中的内容
@@ -142,11 +143,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
-		//给删除按钮添加单击事件
+		//给”删除“按钮添加单击事件
 		$("#deleteActivityBtn").click(function (){
 			var checkedIds=$("#tBody input[type='checkbox']:checked");
 			if(checkedIds.size()==0) {
 				alert("请选择需要删除的数据");
+				return;
 			}else{
 				//提示用户是否确定要删除这些数据
 				if(window.confirm("情定要删除吗？")==true){
@@ -180,6 +182,48 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 			}
 		});
+
+		//给”修改"按钮添加点击事件
+		$("#editActivityBtn").click(function (){
+			//获取被选中的元素
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择需要删除的数据");
+				return;
+			}else if(checkedIds.size()>1){
+				alert("只能选择一条数据进行修改");
+				return;
+			}else {
+				var id=checkedIds.val();
+
+				//发送Ajax请求
+				$.ajax({
+					url:"workbench/activity/queryActivityById.do",
+					type:'post',
+					data:{id:id},
+					success:function (data){
+						//将后台发送过来的数据填写到模态窗口中
+						$("#edit-activityId").val(data.id);
+						//向下拉列表中填入信息
+						$("#edit-marketActivityOwner").val(data.owner);
+						$("edit-marketActivityName").val(data.name);
+						$("#edit-startTime").val(data.startDate);
+						$("#edit-endTime").val(data.endDate);
+						$("#edit-cost").val(data.cost);
+						$("#edit-describe").val(data.description);
+						//显示修改市场活动的模态窗口
+						$("#editActivityModal").modal("show");
+
+					}
+				});
+			}
+		});
+
+		//给“更新”按钮添加点击事件
+		$("#activityUpdateBtn").click(function (){
+			//收集参数
+		});
+
 		
 	});
 
@@ -339,7 +383,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form">
-					
+                       <%--这儿设置一个隐藏域用来保存市场活动的id--%>
+						<input type="hidden" id="edit-activityId">
 						<div class="form-group">
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -351,32 +396,32 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							</div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-marketActivityName">
                             </div>
 						</div>
 
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control mydate" id="edit-startTime" value="2020-10-10" readonly>
+								<input type="text" class="form-control mydate" id="edit-startTime"  readonly>
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control mydate" id="edit-endTime" value="2020-10-20" readonly>
+								<input type="text" class="form-control mydate" id="edit-endTime" readonly>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-cost" class="col-sm-2 control-label">成本</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-cost" value="5,000">
+								<input type="text" class="form-control" id="edit-cost" >
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
 							</div>
 						</div>
 						
@@ -385,7 +430,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="activityUpdateBtn">更新</button>
 				</div>
 			</div>
 		</div>
@@ -478,7 +523,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" id="editActivityBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger" id="deleteActivityBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				<div class="btn-group" style="position: relative; top: 18%;">

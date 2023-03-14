@@ -89,7 +89,7 @@ public class ActivityCOntroller {
         map.put("owner",owner);
         map.put("startDate",startDate);
         map.put("endDate",endDate);
-        map.put("pageNo",pageNo);
+        map.put("pageNo",(pageNo-1)*pageSize);  //这儿一定要注意，要不然会找死你
         map.put("pageSize",pageSize);
 
         //调用service，查询数据
@@ -121,6 +121,13 @@ public class ActivityCOntroller {
             returnObject.setMessage("当前系统繁忙，请稍后删除");
         }
         return returnObject;
+    }
+
+    @RequestMapping("/workbench/activity/queryActivityById.do")
+    @ResponseBody
+    public Object queryActivityById(String id){
+        Activity activity = activityService.queryActivityById(id);
+        return activity;
     }
 
 }

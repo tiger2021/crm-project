@@ -25,7 +25,8 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<Activity> queryActivityByConditionForPage(Map<String, Object> map) {
-        return activityMapper.selectActivityByCondition(map);
+        List<Activity> activities = activityMapper.selectActivityByCondition(map);
+        return activities;
     }
 
     @Override
@@ -36,5 +37,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public int deleteActivityByIds(String[] ids) {
         return activityMapper.deleteActivityByIds(ids);
+    }
+
+    @Override
+    public Activity queryActivityById(String id) {
+        return activityMapper.selectActivityById(id);
     }
 }
