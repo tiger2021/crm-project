@@ -8,13 +8,21 @@ import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.service.ActivityService;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -130,8 +138,7 @@ public class ActivityCOntroller {
         return activity;
     }
 
-    @RequestMapping("/" +
-            "")
+    @RequestMapping("/workbench/activity/saveEditActivityById.do")
     @ResponseBody
     public Object saveEditActivityById(Activity activity,HttpSession session){
         //封装参数
@@ -156,6 +163,187 @@ public class ActivityCOntroller {
             returnObject.setMessage("系统繁忙.....");
         }
         return returnObject;
+    }
+
+    //查询所有的市场活动，然后以Excel文件的形式让前端下载
+    @RequestMapping("/workbench/activity/exportAllActivities.do")
+    public void exportAllActivities(HttpServletResponse response)throws Exception{
+        //调用service曾查询市场活动
+        List<Activity> activityList = activityService.queryAllActivities();
+
+        //创建excel文件对象，把activity List写入到excel文件中
+        HSSFWorkbook wb = new HSSFWorkbook();
+        //创建表单对象
+        HSSFSheet sheet = wb.createSheet("市场活动表单");
+        //创建表单中的行对象
+        HSSFRow row = sheet.createRow(0);
+        //创建每一行中的列对象
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell = row.createCell(1);
+        cell.setCellValue("所有者");
+        cell = row.createCell(2);
+        cell.setCellValue("活动名称");
+        cell = row.createCell(3);
+        cell.setCellValue("活动开始时间");
+        cell = row.createCell(4);
+        cell.setCellValue("活动结束时间");
+        cell = row.createCell(5);
+        cell.setCellValue("活动成本");
+        cell = row.createCell(6);
+        cell.setCellValue("活动描述");
+        cell = row.createCell(7);
+        cell.setCellValue("创建时间");
+        cell = row.createCell(8);
+        cell.setCellValue("创建者");
+        cell = row.createCell(9);
+        cell.setCellValue("修改时间");
+        cell = row.createCell(10);
+        cell.setCellValue("修改者");
+
+        //将activityList中的数据插入到excel表中
+        if(activityList!=null || activityList.size()!=0){
+            //遍历
+            Activity activity;
+            for (int i = 0; i < activityList.size(); i++) {
+                activity=activityList.get(i);
+                //创建表单中的行对象
+                row = sheet.createRow(i+1);
+                //创建每一行中的列对象
+                cell = row.createCell(0);
+                cell.setCellValue(activity.getId());
+                cell = row.createCell(1);
+                cell.setCellValue(activity.getOwner());
+                cell = row.createCell(2);
+                cell.setCellValue(activity.getName());
+                cell = row.createCell(3);
+                cell.setCellValue(activity.getStartDate());
+                cell = row.createCell(4);
+                cell.setCellValue(activity.getEndDate());
+                cell = row.createCell(5);
+                cell.setCellValue(activity.getCost());
+                cell = row.createCell(6);
+                cell.setCellValue(activity.getDescription());
+                cell = row.createCell(7);
+                cell.setCellValue(activity.getCreateTime());
+                cell = row.createCell(8);
+                cell.setCellValue(activity.getCreateBy());
+                cell = row.createCell(9);
+                cell.setCellValue(activity.getEditTime());
+                cell = row.createCell(10);
+                cell.setCellValue(activity.getEditBy());
+            }
+        }
+
+//        //根据web对象生成excel文件，然后存放在硬盘上
+//        FileOutputStream os = new FileOutputStream("F:\\Study\\Project\\crm-project\\activityList.xml");
+//        wb.write(os);
+        //关闭资源
+//        os.close();
+//        wb.close();
+
+        //把生成的文件下载到客户端
+        //防止浏览器将生成的文件直接打开,设置响应头信息
+        response.addHeader("Content-Disposition","attachment;filename=activityList.xls");
+        //设置响应类型
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        //获取输出流对象
+        ServletOutputStream outputStream = response.getOutputStream();
+        wb.write(outputStream);
+        wb.close();
+//        //用文件输入流将刚才存在自己硬盘上的excel文件读到内存区中
+//        FileInputStream is = new FileInputStream("F:\\Study\\Project\\crm-project\\activityList.xml");
+//        //将文件写到客户端浏览器上
+//        //定义一个缓存区
+//        byte[] buff = new byte[1024];
+//        int len=0;  //记录buff中的字节的数量
+//        while((len=is.read(buff))!=-1){
+//            outputStream.write(buff,0,len);
+//        }
+//        is.close();
+        outputStream.flush();  //将输出流中的内容响应到浏览器
+    }
+
+
+    //查询客户选择的市场活动，然后以Excel文件的形式让前端下载
+    @RequestMapping("/workbench/activity/exportActivitiesByIds.do")
+    public void exportActivitiesByIds(String[] id,HttpServletResponse response)throws Exception{
+        //调用service曾查询市场活动
+        List<Activity> activityList = activityService.queryActivitiesByIds(id);
+
+        //创建excel文件对象，把activity List写入到excel文件中
+        HSSFWorkbook wb = new HSSFWorkbook();
+        //创建表单对象
+        HSSFSheet sheet = wb.createSheet("市场活动表单");
+        //创建表单中的行对象
+        HSSFRow row = sheet.createRow(0);
+        //创建每一行中的列对象
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell = row.createCell(1);
+        cell.setCellValue("所有者");
+        cell = row.createCell(2);
+        cell.setCellValue("活动名称");
+        cell = row.createCell(3);
+        cell.setCellValue("活动开始时间");
+        cell = row.createCell(4);
+        cell.setCellValue("活动结束时间");
+        cell = row.createCell(5);
+        cell.setCellValue("活动成本");
+        cell = row.createCell(6);
+        cell.setCellValue("活动描述");
+        cell = row.createCell(7);
+        cell.setCellValue("创建时间");
+        cell = row.createCell(8);
+        cell.setCellValue("创建者");
+        cell = row.createCell(9);
+        cell.setCellValue("修改时间");
+        cell = row.createCell(10);
+        cell.setCellValue("修改者");
+
+        //将activityList中的数据插入到excel表中
+        if(activityList!=null || activityList.size()!=0){
+            //遍历
+            Activity activity;
+            for (int i = 0; i < activityList.size(); i++) {
+                activity=activityList.get(i);
+                //创建表单中的行对象
+                row = sheet.createRow(i+1);
+                //创建每一行中的列对象
+                cell = row.createCell(0);
+                cell.setCellValue(activity.getId());
+                cell = row.createCell(1);
+                cell.setCellValue(activity.getOwner());
+                cell = row.createCell(2);
+                cell.setCellValue(activity.getName());
+                cell = row.createCell(3);
+                cell.setCellValue(activity.getStartDate());
+                cell = row.createCell(4);
+                cell.setCellValue(activity.getEndDate());
+                cell = row.createCell(5);
+                cell.setCellValue(activity.getCost());
+                cell = row.createCell(6);
+                cell.setCellValue(activity.getDescription());
+                cell = row.createCell(7);
+                cell.setCellValue(activity.getCreateTime());
+                cell = row.createCell(8);
+                cell.setCellValue(activity.getCreateBy());
+                cell = row.createCell(9);
+                cell.setCellValue(activity.getEditTime());
+                cell = row.createCell(10);
+                cell.setCellValue(activity.getEditBy());
+            }
+        }
+        //把生成的文件下载到客户端
+        //防止浏览器将生成的文件直接打开,设置响应头信息
+        response.addHeader("Content-Disposition","attachment;filename=activityList.xls");
+        //设置响应类型
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        //获取输出流对象
+        ServletOutputStream outputStream = response.getOutputStream();
+        wb.write(outputStream);
+        wb.close();
+        outputStream.flush();  //将输出流中的内容响应到浏览器
     }
 
 }

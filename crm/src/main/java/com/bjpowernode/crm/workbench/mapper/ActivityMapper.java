@@ -59,4 +59,12 @@ public interface ActivityMapper {
     Activity selectActivityById(String id);
 
     int updateActivityById(Activity activity);
+
+    /**
+     * @description:查询所有的市场活动
+     * @return: java.util.List<com.bjpowernode.crm.workbench.domain.Activity>
+     **/
+    List<Activity> selectAllActivities();
+
+    List<Activity> selectActivityByIds(String[] ids);
 }
