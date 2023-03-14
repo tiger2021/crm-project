@@ -148,7 +148,7 @@
       <version>2.7.3</version>
     </dependency>
 
-    <!--poi依赖-->
+    <!--poi依赖，使用apache-poi生成excel-->
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>

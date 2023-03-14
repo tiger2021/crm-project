@@ -21,4 +21,6 @@ public interface ActivityService {
     public int deleteActivityByIds(String[] ids);
 
     public Activity queryActivityById(String id);
+
+    public int saveEditActivityById(Activity activity);
 }

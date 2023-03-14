@@ -57,4 +57,6 @@ public interface ActivityMapper {
     int deleteActivityByIds(String[] ids);
 
     Activity selectActivityById(String id);
+
+    int updateActivityById(Activity activity);
 }

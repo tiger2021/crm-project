@@ -261,4 +261,19 @@
     where id=#{id}
   </select>
 
+  <update id="updateActivityById" parameterType="com.bjpowernode.crm.workbench.domain.Activity">
+    update tbl_activity
+    set owner = #{owner,jdbcType=CHAR},
+        name = #{name,jdbcType=VARCHAR},
+        start_date = #{startDate,jdbcType=CHAR},
+        end_date = #{endDate,jdbcType=CHAR},
+        cost = #{cost,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        edit_time = #{editTime,jdbcType=CHAR},
+        edit_by = #{editBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+
+
 </mapper>

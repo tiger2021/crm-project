@@ -55,7 +55,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 			//验证表单数据是否正确
 			if(owner==""){
-				alert("所有者不饿能为空");
+				alert("所有者不能为空");
 				return;
 			}
 			if(name==""){
@@ -188,7 +188,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			//获取被选中的元素
 			var checkedIds=$("#tBody input[type='checkbox']:checked");
 			if(checkedIds.size()==0) {
-				alert("请选择需要删除的数据");
+				alert("请选择需要修改的数据");
 				return;
 			}else if(checkedIds.size()>1){
 				alert("只能选择一条数据进行修改");
@@ -206,14 +206,13 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						$("#edit-activityId").val(data.id);
 						//向下拉列表中填入信息
 						$("#edit-marketActivityOwner").val(data.owner);
-						$("edit-marketActivityName").val(data.name);
+						$("#edit-marketActivityName").val(data.name);
 						$("#edit-startTime").val(data.startDate);
 						$("#edit-endTime").val(data.endDate);
 						$("#edit-cost").val(data.cost);
 						$("#edit-describe").val(data.description);
 						//显示修改市场活动的模态窗口
 						$("#editActivityModal").modal("show");
-
 					}
 				});
 			}
@@ -221,10 +220,66 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给“更新”按钮添加点击事件
 		$("#activityUpdateBtn").click(function (){
-			//收集参数
-		});
+			//获取表单数据
+			var id=$("#edit-activityId").val();
+			var owner=$("#edit-marketActivityOwner").val();
+			var name=$.trim($("#edit-marketActivityName").val());
+			var startDate=$("#edit-startTime").val();
+			var endDate=$("#edit-endTime").val();
+			var cost=$("#edit-cost").val();
+			var description=$("#edit-describe").val();
 
-		
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(name==""){
+				alert("活动名称不能为空");
+				return;
+			}
+			if(startDate!="" && endDate!=""){
+				if(startDate>endDate){
+					alert("结束日期不能比开始日期小");
+					return;
+				}
+			}
+			//创建正则表达式用来验证成本
+			var regExp=/^(([1-9]\d*)|0)$/;
+			if(!regExp.test(cost)){
+				alert("成本只能为非负整数");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/activity/saveEditActivityById.do",
+				data:{
+					id:id,
+					owner:owner,
+					name:name,
+					startDate:startDate,
+					endDate:endDate,
+					cost:cost,
+					description:description
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#editActivityModal").modal("hide");
+						queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+					}else{
+						alert(data.message);
+						$("#editActivityModal").modal("show");
+					}
+				}
+			})
+
+		})
+
 	});
 
 

@@ -130,4 +130,32 @@ public class ActivityCOntroller {
         return activity;
     }
 
+    @RequestMapping("/" +
+            "")
+    @ResponseBody
+    public Object saveEditActivityById(Activity activity,HttpSession session){
+        //封装参数
+        User editor = (User) session.getAttribute(Contants.SESSION_USER);
+        activity.setEditBy(editor.getId());
+        activity.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            //调用service修改数据库中的数据
+            int num = activityService.saveEditActivityById(activity);
+            if(num==0){
+                //未修改成功
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙.....");
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙.....");
+        }
+        return returnObject;
+    }
+
 }
