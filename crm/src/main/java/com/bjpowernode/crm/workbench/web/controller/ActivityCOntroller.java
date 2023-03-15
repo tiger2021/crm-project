@@ -268,6 +268,7 @@ public class ActivityCOntroller {
     //查询客户选择的市场活动，然后以Excel文件的形式让前端下载
     @RequestMapping("/workbench/activity/exportActivitiesByIds.do")
     public void exportActivitiesByIds(String[] id,HttpServletResponse response)throws Exception{
+        System.out.println(id);
         //调用service曾查询市场活动
         List<Activity> activityList = activityService.queryActivitiesByIds(id);
 

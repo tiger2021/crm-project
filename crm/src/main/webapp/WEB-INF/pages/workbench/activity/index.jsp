@@ -286,27 +286,27 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			window.location.href="workbench/activity/exportAllActivities.do";
 		});
 
-		// //给”选择导出“按钮添加单击事件
-		// $("#exportActivityXzBtn").click(function (){
-		// 	var checkedIds=$("#tBody input[type='checkbox']:checked");
-		// 	if(checkedIds.size()==0) {
-		// 		alert("请选择需要导出的数据");
-		// 		return;
-		// 	}else {
-		// 		/*将需要导出的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
-		// 		* 所以在发送Ajax请求的时候不能写为json的格式
-		// 		* */
-		// 		var ids = "";
-		// 		$.each(checkedIds, function (index, obj) {
-		// 			ids += "id=" + this.value + "&";
-		// 		});
-		//
-		// 		//删除拼接的字符最后多出来的&
-		// 		ids = ids.substr(0, ids.length - 1);
-		// 		//发送同步请求
-		// 		window.location.href = "workbench/activity/exportActivitiesByIds.do?"+ids;
-		// 	}
-		// });
+		//给”选择导出“按钮添加单击事件
+		$("#exportActivityXzBtn").click(function (){
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择需要导出的数据");
+				return;
+			}else {
+				/*将需要导出的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
+				* 所以在发送Ajax请求的时候不能写为json的格式
+				* */
+				var ids = "";
+				$.each(checkedIds, function (index, obj) {
+					ids += "id=" + this.value + "&";
+				});
+
+				//删除拼接的字符最后多出来的&
+				ids = ids.substr(0, ids.length - 1);
+				//发送同步请求
+				window.location.href = "workbench/activity/exportActivitiesByIds.do?"+ids+"";
+			}
+		});
 	});
 
 
