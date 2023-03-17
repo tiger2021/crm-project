@@ -307,6 +307,52 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				window.location.href = "workbench/activity/exportActivitiesByIds.do?"+ids+"";
 			}
 		});
+
+
+		//给“导入”按钮添加单击事件
+		$("#importActivityBtn").click(function (){
+			//收集数据
+			var activityFileName=$("#activityFile").val();  //获得的是文件名
+			//进行表单验证
+			var suffix=activityFileName.substr(activityFileName.lastIndexOf(".")+1).toLocaleLowerCase();//转为小写
+			if(suffix!="xls"){
+				alert("只支持excel文件");
+				reutrn;
+			}else{
+				//获得Dom对象
+				var activityFile=$("#activityFile")[0].files[0];  //获得文件本身
+				//验证文件的大小
+				if(activityFile.size>5*1024*1024){
+					alert("要求文件小于5M");
+					return;
+				}else{
+					//formData不仅可以提交文本数据，还能提交二进制数据
+					var formData = new FormData();
+					formData.append("activityFile",activityFile);
+					//发送请求
+					$.ajax({
+						url:"workbench/activity/importActivity.do",
+						type:"post",
+						processData:false,//设置Ajax向后台提交参数之前，是否把参数统一转换成字符串，取值是true或false，默认为true
+						contentType:false, //设置Ajax向后台提交参数之前，是否把所有的参数统一按urlencode编码：true或false，默认为true
+						data:formData,
+						dataType:'json',
+						success:function (data){
+							if(data.code=="1"){
+								//提示成功导入记录条数
+								alert("成功导入"+data.retData+"条数据");
+								//关闭模态窗口
+								$("#importActivityModal").modal("hide");
+								//刷新列表
+								queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+							}else{
+								alert(data.message);
+							}
+						}
+					})
+				}
+			}
+		})
 	});
 
 

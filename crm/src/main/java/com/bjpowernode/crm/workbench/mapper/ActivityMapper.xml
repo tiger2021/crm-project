@@ -298,6 +298,14 @@
     order by a.create_time desc
   </select>
 
+<insert id="insertActivityByList" parameterType="com.bjpowernode.crm.workbench.domain.Activity" >
+  insert into tbl_activity(id, owner, name, start_date, end_date, cost, description, create_time, create_by)
+  values
+  <foreach collection="list" item="activity" separator="," >
+    (#{activity.id},#{activity.owner},#{activity.name},#{activity.startDate},#{activity.endDate},#{activity.cost},#{activity.description},#{activity.createTime},#{activity.createBy})
+  </foreach>
 
+
+</insert>
 
 </mapper>

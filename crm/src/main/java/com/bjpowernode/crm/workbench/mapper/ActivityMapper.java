@@ -67,4 +67,7 @@ public interface ActivityMapper {
     List<Activity> selectAllActivities();
 
     List<Activity> selectActivityByIds(String[] ids);
+
+
+    int insertActivityByList(List<Activity> activityList);
 }
