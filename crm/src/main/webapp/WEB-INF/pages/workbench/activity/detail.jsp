@@ -60,7 +60,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 </head>
 <body>
-	
 	<!-- 修改市场活动备注的模态窗口 -->
 	<div class="modal fade" id="editRemarkModal" role="dialog">
 		<%-- 备注的id --%>

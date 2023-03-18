@@ -384,7 +384,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$.each(data.activityList,function (index,activity){
 					htmlStr+="<tr class=\"active\">"
 					htmlStr+="<td><input type=\"checkbox\" value=\""+activity.id+"\"/></td>"
-					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/activity/detailActivity.do?id="+activity.id+"'\">"+activity.name+"</a></td>"
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/activity/avtivityDetail.do?id="+activity.id+"'\">"+activity.name+"</a></td>";
 					htmlStr+="<td>"+activity.owner+"</td>"
 					htmlStr+="<td>"+activity.startDate+"</td>"
 					htmlStr+="<td>"+activity.endDate+"</td>"
