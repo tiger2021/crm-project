@@ -408,7 +408,7 @@ public class ActivityCOntroller {
 
     @RequestMapping("/workbench/activity/avtivityDetail.do")
     public String queryActivityDetail(String id,HttpServletRequest request){
-        Activity activity = activityService.queryActivityById(id);
+        Activity activity = activityService.queryActivityForDetailById(id);
         List<ActivityRemark> remarkList = activityRemarkService.queryActivityRemarkForDetailByActivityId(id);
         request.setAttribute("activity",activity);
         request.setAttribute("remarkList",remarkList);
