@@ -174,4 +174,9 @@
     where ar.activity_id=#{activityId}
   </select>
 
+  <insert id="insertActivityRemark" parameterType="com.bjpowernode.crm.workbench.domain.ActivityRemark">
+    insert into tbl_activity_remark(id, note_content, create_time, create_by, activity_id)
+    values (#{id,jdbcType=CHAR}, #{noteContent,jdbcType=VARCHAR}, #{createTime,jdbcType=CHAR},
+            #{createBy,jdbcType=VARCHAR},  #{activityId,jdbcType=CHAR})
+  </insert>
 </mapper>

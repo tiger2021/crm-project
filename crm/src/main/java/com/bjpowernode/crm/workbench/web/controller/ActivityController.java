@@ -25,8 +25,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -37,7 +35,7 @@ import java.util.*;
  * @create 2023/3/10 21:14
  */
 @Controller
-public class ActivityCOntroller {
+public class ActivityController {
 
     @Autowired
     private UserService userService;

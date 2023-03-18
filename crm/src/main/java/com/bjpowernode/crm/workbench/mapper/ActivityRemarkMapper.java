@@ -54,4 +54,6 @@ public interface ActivityRemarkMapper {
     int updateByPrimaryKey(ActivityRemark record);
 
     List<ActivityRemark> selectActivityRemarkForDetailByActivityId(String activityId);
+
+    int insertActivityRemark(ActivityRemark activityRemark);
 }
