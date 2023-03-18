@@ -56,4 +56,6 @@ public interface ActivityRemarkMapper {
     List<ActivityRemark> selectActivityRemarkForDetailByActivityId(String activityId);
 
     int insertActivityRemark(ActivityRemark activityRemark);
+
+    int deleteActivityRemarkById(String id);
 }

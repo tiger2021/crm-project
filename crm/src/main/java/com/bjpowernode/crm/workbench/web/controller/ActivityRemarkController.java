@@ -52,4 +52,34 @@ public class ActivityRemarkController {
         }
         return returnObject;
     }
+
+
+    @RequestMapping("/workbench/activity/deleteActivityRemark.do")
+    @ResponseBody
+    public Object deleteActivityRemark(String id){
+
+        ReturnObject returnObject = new ReturnObject();
+
+        try {
+            int num = activityRemarkService.deleteActivityRemarkById(id);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍重试....");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍重试....");
+        }
+        return returnObject;
+
+    }
+
+
+
+
+
 }
+

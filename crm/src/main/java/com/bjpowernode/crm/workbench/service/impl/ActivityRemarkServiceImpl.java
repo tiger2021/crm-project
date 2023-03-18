@@ -20,6 +20,8 @@ public class ActivityRemarkServiceImpl implements ActivityRemarkService {
 
     @Autowired
     private ActivityRemarkMapper activityRemarkMapper;
+
+
     @Override
     public List<ActivityRemark> queryActivityRemarkForDetailByActivityId(String activityId) {
         return activityRemarkMapper.selectActivityRemarkForDetailByActivityId(activityId);
@@ -28,5 +30,10 @@ public class ActivityRemarkServiceImpl implements ActivityRemarkService {
     @Override
     public int saveCreateActivityRemark(ActivityRemark activityRemark) {
         return activityRemarkMapper.insertActivityRemark(activityRemark);
+    }
+
+    @Override
+    public int deleteActivityRemarkById(String id) {
+        return activityRemarkMapper.deleteActivityRemarkById(id);
     }
 }

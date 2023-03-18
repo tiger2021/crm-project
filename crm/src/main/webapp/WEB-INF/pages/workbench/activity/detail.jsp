@@ -94,15 +94,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							$("#remark").val("");
 							//拼接数据
 							var htmlStr="";
-							htmlStr+="<div class=\"remarkDiv\" style=\"height: 60px;\">";
+							htmlStr+="<div id=\"div_"+data.retData.id+" class=\"remarkDiv\" style=\"height: 60px;\">";
 						    htmlStr+="<img title=\"${sessionScope.sessionUser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
 						    htmlStr+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
 							htmlStr+="<h5>"+data.retData.noteContent+"</h5>";
 							htmlStr+="<font color=\"gray\">市场活动</font> <font color=\"gray\">-</font> <b>${activity.name}</b> <small style=\"color: gray;\"> "+data.retData.createTime+"由${sessionScope.sessionUser.name}创建</small>";
 							htmlStr+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
-							htmlStr+="	<a remarkId="+data.retData.id+" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="	<a remarkId="+data.retData.id+" name=\"editA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
 							htmlStr+="	&nbsp;&nbsp;&nbsp;&nbsp;";
-							htmlStr+="<a remarkId="+data.retData.id+" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="<a remarkId="+data.retData.id+" name=\"deleteA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
 							htmlStr+="  </div>";
 						    htmlStr+="  </div>";
 					        htmlStr+=" </div>";
@@ -118,6 +118,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给所有”删除图标“添加单击事件
+		$("#remarkDivList").on("click","a[name=deleteA]",function (){
+			var id=$(this).attr("remarkId");  //this代表正在被点击的dom对象
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/activity/deleteActivityRemark.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//刷新备注列表,删除div
+						$("#div_"+id).remove();
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		})
 	});
 	
 </script>
@@ -225,15 +247,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 		<%--遍历remarkList--%>
 		<c:forEach items="${remarkList}" var="remark">
-					<div class="remarkDiv" style="height: 60px;">
+					<div  id="div_${remark.id}" class="remarkDiv" style="height: 60px;">
 						<img title="${remark.createBy}" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 						<div style="position: relative; top: -40px; left: 40px;" >
 							<h5>${remark.noteContent}</h5>
 							<font color="gray">市场活动</font> <font color="gray">-</font> <b>${activity.name}</b> <small style="color: gray;"> ${remark.editFlag=='1'?remark.editTime:remark.createTime}  由${remark.editFlag=='1'?remark.editBy:remark.createBy}  ${remark.editFlag=='1'?'修改':'创建'}</small>
 							<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-								<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+								<a remarkId="${remark.id}" name="editA" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+								<a remarkId="${remark.id}" name="deleteA" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 							</div>
 						</div>
 					</div>
