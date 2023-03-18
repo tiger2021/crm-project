@@ -39,21 +39,35 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			cancelAndSaveBtnDefault = true;
 		});
 		
-		$(".remarkDiv").mouseover(function(){
+		// $(".remarkDiv").mouseover(function(){
+		// 	$(this).children("div").children("div").show();
+		// });
+		$("#remarkDivList").on("mouseover",".remarkDiv",function (){
 			$(this).children("div").children("div").show();
-		});
+		})
+
 		
-		$(".remarkDiv").mouseout(function(){
+		// $(".remarkDiv").mouseout(function(){
+		// 	$(this).children("div").children("div").hide();
+		// });
+		$("#remarkDivList").on("mouseout",".remarkDiv",function (){
 			$(this).children("div").children("div").hide();
-		});
-		
-		$(".myHref").mouseover(function(){
+		})
+		//
+		// $(".myHref").mouseover(function(){
+		// 	$(this).children("span").css("color","red");
+		// });
+
+		$("#remarkDivList").on("mouseover",".myHref",function (){
 			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
+		})
+
+		// $(".myHref").mouseout(function(){
+		// 	$(this).children("span").css("color","#E6E6E6");
+		// });
+		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
-		});
+		})
 
 		//给“保存”按钮添加单击事件
 		$("#saveCreateActivityRemarkBtn").click(function (){
@@ -205,7 +219,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 30px; left: 40px;">
+	<div id="remarkDivList" style="position: relative; top: 30px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
