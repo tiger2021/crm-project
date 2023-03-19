@@ -140,6 +140,59 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 			})
 		})
+
+		//给所有”修改“按钮添加单击事件
+		$("#remarkDivList").on("click","a[name=editA]",function (){
+		// 获取活动评论的id
+			var id=$(this).attr("remarkId");
+		//获得notecontent,在h5前面要记得加空格
+			var noteContent=$("#div_"+id+" h5").text();
+			//把备注的id和noteContent写到修改备注的模态窗口中
+			$("#edit_id").val(id);     //先将活动评论的id写在模态窗口中
+			$("#edit_noteContent").text(noteContent);
+			//弹出修改市场活动备注的模态窗口
+			$("#editRemarkModal").modal("show");
+		});
+
+
+		//给更新按钮添加单击事件
+		$("#updateRemarkBtn").click(function (){
+			//收集参数
+			var id=$("#edit_id").val();
+			var noteContent=$.trim($("#edit_noteContent").val());
+
+			//验证表单
+			if(noteContent==""){
+				alert("请输入修改的评论");
+				return;
+			}else{
+				//发送Ajax请求
+				$.ajax({
+					url:"workbench/activity/updateActivityRemark.do",
+					type:"post",
+					data:{
+						id:id,
+						noteContent:noteContent
+					},
+					dataType:"json",
+					success:function (data){
+						if(data.code=="0"){
+							alert(data.message);
+						}else{
+							//关闭模态窗口
+							$("#editRemarkModal").modal("hide");
+							//刷新备注列表
+							$("#div_"+id+" h5").text(data.retData.noteContent);
+							//更新时间和修改者
+							$("#div_"+id+" small").text(" "+data.retData.editTime+" 由${sessionScope.sessionUser.name}修改")
+
+						}
+					}
+				})
+			}
+		});
+
+
 	});
 	
 </script>
@@ -160,10 +213,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
+                        <input type="hidden" id="edit_id">
                         <div class="form-group">
-                            <label for="noteContent" class="col-sm-2 control-label">内容</label>
+                            <label for="edit_noteContent" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="noteContent"></textarea>
+                                <textarea class="form-control" rows="3" id="edit_noteContent"></textarea>
                             </div>
                         </div>
                     </form>
@@ -253,8 +307,10 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<h5>${remark.noteContent}</h5>
 							<font color="gray">市场活动</font> <font color="gray">-</font> <b>${activity.name}</b> <small style="color: gray;"> ${remark.editFlag=='1'?remark.editTime:remark.createTime}  由${remark.editFlag=='1'?remark.editBy:remark.createBy}  ${remark.editFlag=='1'?'修改':'创建'}</small>
 							<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
+								<%--修改图标--%>
 								<a remarkId="${remark.id}" name="editA" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 								&nbsp;&nbsp;&nbsp;&nbsp;
+								<%--删除图标--%>
 								<a remarkId="${remark.id}" name="deleteA" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 							</div>
 						</div>

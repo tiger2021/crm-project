@@ -77,6 +77,34 @@ public class ActivityRemarkController {
 
     }
 
+    @RequestMapping("/workbench/activity/updateActivityRemark.do")
+    @ResponseBody
+    public Object updateActivityRemark(ActivityRemark activityRemark,HttpSession session){
+        //封装参数
+        activityRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES_EDITED);
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        activityRemark.setEditBy(user.getId());
+        activityRemark.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            //调用service方法
+            int num = activityRemarkService.saveEditActivityRemark(activityRemark);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(activityRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
 
 
 
