@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
@@ -18,7 +19,14 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 
 	$(function(){
-		
+		//给”创建“按钮添加单击事件
+		$("#create-clue-btn").click(function (){
+			//清空创建市场活动的模态窗口form表单中的内容
+			$("#create-clue-form").get(0).reset();
+			//显示创建线索的模态窗口
+			$("#createClueModal").modal("show");
+
+		});
 		
 		
 	});
@@ -38,15 +46,18 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<h4 class="modal-title" id="myModalLabel">创建线索</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="create-clue-form">
 					
 						<div class="form-group">
 							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-clueOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+									<c:forEach items="${ownerList}" var="owner">
+										<option value="${owner.id}">${owner.name}</option>
+									</c:forEach>
+<%--								  <option>zhangsan</option>--%>
+<%--								  <option>lisi</option>--%>
+<%--								  <option>wangwu</option>--%>
 								</select>
 							</div>
 							<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -442,8 +453,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 40px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createClueModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-primary" id="create-clue-btn" ><span class="glyphicon glyphicon-plus" ></span> 创建</button>
+				  <button type="button" class="btn btn-default" id="edit-clue-btn" ><span class="glyphicon glyphicon-pencil" ></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				

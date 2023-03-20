@@ -307,4 +307,22 @@
       address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+  <insert id="insertClue" parameterType="com.bjpowernode.crm.workbench.domain.Clue">
+    insert into tbl_clue (id, fullname, appellation,
+                          owner, company, job, email,
+                          phone, website, mphone,
+                          state, source, create_by,
+                          create_time, edit_by, edit_time,
+                          description, contact_summary, next_contact_time,
+                          address)
+    values (#{id}, #{fullname}, #{appellation},
+            #{owner}, #{company}, #{job}, #{email},
+            #{phone}, #{website}, #{mphone},
+            #{state}, #{source}, #{createBy},
+            #{createTime}, #{editBy}, #{editTime},
+            #{description}, #{contactSummary}, #{nextContactTime},
+            #{address})
+  </insert>
 </mapper>

@@ -50,4 +50,7 @@ public interface ClueMapper {
      * @mbggenerated Sun Mar 19 23:17:45 CST 2023
      */
     int updateByPrimaryKey(Clue record);
+
+
+    int insertClue(Clue clue);
 }
