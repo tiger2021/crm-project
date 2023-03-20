@@ -19,14 +19,103 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 
 	$(function(){
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
+
 		//给”创建“按钮添加单击事件
 		$("#create-clue-btn").click(function (){
 			//清空创建市场活动的模态窗口form表单中的内容
 			$("#create-clue-form").get(0).reset();
 			//显示创建线索的模态窗口
 			$("#createClueModal").modal("show");
+		});
+
+		//给“保存”按钮添加单击事件
+		$("#saveClueBtn").click(function (){
+			//收集表单参数
+			var owner=$("#create-clueOwner").val();
+			var company=$.trim($("#create-company").val());
+			var appellation=$("#create-appellation").val();
+			var name=$.trim($("#create-surname").val());
+			var fullname=name+appellation;
+			var job=$.trim($("#create-job").val());
+			var email=$.trim($("#create-email").val());
+			var phone=$.trim($("#create-phone").val());
+			var website=$.trim($("#create-website").val());
+			var mphone=$.trim($("#create-mphone").val());
+			var state=$("#create-status").val();
+			var source=$("#create-source").val();
+			var description=$.trim($("#create-describe").val());
+			var contactSummary=$.trim($("#create-contactSummary").val());
+			var nextContactTime=$("#create-nextContactTime").val();
+			var address=$.trim($("#edit-address").val());
+
+			//验证表单数据
+			if(company==""){
+				alert("公司名称不能为空");
+				return;
+			}
+			if(name==""){
+				alert("姓名不能为空");
+				return;
+			}
+			var regExpEmail=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+			if(!regExpEmail.test(email)){
+				alert("请输入正确的邮箱地址");
+				return;
+			}
+			var regExpMobPhone=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+			if(!regExpMobPhone.test(mphone)){
+				alert("请输入正确的电话号码");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/saveClue.do",
+				type:"post",
+				data:{
+					owner:owner,
+					company:company,
+					appellation:appellation,
+					fullname:fullname,
+					job:job,
+					email:email,
+					phone:phone,
+					website:website,
+					mphone:mphone,
+					state:state,
+					source:source,
+					description:description,
+					contactSummary:contactSummary,
+					nextContactTime:nextContactTime,
+					address:address,
+				},
+				dataType:"json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						//显示创建线索的模态窗口
+						$("#createClueModal").modal("show");
+					}else{
+						//关闭创建线索的模态窗口
+						$("#createClueModal").modal("hide");
+
+					}
+				}
+
+			})
 
 		});
+
 		
 		
 	});
@@ -67,9 +156,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						</div>
 						
 						<div class="form-group">
-							<label for="create-call" class="col-sm-2 control-label">称呼</label>
+							<label for="create-appellation" class="col-sm-2 control-label">称呼</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-call">
+								<select class="form-control" id="create-appellation">
 								  <option></option>
 								  <option>先生</option>
 								  <option>夫人</option>
@@ -169,7 +258,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<div class="form-group">
 								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime">
+									<input type="text" class="form-control mydate" id="create-nextContactTime" readonly>
 								</div>
 							</div>
 						</div>
@@ -189,7 +278,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" id="saveClueBtn">保存</button>
 				</div>
 			</div>
 		</div>

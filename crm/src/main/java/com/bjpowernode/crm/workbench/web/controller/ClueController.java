@@ -1,5 +1,9 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import com.bjpowernode.crm.commons.contants.Contants;
+import com.bjpowernode.crm.commons.domain.ReturnObject;
+import com.bjpowernode.crm.commons.utils.DateUtils;
+import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Clue;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +36,6 @@ public class ClueController {
         //调用userService，查询所有的user
         List<User> ownerList = userService.queryAllUsers();
         request.setAttribute("ownerList",ownerList);
-
         return "workbench/clue/index";
     }
 
@@ -41,7 +45,26 @@ public class ClueController {
     @ResponseBody
     public Object saveClue(Clue clue, HttpSession session){
         //封装参数
-        return null;
+        clue.setId(UUIDUtils.getUUID());
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        clue.setCreateBy(user.getId());
+        clue.setCreateTime(DateUtils.formateDateTime(new Date()));
 
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            //调用clueService
+            int num = clueService.saveClue(clue);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
     }
 }
