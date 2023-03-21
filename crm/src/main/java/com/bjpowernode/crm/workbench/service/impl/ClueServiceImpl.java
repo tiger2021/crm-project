@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -24,7 +25,12 @@ public class ClueServiceImpl implements ClueService {
     }
 
     @Override
-    public List<Clue> queryClueByConditionsForPage(Clue clue) {
-        return clueMapper.selectCluesByConditionsForPage(clue);
+    public List<Clue> queryClueByConditionsForPage(Map<String,Object> map) {
+        return clueMapper.selectCluesByConditionsForPage(map);
+    }
+
+    @Override
+    public int queryCountOfClueByCondition(Map<String, Object> map) {
+        return clueMapper.selectCountOfClueByCondition(map);
     }
 }

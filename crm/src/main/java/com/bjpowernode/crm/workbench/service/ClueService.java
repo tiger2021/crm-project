@@ -4,6 +4,7 @@ import com.bjpowernode.crm.workbench.domain.Clue;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -14,5 +15,7 @@ import java.util.List;
 public interface ClueService {
     int saveClue(Clue clue);
 
-    List<Clue> queryClueByConditionsForPage(Clue clue);
+    List<Clue> queryClueByConditionsForPage(Map<String,Object> map);
+
+    int queryCountOfClueByCondition(Map<String,Object> map);
 }

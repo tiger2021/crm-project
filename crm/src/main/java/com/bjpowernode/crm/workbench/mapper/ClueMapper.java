@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.mapper;
 import com.bjpowernode.crm.workbench.domain.Clue;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClueMapper {
     /**
@@ -57,5 +58,7 @@ public interface ClueMapper {
     int insertClue(Clue clue);
 
 
-    List<Clue> selectCluesByConditionsForPage(Clue clue);
+    List<Clue> selectCluesByConditionsForPage(Map<String,Object> map);
+
+    int selectCountOfClueByCondition(Map<String,Object> map);
 }

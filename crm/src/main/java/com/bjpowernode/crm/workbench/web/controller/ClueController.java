@@ -73,11 +73,27 @@ public class ClueController {
 
     @RequestMapping("/workbench/clue/queryClueByConditionsForPage.do")
     @ResponseBody
-    public Object queryClueByConditionsForPage(Clue clue){
+    public Object queryClueByConditionsForPage(String fullname,String company,String phone,String mphone,
+                                               String source,String owner,String state,int pageNo,int pageSize){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("fullname",fullname);
+        map.put("company",company);
+        map.put("phone",phone);
+        map.put("mphone",mphone);
+        map.put("source",source);
+        map.put("owner",owner);
+        map.put("state",state);
+        map.put("pageNo",(pageNo-1)*pageSize);
+        map.put("pageSize",pageSize);
+
         //调用service
-        List<Clue> clueList = clueService.queryClueByConditionsForPage(clue);
+        List<Clue> clueList = clueService.queryClueByConditionsForPage(map);
+        int totalRows=clueService.queryCountOfClueByCondition(map);
         Map<String,Object> retMap=new HashMap<>();
         retMap.put("clueList",clueList);
+        retMap.put("totalRows",totalRows);
+
         return retMap;
     }
 }
