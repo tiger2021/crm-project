@@ -127,19 +127,37 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		});
 
-		
+		//给“查询”按钮添加单击事件
+		$("#queryBtn").click(function (){
+			queryActivityByConditionForPage();
+		});
 		
 	});
 
 	//定义查询市场活动的函数
 	function queryActivityByConditionForPage(){
 		//收集参数
-
+		var fullname=$("#queryFullname").val();
+		var company=$("#queryCompany").val();
+		var phone=$("#queryPhone").val();
+		var mphone=$("#queryMphone").val();
+		var source=$("#querySource").val();
+		var owner=$("#queryOwner").val();
+		var state=$("#queryState").val();
 		//向后台发送Ajax请求
 		$.ajax({
 			url:"workbench/clue/queryClueByConditionsForPage.do",
 			type:"post",
-			data: {},
+			data: {
+				fullname:fullname,
+				company:company,
+				phone:phone,
+				mphone:mphone,
+				source:source,
+				owner:owner,
+				state:state
+			},
+			dataType: "json",
 			success:function (data) {
 				//显示查询出的市场活动的总记录数
 				//遍历List，拼接字符串
@@ -505,28 +523,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="queryFullname">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="queryCompany">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">公司座机</div>
-				      <input class="form-control" type="text">
+				      <div class="input-group-addon" >公司座机</div>
+				      <input class="form-control" type="text" id="queryPhone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">线索来源</div>
-					  <select class="form-control">
+				      <div class="input-group-addon" >线索来源</div>
+					  <select class="form-control" id="querySource">
 					  	  <option></option>
 					  	  <option>广告</option>
 						  <option>推销电话</option>
@@ -550,8 +568,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <div class="input-group-addon" >所有者</div>
+				      <input class="form-control" type="text" id="queryOwner">
 				    </div>
 				  </div>
 				  
@@ -559,15 +577,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">手机</div>
-				      <input class="form-control" type="text">
+				      <div class="input-group-addon" >手机</div>
+				      <input class="form-control" type="text" id="queryMphone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">线索状态</div>
-					  <select class="form-control">
+					  <select class="form-control" id="queryState">
 					  	<option></option>
 					  	<option>试图联系</option>
 					  	<option>将来联系</option>
@@ -580,7 +598,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				    </div>
 				  </div>
 
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryBtn" >查询</button>
 				  
 				</form>
 			</div>
