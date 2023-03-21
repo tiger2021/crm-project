@@ -6,6 +6,8 @@ import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Author 小镇做题家
@@ -19,5 +21,10 @@ public class ClueServiceImpl implements ClueService {
     @Override
     public int saveClue(Clue clue) {
         return clueMapper.insertClue(clue);
+    }
+
+    @Override
+    public List<Clue> queryClueByConditionsForPage(Clue clue) {
+        return clueMapper.selectCluesByConditionsForPage(clue);
     }
 }

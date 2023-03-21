@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -66,5 +68,16 @@ public class ClueController {
             returnObject.setMessage("系统繁忙，请稍后重试...");
         }
         return returnObject;
+    }
+
+
+    @RequestMapping("/workbench/clue/queryClueByConditionsForPage.do")
+    @ResponseBody
+    public Object queryClueByConditionsForPage(Clue clue){
+        //调用service
+        List<Clue> clueList = clueService.queryClueByConditionsForPage(clue);
+        Map<String,Object> retMap=new HashMap<>();
+        retMap.put("clueList",clueList);
+        return retMap;
     }
 }

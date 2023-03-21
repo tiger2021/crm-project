@@ -19,6 +19,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 
 	$(function(){
+        //当页面加载完成之后，查询线索，并在页面展现出来
+		queryActivityByConditionForPage();
+
 		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
 		$(".mydate").datetimepicker({
 			language:'zh-CN',  //日历上显示的语言
@@ -67,15 +70,20 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				alert("姓名不能为空");
 				return;
 			}
-			var regExpEmail=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-			if(!regExpEmail.test(email)){
-				alert("请输入正确的邮箱地址");
-				return;
+			if (email!=""){
+				var regExpEmail=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+				if(!regExpEmail.test(email)){
+					alert("请输入正确的邮箱地址");
+					return;
+				}
 			}
-			var regExpMobPhone=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
-			if(!regExpMobPhone.test(mphone)){
-				alert("请输入正确的电话号码");
-				return;
+
+			if(mphone!=""){
+				var regExpMobPhone=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+				if(!regExpMobPhone.test(mphone)){
+					alert("请输入正确的电话号码");
+					return;
+				}
 			}
 
 			//发送Ajax请求
@@ -109,6 +117,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						//关闭创建线索的模态窗口
 						$("#createClueModal").modal("hide");
 
+						//刷新线索页面
+						queryActivityByConditionForPage();
+
 					}
 				}
 
@@ -119,6 +130,39 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		
 		
 	});
+
+	//定义查询市场活动的函数
+	function queryActivityByConditionForPage(){
+		//收集参数
+
+		//向后台发送Ajax请求
+		$.ajax({
+			url:"workbench/clue/queryClueByConditionsForPage.do",
+			type:"post",
+			data: {},
+			success:function (data) {
+				//显示查询出的市场活动的总记录数
+				//遍历List，拼接字符串
+				var htmlStr="";
+				$.each(data.clueList,function (index,clue){
+					htmlStr+="<tr>"
+					htmlStr+="	<td><input type=\"checkbox\" /></td>"
+					htmlStr+="	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+clue.fullname+"</a></td>"
+					htmlStr+="	<td>"+clue.company+"</td>"
+					htmlStr+="	<td>"+clue.phone+"</td>"
+					htmlStr+="	<td>"+clue.mphone+"</td>"
+					htmlStr+="	<td>"+clue.source+"</td>"
+					htmlStr+="	<td>"+clue.owner+"</td>"
+					htmlStr+="	<td>"+clue.state+"</td>"
+					htmlStr+="</tr>"
+				})
+
+				//将查出的内容添加到tbody中
+				$("#tBody").html(htmlStr);
+			}
+
+			})
+	}
 	
 </script>
 </head>
@@ -563,27 +607,27 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<td>线索状态</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四先生</a></td>
-							<td>动力节点</td>
-							<td>010-84846003</td>
-							<td>12345678901</td>
-							<td>广告</td>
-							<td>zhangsan</td>
-							<td>已联系</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四先生</a></td>
-                            <td>动力节点</td>
-                            <td>010-84846003</td>
-                            <td>12345678901</td>
-                            <td>广告</td>
-                            <td>zhangsan</td>
-                            <td>已联系</td>
-                        </tr>
+					<tbody id="tBody">
+<%--						<tr>--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四先生</a></td>--%>
+<%--							<td>动力节点</td>--%>
+<%--							<td>010-84846003</td>--%>
+<%--							<td>12345678901</td>--%>
+<%--							<td>广告</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td>已联系</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四先生</a></td>--%>
+<%--                            <td>动力节点</td>--%>
+<%--                            <td>010-84846003</td>--%>
+<%--                            <td>12345678901</td>--%>
+<%--                            <td>广告</td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>已联系</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
 			</div>
