@@ -138,6 +138,26 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		$("#queryBtn").click(function (){
 			queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 		});
+
+		//给“全选”按钮添加单击事件
+		$("#checkAll").click(function (){
+			$("#tBody input[type='checkbox']").prop("checked",this.checked)
+		});
+
+		//给列表中的所有checkBox添加点击事件,注意固有元素和动态生成元素的区别，选择器的书写格式会不同
+		$("#tBody").on("click","input[type='checkbox']",function (){
+			//判断列表中的所有checkbox是否全部是选中状态或取消状态
+			//获取列表中所有被选中的checkbox的数量
+			// $("#tBody input[type='checkbox']:checked").size()
+			//获取列表中所有的checkbox的数量
+			// $("#tBody input[type='checkbox']").size()
+			if($("#tBody input[type='checkbox']").size()
+					==$("#tBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				$("#checkAll").prop("checked",false);
+			}
+		});
 		
 	});
 
@@ -655,7 +675,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll"/></td>
 							<td>名称</td>
 							<td>公司</td>
 							<td>公司座机</td>
