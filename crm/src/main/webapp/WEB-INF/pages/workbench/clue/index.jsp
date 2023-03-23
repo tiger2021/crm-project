@@ -125,7 +125,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						$("#createClueModal").modal("hide");
 
 						//刷新线索页面
-						queryActivityByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
+						queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 
 					}
 				}
