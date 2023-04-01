@@ -199,9 +199,45 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给“修改”按钮添加单击事件
 		$("#edit-clue-btn").click(function (){
+			//收集参数
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			//验证
+			if(checkedIds.size()==0){
+				alert("请选择需要修改的数据");
+				return;
+			}
+			if(checkedIds.size()>1){
+				alert("只能选择一条数据进行修改");
+				return;
+			}
+			var id=checkedIds.val();
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/queryClueById.do",
+				type:"post",
+				data:{id:id},
+				success:function (data){
+					if(data.code=="1"){
+						//向修改线索的模态窗口填充数据
+						$("#edit-clueId").val(data.retData.id);
+						$("#edit-clueOwner").val(data.retData.owner);
+						$("#edit-company").val(data.retData.company);
+						$("#").val(data.retData);
+						$("#").val(data.retData);
+						$("#").val(data.retData);
+						$("#").val(data.retData);
+						$("#").val(data.retData);
+						$("#").val(data.retData);
 
-			//显示修改线索的模态窗口
-			$("#editClueModal").modal("show");
+
+						//显示修改线索的模态窗口
+						$("#editClueModal").modal("show");
+					}else{
+						//显示提示信息
+						alert(data.message);
+					}
+				}
+			});
 		});
 
 
@@ -465,7 +501,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
-					
+						<%--这儿设置一个隐藏域用来保存市场活动的id--%>
+						<input type="hidden" id="edit-clueId">
 						<div class="form-group">
 							<label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -480,7 +517,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							</div>
 							<label for="edit-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-company" value="动力节点">
+								<input type="text" class="form-control" id="edit-company" >
 							</div>
 						</div>
 						
@@ -586,7 +623,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<div class="form-group">
 								<label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control mydate" id="edit-nextContactTime" value="2017-05-01">
+									<input type="text" class="form-control mydate" id="edit-nextContactTime" value="2017-05-01" readonly>
 								</div>
 							</div>
 						</div>

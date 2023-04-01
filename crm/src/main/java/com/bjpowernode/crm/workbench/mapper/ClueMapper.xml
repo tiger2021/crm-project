@@ -404,7 +404,9 @@
     </foreach>
   </delete>
 
-<!--  <select id="selectClueById" parameterType="string" resultMap="">-->
-
-<!--  </select>-->
+  <select id="selectClueById" parameterType="string" resultMap="BaseResultMap">
+     select <include refid="Base_Column_List"/>
+     from tbl_clue
+     where id=#{id};
+  </select>
 </mapper>

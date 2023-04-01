@@ -38,4 +38,9 @@ public class ClueServiceImpl implements ClueService {
     public int deleteCluesByIds(String[] id) {
         return clueMapper.deleteCluesByIds(id);
     }
+
+    @Override
+    public Clue queryClueById(String id) {
+        return clueMapper.selectClueById(id);
+    }
 }

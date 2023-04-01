@@ -117,4 +117,19 @@ public class ClueController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/queryClueById.do")
+    @ResponseBody
+    public Object queryClueById(String id){
+        ReturnObject returnObject=new ReturnObject();
+        Clue clue = clueService.queryClueById(id);
+        if(clue==null){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }else{
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setRetData(clue);
+        }
+        return returnObject;
+    }
 }

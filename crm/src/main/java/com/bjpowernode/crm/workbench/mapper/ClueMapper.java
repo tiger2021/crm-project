@@ -64,5 +64,5 @@ public interface ClueMapper {
 
     int deleteCluesByIds(String[] id);
 
-//    Clue selectClueById(String id);
+    Clue selectClueById(String id);
 }

@@ -20,4 +20,6 @@ public interface ClueService {
     int queryCountOfClueByCondition(Map<String,Object> map);
 
     int deleteCluesByIds(String[] id);
+
+    Clue queryClueById(String id);
 }
