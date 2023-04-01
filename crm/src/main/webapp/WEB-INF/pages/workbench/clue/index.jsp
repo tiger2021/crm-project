@@ -222,13 +222,20 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						$("#edit-clueId").val(data.retData.id);
 						$("#edit-clueOwner").val(data.retData.owner);
 						$("#edit-company").val(data.retData.company);
-						$("#").val(data.retData);
-						$("#").val(data.retData);
-						$("#").val(data.retData);
-						$("#").val(data.retData);
-						$("#").val(data.retData);
-						$("#").val(data.retData);
-
+						$("#edit-appellation").val(data.retData.appellation);
+						var surname=data.retData.fullname.substr(0,data.retData.fullname.length-2);
+						$("#edit-surname").val(surname);
+						$("#edit-job").val(data.retData.job);
+						$("#edit-email").val(data.retData.email);
+						$("#edit-phone").val(data.retData.phone);
+						$("#edit-website").val(data.retData.website);
+						$("#edit-mphone").val(data.retData.mphone);
+						$("#edit-status").val(data.retData.state);
+						$("#edit-source").val(data.retData.source);
+						$("#edit-describe").val(data.retData.description);
+						$("#edit-contactSummary").val(data.retData.contactSummary);
+						$("#edit-nextContactTime").val(data.retData.nextContactTime);
+						$("#edit-address").val(data.retData.address);
 
 						//显示修改线索的模态窗口
 						$("#editClueModal").modal("show");
@@ -522,9 +529,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-call" class="col-sm-2 control-label">称呼</label>
+							<label for="edit-appellation" class="col-sm-2 control-label">称呼</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-call">
+								<select class="form-control" id="edit-appellation">
 								  <option></option>
 								  <option selected>先生</option>
 								  <option>夫人</option>
@@ -535,18 +542,18 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							</div>
 							<label for="edit-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-surname" value="李四">
+								<input type="text" class="form-control" id="edit-surname" >
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-job" class="col-sm-2 control-label">职位</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-job" value="CTO">
+								<input type="text" class="form-control" id="edit-job" >
 							</div>
 							<label for="edit-email" class="col-sm-2 control-label">邮箱</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-email" value="lisi@bjpowernode.com">
+								<input type="text" class="form-control" id="edit-email" >
 							</div>
 						</div>
 						
@@ -557,14 +564,14 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							</div>
 							<label for="edit-website" class="col-sm-2 control-label">公司网站</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-website" value="http://www.bjpowernode.com">
+								<input type="text" class="form-control" id="edit-website" >
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-mphone" class="col-sm-2 control-label">手机</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-mphone" value="12345678901">
+								<input type="text" class="form-control" id="edit-mphone" >
 							</div>
 							<label for="edit-status" class="col-sm-2 control-label">线索状态</label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -572,7 +579,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 								  <option></option>
 								  <option>试图联系</option>
 								  <option>将来联系</option>
-								  <option selected>已联系</option>
+								  <option>已联系</option>
 								  <option>虚假线索</option>
 								  <option>丢失线索</option>
 								  <option>未联系</option>
@@ -607,7 +614,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						<div class="form-group">
 							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">这是一条线索的描述信息</textarea>
+								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
 							</div>
 						</div>
 						
@@ -615,15 +622,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						
 						<div style="position: relative;top: 15px;">
 							<div class="form-group">
-								<label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
+								<label for="edit-contactSummary" class="col-sm-2 control-label">联系概要</label>
 								<div class="col-sm-10" style="width: 81%;">
-									<textarea class="form-control" rows="3" id="edit-contactSummary">这个线索即将被转换</textarea>
+									<textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control mydate" id="edit-nextContactTime" value="2017-05-01" readonly>
+									<input type="text" class="form-control mydate" id="edit-nextContactTime"  readonly>
 								</div>
 							</div>
 						</div>
@@ -634,7 +641,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                             <div class="form-group">
                                 <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴区大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address"></textarea>
                                 </div>
                             </div>
                         </div>
