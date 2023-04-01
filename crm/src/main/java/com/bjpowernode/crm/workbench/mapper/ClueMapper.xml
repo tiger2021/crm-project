@@ -327,7 +327,7 @@
   </insert>
 
 
-  <select id="selectCluesByConditionsForPage" parameterType="map" resultType="com.bjpowernode.crm.workbench.domain.Clue">
+  <select id="selectCluesByConditionsForPage" parameterType="map" resultMap="BaseResultMap">
     select c.id,c.fullname,c.appellation,
            u1.name as owner, c.company, c.job, c.email,
            c.phone, c.website, c.mphone,
@@ -402,6 +402,9 @@
     <foreach collection="array" item="id" separator="," open="(" close=")">
           #{id}
     </foreach>
-
   </delete>
+
+<!--  <select id="selectClueById" parameterType="string" resultMap="">-->
+
+<!--  </select>-->
 </mapper>

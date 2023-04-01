@@ -169,7 +169,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				return;
 			}else{
 				//提示用户是否确定要删除这些数据
-				if(window.confirm("情定要删除吗？")==true){
+				if(window.confirm("确定要删除吗？")==true){
 					var id="";
 					$.each(checkedIds,function (index,obj){
 						id+="id="+obj.value+"&";
@@ -196,6 +196,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				}
 			}
 		});
+
+		//给“修改”按钮添加单击事件
+		$("#edit-clue-btn").click(function (){
+
+			//显示修改线索的模态窗口
+			$("#editClueModal").modal("show");
+		});
+
+
 		
 	});
 
@@ -461,9 +470,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="edit-clueOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+									<c:forEach items="${ownerList}" var="owner">
+										<option value="${owner.id}">${owner.name}</option>
+									</c:forEach>
+<%--								  <option>zhangsan</option>--%>
+<%--								  <option>lisi</option>--%>
+<%--								  <option>wangwu</option>--%>
 								</select>
 							</div>
 							<label for="edit-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -574,7 +586,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<div class="form-group">
 								<label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="edit-nextContactTime" value="2017-05-01">
+									<input type="text" class="form-control mydate" id="edit-nextContactTime" value="2017-05-01">
 								</div>
 							</div>
 						</div>
