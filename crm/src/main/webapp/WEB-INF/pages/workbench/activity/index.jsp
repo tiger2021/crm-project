@@ -151,7 +151,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				return;
 			}else{
 				//提示用户是否确定要删除这些数据
-				if(window.confirm("情定要删除吗？")==true){
+				if(window.confirm("确定要删除吗？")==true){
 					/*将需要删除的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
                     * 所以在发送Ajax请求的时候不能写为json的格式
                     * */

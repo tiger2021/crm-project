@@ -61,4 +61,6 @@ public interface ClueMapper {
     List<Clue> selectCluesByConditionsForPage(Map<String,Object> map);
 
     int selectCountOfClueByCondition(Map<String,Object> map);
+
+    int deleteCluesByIds(String[] id);
 }

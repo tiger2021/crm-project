@@ -27,7 +27,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 	$(function(){
         //当页面加载完成之后，查询线索，并在页面展现出来
-		queryActivityByConditionForPage(1,10);
+		queryClueByConditionForPage(1,10);
 
 		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
 		$(".mydate").datetimepicker({
@@ -125,7 +125,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						$("#createClueModal").modal("hide");
 
 						//刷新线索页面
-						queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+						queryClueByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 
 					}
 				}
@@ -136,7 +136,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给“查询”按钮添加单击事件
 		$("#queryBtn").click(function (){
-			queryActivityByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+			queryClueByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 		});
 
 		//给“全选”按钮添加单击事件
@@ -158,11 +158,49 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$("#checkAll").prop("checked",false);
 			}
 		});
+
+		//给“删除”按钮添加单击事件
+		$("#delete-clue-btn").click(function (){
+			//收集参数
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			//队收集到的参数进行判断
+			if(checkedIds.size()==0){
+				alert("请选择要删除的数据");
+				return;
+			}else{
+				//提示用户是否确定要删除这些数据
+				if(window.confirm("情定要删除吗？")==true){
+					var id="";
+					$.each(checkedIds,function (index,obj){
+						id+="id="+obj.value+"&";
+					});
+
+					//删除拼接的字符最后多出来的&
+					id=id.substr(0,id.length-1);
+
+					//发送Ajax请求
+					$.ajax({
+						url:"workbench/clue/removeCluesByIds.do",
+						type:"post",
+						data:id,
+						success:function (data){
+							if(data.code=="1"){
+								//刷新市场活动页面
+								queryClueByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+							}else{
+								//显示提示信息
+								alert(data.message);
+							}
+						}
+					})
+				}
+			}
+		});
 		
 	});
 
 	//定义查询市场活动的函数
-	function queryActivityByConditionForPage(pageNo,pageSize){
+	function queryClueByConditionForPage(pageNo,pageSize){
 		//收集参数
 		var fullname=$("#queryFullname").val();
 		var company=$("#queryCompany").val();
@@ -193,7 +231,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				var htmlStr="";
 				$.each(data.clueList,function (index,clue){
 					htmlStr+="<tr>"
-					htmlStr+="	<td><input type=\"checkbox\" /></td>"
+					htmlStr+="	<td><input type=\"checkbox\" value=\""+clue.id+"\"/></td>"
 					htmlStr+="	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+clue.fullname+"</a></td>"
 					htmlStr+="	<td>"+clue.company+"</td>"
 					htmlStr+="	<td>"+clue.phone+"</td>"
@@ -234,7 +272,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					//每次返回切换页号之后的pageNo和pageSize
 					onChangePage: function(event,pageObj) { // returns page_num and rows_per_page after a link has clicked
 						//js代码
-						queryActivityByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
+						queryClueByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
 					}
 				});
 			}
@@ -666,7 +704,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="create-clue-btn" ><span class="glyphicon glyphicon-plus" ></span> 创建</button>
 				  <button type="button" class="btn btn-default" id="edit-clue-btn" ><span class="glyphicon glyphicon-pencil" ></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="delete-clue-btn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
