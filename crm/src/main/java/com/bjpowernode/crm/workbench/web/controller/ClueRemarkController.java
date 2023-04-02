@@ -6,16 +6,19 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.workbench.domain.Activity;
+import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.domain.ClueActivityRelation;
 import com.bjpowernode.crm.workbench.domain.ClueRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
+import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +39,9 @@ public class ClueRemarkController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ClueService clueService;
 
     @RequestMapping("/workbench/clue/saveClueRemark.do")
     @ResponseBody
@@ -172,7 +178,10 @@ public class ClueRemarkController {
     }
 
     @RequestMapping("/workbench/clue/toConvert.do")
-    public String toConvert(String clueId){
+    public String toConvert(String clueId, HttpServletRequest request){
+
+        Clue clue = clueService.selectClueByIdForDetail(clueId);
+        request.setAttribute("clue",clue);
         return "workbench/clue/convert";
     }
 
