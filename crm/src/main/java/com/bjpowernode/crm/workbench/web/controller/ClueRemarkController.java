@@ -53,4 +53,25 @@ public class ClueRemarkController {
         returnObject.setRetData(clueRemark);
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/removeClueRemarkById.do")
+    @ResponseBody
+    public Object removeClueRemarkById(String id){
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            int num = clueRemarkService.deleteClueRemarkById(id);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
 }

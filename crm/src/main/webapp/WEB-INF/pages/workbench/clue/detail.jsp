@@ -102,6 +102,33 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				}
 			});
 		});
+
+		//给所有”删除图标“添加单击事件
+		$("#remarkDivList").on("click","a[name=deleteCR]",function (){
+			//收集参数
+			var id=$(this).attr("remarkId");
+
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/removeClueRemarkById.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//刷新备注列表,删除div
+						$("#div_"+id).remove();
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		});
+
+
 	});
 	
 </script>
@@ -285,9 +312,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<h5>${remark.noteContent}</h5>
 					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}-${clue.company}</b> <small style="color: gray;"> ${remark.editFlag=='1'?remark.editTime:remark.createTime}  由${remark.editFlag=='1'?remark.editBy:remark.createBy}  ${remark.editFlag=='1'?'修改':'创建'}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-						<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a remarkId="${remark.id}" name="editCR" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a remarkId="${remark.id}" name="deleteCR" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 					</div>
 				</div>
 			</div>

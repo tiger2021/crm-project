@@ -177,4 +177,10 @@
     join tbl_clue c on c.id=r.clue_id
     where r.clue_id=#{clueId};
   </select>
+
+  <delete id="deleteClueRemarkById" parameterType="string">
+    delete
+    from tbl_clue_remark
+    where id=#{id};
+  </delete>
 </mapper>

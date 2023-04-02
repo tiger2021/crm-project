@@ -14,4 +14,6 @@ public interface ClueRemarkService {
 
     int saveClueRemark(ClueRemark clueRemark);
 
+    int deleteClueRemarkById(String id);
+
 }
