@@ -171,4 +171,9 @@ public class ClueRemarkController {
         return returnObject;
     }
 
+    @RequestMapping("/workbench/clue/toConvert.do")
+    public String toConvert(String clueId){
+        return "workbench/clue/convert";
+    }
+
 }
