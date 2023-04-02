@@ -31,4 +31,8 @@ public interface ActivityService {
     public int saveCreateActivityByList(List<Activity> activityList);
 
     public Activity queryActivityForDetailById(String id);
+
+    public List<Activity> queryActivityForClueDetailByClueId(String clueId);
+
+    public List<Activity> queryActivityForClueDetailByNameClueId(Map<String,Object> map);
 }

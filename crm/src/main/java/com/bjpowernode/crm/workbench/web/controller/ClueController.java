@@ -6,8 +6,10 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
+import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.domain.ClueRemark;
+import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class ClueController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @Autowired
     private ClueService clueService;
@@ -175,6 +180,24 @@ public class ClueController {
 
         List<ClueRemark> remarkList = clueRemarkService.selectClueRemarkByClueIdForClueDetail(id);
         request.setAttribute("remarkList",remarkList);
+
+        List<Activity> activityList = activityService.queryActivityForClueDetailByClueId(id);
+        request.setAttribute("activityList",activityList);
+
         return "/workbench/clue/detail";
+    }
+
+    @RequestMapping("/workbench/clue/queryActivityForClueDetailByNameClueId.do")
+    @ResponseBody
+    public Object queryActivityForClueDetailByNameClueId(String activityName,String clueId){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("activityName",activityName);
+        map.put("clueId",clueId);
+
+        List<Activity> activityList = activityService.queryActivityForClueDetailByNameClueId(map);
+
+        //返回响应信息
+        return activityList;
     }
 }

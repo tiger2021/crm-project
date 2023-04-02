@@ -73,4 +73,8 @@ public interface ActivityMapper {
 
 
     Activity selectActivityForDetailById(String id);
+
+    List<Activity> selectActivityForClueDetailByClueId(String clueId);
+
+    List<Activity> selectActivityForClueDetailByNameClueId(Map<String,Object> map);
 }

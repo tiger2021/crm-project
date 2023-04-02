@@ -178,6 +178,37 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给市场活动搜索框添加键盘弹起事件
+		$("#searchActivityTxt").keyup(function (){
+			//收集参数
+			var activityName=$("#searchActivityTxt").val();
+			var clueId='${clue.id}'
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/queryActivityForClueDetailByNameClueId.do",
+				type:"post",
+				data:{
+					activityName:activityName,
+					clueId:clueId
+				},
+				dataType:"json",
+				success:function (data){
+					var htmlStr="";
+					$.each(data,function (index,obj){
+						htmlStr+="<tr>";
+						htmlStr+="<td><input type=\"checkbox\" value=\""+obj.id+"\"/></td>";
+						htmlStr+="<td>"+obj.name+"</td>";
+						htmlStr+="<td>"+obj.startDate+"</td>";
+						htmlStr+="<td>"+obj.endDate+"</td>";
+						htmlStr+="<td>"+obj.owner+"</td>";
+						htmlStr+="</tr>";
+					});
+					$("#tBody").html(htmlStr);
+				}
+			});
+		});
+
 
 	});
 	
@@ -187,7 +218,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <body>
 
 <!-- 修改线索备注的模态窗口 -->
-
     <div class="modal fade" id="editRemarkModal" role="dialog">
 	<%-- 备注的id --%>
 
@@ -233,7 +263,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="searchActivityTxt" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -249,21 +279,21 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="tBody">
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -432,20 +462,29 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						</tr>
 					</thead>
 					<tbody>
+					<c:forEach items="${activityList}" var="activity">
 						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+							<td>${activity.name}</td>
+							<td>${activity.startDate}</td>
+							<td>${activity.endDate}</td>
+							<td>${activity.owner}</td>
+							<td><a href="javascript:void(0);" activityId="${activity.id}" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
 						</tr>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+					</c:forEach>
+<%--						<tr>--%>
+<%--							<td>发传单</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>--%>
+<%--						</tr>--%>
+<%--						<tr>--%>
+<%--							<td>发传单</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>--%>
+<%--						</tr>--%>
 					</tbody>
 				</table>
 			</div>
