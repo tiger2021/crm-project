@@ -222,38 +222,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 40px; left: 40px;">
+	<div id="remarkDivList" style="position: relative; top: 40px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
-		
-		<!-- 备注1 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>哎呦！</h5>
-				<font color="gray">线索</font> <font color="gray">-</font> <b>李四先生-动力节点</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+		<%--遍历remarkList--%>
+		<c:forEach items="${remarkList}" var="remark">
+			<div id="div_${remark.id}" class="remarkDiv" style="height: 60px;">
+				<img title="${remark.createBy}" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
+				<div style="position: relative; top: -40px; left: 40px;" >
+					<h5>${remark.noteContent}</h5>
+					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}-${clue.company}</b> <small style="color: gray;"> ${remark.editFlag=='1'?remark.editTime:remark.createTime}  由${remark.editFlag=='1'?remark.editBy:remark.createBy}  ${remark.editFlag=='1'?'修改':'创建'}</small>
+					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
+						<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a remarkId="${remark.id}" class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+					</div>
 				</div>
 			</div>
-		</div>
+		</c:forEach>
+
 		
-		<!-- 备注2 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>呵呵！</h5>
-				<font color="gray">线索</font> <font color="gray">-</font> <b>李四先生-动力节点</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
+
 		
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">

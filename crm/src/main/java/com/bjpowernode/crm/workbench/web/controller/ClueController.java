@@ -7,6 +7,8 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.ClueRemark;
+import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,10 @@ public class ClueController {
 
     @Autowired
     private ClueService clueService;
+
+    @Autowired
+    private ClueRemarkService clueRemarkService;
+
     @RequestMapping("/workbench/clue/toClueIndex.do")
     public String toClueIndex(HttpServletRequest request){
         //调用userService，查询所有的user
@@ -166,6 +172,9 @@ public class ClueController {
     public String toClueDetail(String id,HttpServletRequest request){
         Clue clue = clueService.selectClueByIdForDetail(id);
         request.setAttribute("clue",clue);
+
+        List<ClueRemark> remarkList = clueRemarkService.selectClueRemarkByClueIdForClueDetail(id);
+        request.setAttribute("remarkList",remarkList);
         return "/workbench/clue/detail";
     }
 }
