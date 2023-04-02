@@ -74,4 +74,32 @@ public class ClueRemarkController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/renewClueRemark.do")
+    @ResponseBody
+    public Object renewClueRemark(ClueRemark clueRemark,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        clueRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES_EDITED);
+        clueRemark.setEditBy(user.getId());
+        clueRemark.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject=new ReturnObject();
+        try {
+            int num = clueRemarkService.updateClueRemarkById(clueRemark);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(clueRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
 }

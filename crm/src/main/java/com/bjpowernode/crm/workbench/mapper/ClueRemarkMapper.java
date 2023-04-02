@@ -56,4 +56,6 @@ public interface ClueRemarkMapper {
     List<ClueRemark> selectClueRemarkByClueIdForClueDetail(String clueId);
 
     int deleteClueRemarkById(String id);
+
+    int updateClueRemarkById(ClueRemark clueRemark);
 }

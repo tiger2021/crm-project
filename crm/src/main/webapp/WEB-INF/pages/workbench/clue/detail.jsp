@@ -128,6 +128,56 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			})
 		});
 
+		//给所有”修改“按钮添加单击事件
+		$("#remarkDivList").on("click","a[name=editCR]",function (){
+			// 获取活动评论的id
+			var id=$(this).attr("remarkId");
+			//获得notecontent,在h5前面要记得加空格
+			var noteContent=$("#div_"+id+" h5").text();
+			//把备注的id和noteContent写到修改备注的模态窗口中
+			$("#edit_id").val(id);     //先将活动评论的id写在模态窗口中
+			$("#edit_noteContent").text(noteContent);
+			//弹出修改市场活动备注的模态窗口
+			$("#editRemarkModal").modal("show");
+		});
+
+		//给更新按钮添加单击事件
+		$("#updateRemarkBtn").click(function (){
+			//收集参数
+			var id=$("#edit_id").val();
+			var noteContent=$.trim($("#edit_noteContent").val());
+
+			//验证表单
+			if(noteContent==""){
+				alert("请输入修改的评论");
+				return;
+			}else{
+				//发送Ajax请求
+				$.ajax({
+					url:"workbench/clue/renewClueRemark.do",
+					type:"post",
+					data:{
+						id:id,
+						noteContent:noteContent
+					},
+					dataType:"json",
+					success:function (data){
+						if(data.code=="0"){
+							alert(data.message);
+						}else{
+							//关闭模态窗口
+							$("#editRemarkModal").modal("hide");
+							//刷新备注列表
+							$("#div_"+id+" h5").text(data.retData.noteContent);
+							//更新时间和修改者
+							$("#div_"+id+" small").text(" "+data.retData.editTime+" 由${sessionScope.sessionUser.name}修改")
+
+						}
+					}
+				})
+			}
+		});
+
 
 	});
 	
@@ -135,6 +185,39 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 </head>
 <body>
+
+<!-- 修改线索备注的模态窗口 -->
+
+    <div class="modal fade" id="editRemarkModal" role="dialog">
+	<%-- 备注的id --%>
+
+		<input type="hidden" id="remarkId">
+		<div class="modal-dialog" role="document" style="width: 40%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">修改备注</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<input type="hidden" id="edit_id">
+					<div class="form-group">
+						<label for="edit_noteContent" class="col-sm-2 control-label">内容</label>
+						<div class="col-sm-10" style="width: 81%;">
+							<textarea class="form-control" rows="3" id="edit_noteContent"></textarea>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="updateRemarkBtn">更新</button>
+			</div>
+		</div>
+	</div>
+  </div>
 
 	<!-- 关联市场活动的模态窗口 -->
 	<div class="modal fade" id="bundModal" role="dialog">
@@ -320,9 +403,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 		</c:forEach>
 
-		
-
-		
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
