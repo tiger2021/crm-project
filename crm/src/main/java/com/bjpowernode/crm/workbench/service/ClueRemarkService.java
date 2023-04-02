@@ -12,4 +12,6 @@ import java.util.List;
 public interface ClueRemarkService {
     List<ClueRemark> selectClueRemarkByClueIdForClueDetail(String clueId);
 
+    int saveClueRemark(ClueRemark clueRemark);
+
 }

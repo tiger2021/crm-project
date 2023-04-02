@@ -51,6 +51,57 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//给“保存”按钮添加单击事件
+		$("#saveCreateClueRemarkBtn").click(function (){
+			//收集参数
+			var noteContent=$("#remark").val();
+			var clueId='${clue.id}';
+
+			//验证表单数据
+			noteContent=$.trim(noteContent);
+			if(noteContent==""){
+				alert("请输入评论");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/saveClueRemark.do",
+				type:"post",
+				data:{
+					noteContent:noteContent,
+					clueId:clueId
+				},
+				success:function (data){
+					if(data.code=="1"){
+						//清空输入框
+						$("#remark").val("");
+						//拼接数据
+						var htmlStr="";
+
+					   htmlStr+="<div id=\""+data.retData.id+"\" class=\"remarkDiv\" style=\"height: 60px;\">";
+				       htmlStr+="<img title=\"${sessionScope.sessionUser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
+				       htmlStr+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
+					   htmlStr+="<h5>"+data.retData.noteContent+"</h5>";
+					   htmlStr+="<font color=\"gray\">线索</font> <font color=\"gray\">-</font> <b>${clue.fullname}-${clue.company}</b> <small style=\"color: gray;\"> "+data.retData.createTime+"  由${sessionScope.sessionUser.name}  '创建'</small>";
+					   htmlStr+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
+					   htmlStr+="<a remarkId=\""+data.retData.id+"\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+					   htmlStr+="&nbsp;&nbsp;&nbsp;&nbsp;";
+					   htmlStr+="<a remarkId=\""+data.retData.id+"\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+					   htmlStr+="</div>";
+				       htmlStr+="</div>";
+			           htmlStr+="</div>";
+
+						$("#remarkDiv").before(htmlStr);
+
+					}else{
+						//显示提示信息
+						alert(data.message);
+					}
+				}
+			});
+		});
 	});
 	
 </script>
@@ -250,7 +301,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-primary" id="saveCreateClueRemarkBtn">保存</button>
 				</p>
 			</form>
 		</div>
