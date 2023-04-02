@@ -43,4 +43,9 @@ public class ClueServiceImpl implements ClueService {
     public Clue queryClueById(String id) {
         return clueMapper.selectClueById(id);
     }
+
+    @Override
+    public int updateClueById(Clue clue) {
+        return clueMapper.updateClueById(clue);
+    }
 }

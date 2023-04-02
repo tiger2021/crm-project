@@ -247,6 +247,90 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			});
 		});
 
+		//给“更新”按钮添加单击事件
+		$("#clueUpdateBtn").click(function (){
+			//收集参数
+			var id=$("#edit-clueId").val();
+			var owner=$("#edit-clueOwner").val();
+			var company=$("#edit-company").val();
+			var appellation=$("#edit-appellation").val();
+			var surname=$("#edit-surname").val();
+			var fullname=surname+appellation;
+			var job=$("#edit-job").val();
+			var email=$("#edit-email").val();
+			var phone=$("#edit-phone").val();
+			var website=$("#edit-website").val();
+			var mphone=$("#edit-mphone").val();
+			var state=$("#edit-status").val();
+			var source=$("#edit-source").val();
+			var description=$("#edit-describe").val();
+			var contactSummary=$("#edit-contactSummary").val();
+			var nextContactTime=$("#edit-nextContactTime").val();
+			var address=$("#edit-address").val();
+
+			//验证表单
+			//验证表单数据
+			if(company==""){
+				alert("公司名称不能为空");
+				return;
+			}
+			if(name==""){
+				alert("姓名不能为空");
+				return;
+			}
+			if (email!=""){
+				var regExpEmail=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+				if(!regExpEmail.test(email)){
+					alert("请输入正确的邮箱地址");
+					return;
+				}
+			}
+
+			if(mphone!=""){
+				var regExpMobPhone=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+				if(!regExpMobPhone.test(mphone)){
+					alert("请输入正确的电话号码");
+					return;
+				}
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/renewClue.do",
+				type:"post",
+				data:{
+					id:id,
+					owner:owner,
+					company:company,
+					appellation:appellation,
+					fullname:fullname,
+					job:job,
+					email:email,
+					phone:phone,
+					website:website,
+					mphone:mphone,
+					state:state,
+					source:source,
+					description:description,
+					contactSummary:contactSummary,
+					nextContactTime:nextContactTime,
+					address:address
+				},
+				success:function (data){
+					if(data.code=="1"){
+						//关闭修改线索的模态窗口
+						$("#editClueModal").modal("hide");
+						//刷新线索页面
+						queryClueByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+					}else{
+						//显示提示信息
+						alert(data.message);
+					}
+				}
+			});
+		});
+
+
 
 		
 	});
@@ -650,7 +734,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="clueUpdateBtn">更新</button>
 				</div>
 			</div>
 		</div>

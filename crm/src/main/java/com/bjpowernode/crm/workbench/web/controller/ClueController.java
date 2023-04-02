@@ -132,4 +132,33 @@ public class ClueController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/renewClue.do")
+    @ResponseBody
+    public Object renewClue(Clue clue,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        clue.setEditBy(user.getId());
+        clue.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject=new ReturnObject();
+
+        //调用service
+        try {
+            int num = clueService.updateClueById(clue);
+
+            //判断是否修改成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
 }
