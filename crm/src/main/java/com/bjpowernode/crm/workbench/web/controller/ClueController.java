@@ -161,4 +161,11 @@ public class ClueController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/toClueDetail.do")
+    public String toClueDetail(String id,HttpServletRequest request){
+        Clue clue = clueService.selectClueByIdForDetail(id);
+        request.setAttribute("clue",clue);
+        return "/workbench/clue/detail";
+    }
 }

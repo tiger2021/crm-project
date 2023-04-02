@@ -368,7 +368,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$.each(data.clueList,function (index,clue){
 					htmlStr+="<tr>"
 					htmlStr+="	<td><input type=\"checkbox\" value=\""+clue.id+"\"/></td>"
-					htmlStr+="	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+clue.fullname+"</a></td>"
+					htmlStr+="	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/clue/toClueDetail.do?id="+clue.id+"'\">"+clue.fullname+"</a></td>"
 					htmlStr+="	<td>"+clue.company+"</td>"
 					htmlStr+="	<td>"+clue.phone+"</td>"
 					htmlStr+="	<td>"+clue.mphone+"</td>"

@@ -24,4 +24,6 @@ public interface ClueService {
     Clue queryClueById(String id);
 
     int updateClueById(Clue clue);
+
+    Clue selectClueByIdForDetail(String id);
 }

@@ -67,4 +67,6 @@ public interface ClueMapper {
     Clue selectClueById(String id);
 
     int updateClueById(Clue clue);
+
+    Clue selectClueByIdForDetail(String id);
 }
