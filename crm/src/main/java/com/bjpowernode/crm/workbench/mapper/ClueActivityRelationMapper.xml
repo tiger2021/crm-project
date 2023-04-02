@@ -108,4 +108,13 @@
       activity_id = #{activityId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <insert id="insertClueActivityRelationByList" parameterType="com.bjpowernode.crm.workbench.domain.ClueActivityRelation">
+    insert into tbl_clue_activity_relation (id, clue_id, activity_id
+    )
+    values
+        <foreach collection="list" item="obj" separator=",">
+          (#{obj.id}, #{obj.clueId}, #{obj.activityId})
+        </foreach>
+  </insert>
 </mapper>

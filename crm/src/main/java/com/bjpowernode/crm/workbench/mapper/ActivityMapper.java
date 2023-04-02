@@ -77,4 +77,6 @@ public interface ActivityMapper {
     List<Activity> selectActivityForClueDetailByClueId(String clueId);
 
     List<Activity> selectActivityForClueDetailByNameClueId(Map<String,Object> map);
+
+    List<Activity> selectActivityForClueDetailByIdArray(String[] idArray);
 }

@@ -178,6 +178,18 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给"关联市场活动"按钮添加单击事件
+		$("#bundActivityBtn").click(function () {
+			//初始化工作
+			//清空搜索框
+			$("#searchActivityTxt").val("");
+			//清空搜索的市场活动列表
+			$("#tBody").html("");
+
+			//弹出"线索关联市场活动"的模态窗口
+			$("#bundModal").modal("show");
+		});
+
 		//给市场活动搜索框添加键盘弹起事件
 		$("#searchActivityTxt").keyup(function (){
 			//收集参数
@@ -208,6 +220,54 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				}
 			});
 		});
+
+		//给“关联”按钮添加单击事件
+		$("#bundleBtn").click(function (){
+			//收集参数
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			//表单验证
+			if(checkedIds.size()==0){
+				alert("请选择要关联的市场活动");
+				return;
+			}
+			var ids="";
+			$.each(checkedIds,function (index,obj){
+				ids+="activityId="+obj.value+"&";
+			});
+			ids+="clueId=${clue.id}";
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/saveBundle.do",
+				type:"post",
+				data:ids,
+				dataType:"json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						return;
+					}else{
+						var htmlStr="";
+						$.each(data.retData,function (index,obj){
+							htmlStr+="<tr>";
+							htmlStr+="<td>"+obj.name+"</td>";
+							htmlStr+="<td>"+obj.startDate+"</td>";
+							htmlStr+="<td>"+obj.endDate+"</td>";
+							htmlStr+="<td>"+obj.owner+"</td>";
+							htmlStr+="<td><a href=\"javascript:void(0);\" activityId=\""+obj.id+"\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>";
+							htmlStr+="</tr>";
+						});
+						$("#relatedTBody").append(htmlStr);
+
+						//关闭关联市场活动的模态窗口
+						$("#bundModal").modal("hide");
+					}
+
+
+				}
+			});
+		});
+
+
 
 
 	});
@@ -299,7 +359,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundleBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -461,7 +521,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="relatedTBody">
 					<c:forEach items="${activityList}" var="activity">
 						<tr>
 							<td>${activity.name}</td>
@@ -490,7 +550,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bundActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>

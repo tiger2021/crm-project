@@ -5,7 +5,11 @@ import com.bjpowernode.crm.commons.domain.ReturnObject;
 import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
+import com.bjpowernode.crm.workbench.domain.Activity;
+import com.bjpowernode.crm.workbench.domain.ClueActivityRelation;
 import com.bjpowernode.crm.workbench.domain.ClueRemark;
+import com.bjpowernode.crm.workbench.service.ActivityService;
+import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author 小镇做题家
@@ -24,6 +30,12 @@ import java.util.Date;
 public class ClueRemarkController {
     @Autowired
     private ClueRemarkService clueRemarkService;
+
+    @Autowired
+    private ClueActivityRelationService clueActivityRelationService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping("/workbench/clue/saveClueRemark.do")
     @ResponseBody
@@ -98,6 +110,41 @@ public class ClueRemarkController {
         } catch (Exception e) {
             e.printStackTrace();
             returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
+    @RequestMapping("/workbench/clue/saveBundle.do")
+    @ResponseBody
+    public Object saveBundle(String[] activityId,String clueId){
+        //封装参数
+        ClueActivityRelation car=null;
+        List<ClueActivityRelation> list=new ArrayList<>();
+        for (String ai : activityId) {
+            car=new ClueActivityRelation();
+            car.setId(UUIDUtils.getUUID());
+            car.setClueId(clueId);
+            car.setActivityId(ai);
+            list.add(car);
+        }
+
+        ReturnObject returnObject=new ReturnObject();
+
+        //调用service
+        try {
+            int num = clueActivityRelationService.saveClueActivityRelationByList(list);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                List<Activity> activityList = activityService.queryActivityForClueDetailByIdArray(activityId);
+                returnObject.setRetData(activityList);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
             returnObject.setMessage("系统繁忙，请稍后重试...");
         }
         return returnObject;

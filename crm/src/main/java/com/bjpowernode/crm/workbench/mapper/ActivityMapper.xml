@@ -327,7 +327,7 @@
 
 
   <select id="selectActivityForClueDetailByNameClueId" parameterType="map" resultMap="BaseResultMap">
-    select a.name,a.start_date,a.end_date,u.name as owner
+    select a.name,a.start_date,a.end_date,u.name as owner,a.id
     from tbl_activity a
     join tbl_user u on a.owner=u.id
     where a.name like '%' #{activityName} '%' and
@@ -338,5 +338,14 @@
       ) ;
   </select>
 
+  <select id="selectActivityForClueDetailByIdArray" parameterType="string" resultMap="BaseResultMap">
+    select a.name,a.start_date,a.end_date,u.name as owner,a.id
+    from tbl_activity a
+    join tbl_user u on a.owner=u.id
+    where a.id in 
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </select>
 
 </mapper>
