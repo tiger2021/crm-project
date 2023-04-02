@@ -248,7 +248,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					}else{
 						var htmlStr="";
 						$.each(data.retData,function (index,obj){
-							htmlStr+="<tr>";
+							htmlStr+="<tr id=\"tr_"+obj.id+"\">";
 							htmlStr+="<td>"+obj.name+"</td>";
 							htmlStr+="<td>"+obj.startDate+"</td>";
 							htmlStr+="<td>"+obj.endDate+"</td>";
@@ -265,6 +265,36 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 				}
 			});
+		});
+
+		//给所有的“解除关联”按钮添加单击事件
+		$("#relatedTBody").on("click","a",function (){
+			//收集参数
+			var activityId=$(this).attr("activityId");
+			var clueId="${clue.id}";
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/disassociate.do",
+				type:"post",
+				data: {
+					activityId:activityId,
+					clueId:clueId
+				},
+				dataType:"json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						return;
+					}else{
+						//这儿用到了扩展定位属性
+						$("#tr_"+activityId).remove();
+					}
+
+
+				}
+			});
+
 		});
 
 
@@ -523,7 +553,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					</thead>
 					<tbody id="relatedTBody">
 					<c:forEach items="${activityList}" var="activity">
-						<tr>
+						<tr id="tr_${activity.id}">
 							<td>${activity.name}</td>
 							<td>${activity.startDate}</td>
 							<td>${activity.endDate}</td>

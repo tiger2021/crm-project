@@ -149,4 +149,26 @@ public class ClueRemarkController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/clue/disassociate.do")
+    @ResponseBody
+    public Object disassociate(ClueActivityRelation clueActivityRelation){
+
+        ReturnObject returnObject=new ReturnObject();
+        try {
+            int num = clueActivityRelationService.deleteClueActivityRelationByClueIdAndActivityId(clueActivityRelation);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
 }
