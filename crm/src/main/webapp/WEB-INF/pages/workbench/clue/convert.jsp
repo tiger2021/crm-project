@@ -65,6 +65,19 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			});
 		});
 
+		//给所有的单选按钮添加单击事件
+		$("tBody").on("click","input[type='radio']",function (){
+			//把市场活动的id写到隐藏域中，把活动的name写到输入框中
+			var activityId=this.value;
+			var activityName=$(this).attr("activityName");
+			$("#activityId").val(activityId);
+			$("#activityName").val(activityName);
+
+			//关闭搜索市场活动的模态窗口
+			$("#searchActivityModal").modal("hide");
+
+		})
+
 	});
 </script>
 
@@ -167,8 +180,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		    </select>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="searchActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
-		    <input type="text" class="form-control" id="activity" placeholder="点击上面搜索" readonly>
+		    <label for="activityName">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="searchActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
+		   <input type="hidden" id="activityId">
+		    <input type="text" class="form-control" id="activityName" placeholder="点击上面搜索" readonly>
 		  </div>
 		</form>
 		
