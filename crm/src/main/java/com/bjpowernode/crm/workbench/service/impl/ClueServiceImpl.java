@@ -223,6 +223,13 @@ public class ClueServiceImpl implements ClueService {
 
         }
 
+        //删除该线索下所有的备注
+        clueRemarkMapper.deleteClueRemarkByClueId(clueId);
+        //删除该线索和市场活动的关联关系
+        clueActivityRelationMapper.deleteClueActivityRelationByClueId(clueId);
+        //删除该线索
+        clueMapper.deleteClueById(clueId);
+
 
     }
 }

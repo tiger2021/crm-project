@@ -199,4 +199,10 @@
     where clue_id=#{clueId};
   </select>
 
+  <delete id="deleteClueRemarkByClueId" parameterType="string">
+    delete from tbl_clue_remark
+    where clue_id=#{clueId};
+  </delete>
+
+
 </mapper>
