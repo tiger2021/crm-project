@@ -26,6 +26,45 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$("#create-transaction2").hide(200);
 			}
 		});
+
+		//给”市场活动源“后面的搜索添加单击事件
+		$("#searchActivityBtn").click(function (){
+			//弹出搜索市场活动的模态窗口
+			$("#searchActivityModal").modal("show");
+		});
+
+		//给市场活动源搜索框添加键盘弹起事件
+		$("#searchActivityText").keyup(function (){
+			//收集参数
+			var activityName=this.value;
+			var clueId="${clue.id}";
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/clue/queryActivityForConvertByNameClueId.do",
+				type:"post",
+				data:{
+					activityName:activityName,
+					clueId:clueId
+				},
+				dataType:"json",
+				success:function(data){
+					//显示搜索得到的市场活动
+					var htmlStr="";
+					$.each(data,function (index,obj){
+						htmlStr+="<tr>";
+						htmlStr+="<td><input type=\"radio\" value=\""+obj.id+"\" activityName=\""+obj.name+"\" name=\"activity\"/></td>";
+						htmlStr+="<td>"+obj.name+"</td>";
+						htmlStr+="<td>"+obj.startDate+"</td>";
+						htmlStr+="<td>"+obj.endDate+"</td>";
+						htmlStr+="<td>"+obj.owner+"</td>";
+						htmlStr+="</tr>";
+					});
+					$("#tBody").html(htmlStr);
+
+				}
+			});
+		});
+
 	});
 </script>
 
@@ -46,7 +85,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="searchActivityText" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -62,21 +101,21 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="tBody">
+<%--							<tr>--%>
+<%--								<td><input type="radio" name="activity"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
+<%--							<tr>--%>
+<%--								<td><input type="radio" name="activity"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -128,7 +167,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		    </select>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#searchActivityModal" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
+		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="searchActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
 		    <input type="text" class="form-control" id="activity" placeholder="点击上面搜索" readonly>
 		  </div>
 		</form>

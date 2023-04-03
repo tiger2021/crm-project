@@ -79,4 +79,6 @@ public interface ActivityMapper {
     List<Activity> selectActivityForClueDetailByNameClueId(Map<String,Object> map);
 
     List<Activity> selectActivityForClueDetailByIdArray(String[] idArray);
+
+    List<Activity> selectActivityForConvertByNameClueId(Map<String,Object> map);
 }

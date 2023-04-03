@@ -200,5 +200,18 @@ public class ClueController {
     }
 
 
+    @RequestMapping("/workbench/clue/queryActivityForConvertByNameClueId.do")
+    @ResponseBody
+    public Object queryActivityForConvertByNameClueId(String activityName,String clueId){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("activityName",activityName);
+        map.put("clueId",clueId);
+        List<Activity> activityList = activityService.selectActivityForConvertByNameClueId(map);
+        //返回响应信息
+        return activityList;
+
+    }
+
 
 }
