@@ -84,6 +84,45 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		})
 
+		//给"转换"按钮添加单击事件
+		$("#saveConcertClueBtn").click(function (){
+			//收集参数
+			var clueId="${clue.id}";
+			var money=$.trim($("#amountOfMoney").val());
+			var name=$.trim($("#tradeName").val());
+			var expectedDate=$("#expectedClosingDate").val();
+			var stage=$("#stage").val();
+			var activityId=$("#activityId").val();
+			var isCreateTran=$("#isCreateTransaction").prop("checked");
+			//表单验证
+
+			//发送ajax请求
+			$.ajax({
+				url:"workbench/clue/saveConvertClue.do",
+				type:"post",
+				data:{
+					clueId:clueId,
+					money:money,
+					name:name,
+					expectedDate:expectedDate,
+					stage:stage,
+					activityId:activityId,
+					isCreateTran:isCreateTran
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						return;
+					}else{
+						//成功跳转到主页面
+						window.location.href="workbench/clue/toClueIndex.do";
+					}
+				}
+			});
+
+		});
+
 	});
 </script>
 
@@ -164,7 +203,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" value="${clue.company}">
+		    <input type="text" class="form-control" id="tradeName" >
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>
@@ -199,7 +238,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		<b>${clue.owner}</b>
 	</div>
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
-		<input class="btn btn-primary" type="button" value="转换">
+		<input class="btn btn-primary" type="button" id="saveConcertClueBtn" value="转换">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input class="btn btn-default" type="button" value="取消">
 	</div>
