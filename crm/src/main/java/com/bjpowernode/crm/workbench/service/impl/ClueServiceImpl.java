@@ -47,6 +47,9 @@ public class ClueServiceImpl implements ClueService {
     @Autowired
     private ContactsActivityRelationMapper contactsActivityRelationMapper;
 
+    @Autowired
+    private TranMapper tranMapper;
+
     @Override
     public int saveClue(Clue clue) {
         return clueMapper.insertClue(clue);
@@ -172,20 +175,47 @@ public class ClueServiceImpl implements ClueService {
         //调用service
         contactsActivityRelationMapper.insertContactsActivityRelationByList(contactsActivityRelationList);
 
+        //判断是否需要创建交易
+        String isCreateTran = (String) map.get("isCreateTran");
+        if(isCreateTran.equals("true")){
+            //如果需要创建交易，则往交易表中添加一条记录
+            Tran tran=new Tran();
+            //初始化tran
+            tran.setId(UUIDUtils.getUUID());
+            tran.setOwner(user.getId());
+            String money=(String)map.get("money");
+            tran.setMoney(money);
+            String name=(String)map.get("name");
+            tran.setMoney(name);
+            String expectedDate=(String)map.get("expectedDate");
+            tran.setExpectedDate(expectedDate);
+            tran.setCustomerId(customer.getId());
+            String stage=(String)map.get("stage");
+            tran.setStage(stage);
+            String activityId=(String)map.get("activityId");
+            tran.setActivityId(activityId);
+            tran.setContactsId(contacts.getId());
+            tran.setCreateBy(user.getId());
+            tran.setCreateTime(DateUtils.formateDateTime(new Date()));
+            //调用mapper方法进行保存
+            tranMapper.insertTran(tran);
 
 
 
-//        Tran tran=new Tran();
-//        //初始化tran
-//        tran.setId(UUIDUtils.getUUID());
-//        tran.setCreateBy(user.getId());
-//        tran.setCreateTime(DateUtils.formateDateTime(new Date()));
-//        String activityId=(String) map.get("activityId");
-//        tran.setActivityId(activityId);
-//        String money=(String)map.get("money");
-//        tran.setMoney(money);
-//        String name=(String)map.get("name");
-//        tran.setMoney(name);
+
+        }
+
+        Tran tran=new Tran();
+        //初始化tran
+        tran.setId(UUIDUtils.getUUID());
+        tran.setCreateBy(user.getId());
+        tran.setCreateTime(DateUtils.formateDateTime(new Date()));
+        String activityId=(String) map.get("activityId");
+        tran.setActivityId(activityId);
+        String money=(String)map.get("money");
+        tran.setMoney(money);
+        String name=(String)map.get("name");
+        tran.setMoney(name);
 
 
     }
