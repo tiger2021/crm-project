@@ -30,6 +30,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的市场活动
 		queryTransactionByConditionForPage(1,10);
 
+		//给“查询”按钮添加单击事件
+		$("#search-transactionBtn").click(function (){
+			queryTransactionByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+		});
+
+
 		
 		
 	});
@@ -218,7 +224,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				    </div>
 				  </div>
 				  
-				  <button type="button" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="search-transactionBtn">查询</button>
 				  
 				</form>
 			</div>
