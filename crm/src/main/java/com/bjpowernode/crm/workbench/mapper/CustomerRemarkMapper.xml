@@ -165,4 +165,9 @@
       customer_id = #{customerId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <insert id="insertCustomerRemark" parameterType="com.bjpowernode.crm.workbench.domain.CustomerRemark">
+    insert into tbl_customer_remark (id, note_content, create_by,create_time, edit_flag,customer_id)
+    values (#{id}, #{ noteContent}, #{ createBy}, #{createTime}, #{ editFlag}, #{customerId})
+  </insert>
 </mapper>

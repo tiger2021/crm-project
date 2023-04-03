@@ -193,4 +193,10 @@
     where id = #{id}
   </update>
 
+  <select id="selectClueRemarkByClueId" parameterType="string" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tbl_clue_remark
+    where clue_id=#{clueId};
+  </select>
+
 </mapper>

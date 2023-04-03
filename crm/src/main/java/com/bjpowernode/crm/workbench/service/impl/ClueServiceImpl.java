@@ -4,13 +4,8 @@ import com.bjpowernode.crm.commons.contants.Contants;
 import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
-import com.bjpowernode.crm.workbench.domain.Clue;
-import com.bjpowernode.crm.workbench.domain.Contacts;
-import com.bjpowernode.crm.workbench.domain.Customer;
-import com.bjpowernode.crm.workbench.domain.Tran;
-import com.bjpowernode.crm.workbench.mapper.ClueMapper;
-import com.bjpowernode.crm.workbench.mapper.ContactsMapper;
-import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
+import com.bjpowernode.crm.workbench.domain.*;
+import com.bjpowernode.crm.workbench.mapper.*;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +30,12 @@ public class ClueServiceImpl implements ClueService {
 
     @Autowired
     private ContactsMapper contactsMapper;
+
+    @Autowired
+    private ClueRemarkMapper clueRemarkMapper;
+
+    @Autowired
+    private CustomerRemarkMapper customerRemarkMapper;
 
     @Override
     public int saveClue(Clue clue) {
@@ -115,6 +116,23 @@ public class ClueServiceImpl implements ClueService {
         contacts.setAddress(clue.getAddress());
         //将封装好的Contacts保存到联系人表中
         int numContacts = contactsMapper.insertContact(contacts);
+
+
+        //根据clueId查询该线索下所有的备注
+        List<ClueRemark> clueRemarkList = clueRemarkMapper.selectClueRemarkByClueId(clueId);
+        //把该线索下所有的备注转换到客户备注表中一份
+        for (ClueRemark clueRemark : clueRemarkList) {
+            //封装参数
+            CustomerRemark customerRemark=new CustomerRemark();
+            customerRemark.setId(UUIDUtils.getUUID());
+            customerRemark.setNoteContent(clueRemark.getNoteContent());
+            customerRemark.setCreateBy(user.getId());
+            customerRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+            customerRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+            customerRemark.setCustomerId(customer.getId());
+            int customerRemarkNum = customerRemarkMapper.insertCustomerRemark(customerRemark);
+        }
+
 
 
 //        Tran tran=new Tran();
