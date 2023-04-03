@@ -50,6 +50,9 @@ public class ClueServiceImpl implements ClueService {
     @Autowired
     private TranMapper tranMapper;
 
+    @Autowired
+    private TranRemarkMapper tranRemarkMapper;
+
     @Override
     public int saveClue(Clue clue) {
         return clueMapper.insertClue(clue);
@@ -200,22 +203,25 @@ public class ClueServiceImpl implements ClueService {
             //调用mapper方法进行保存
             tranMapper.insertTran(tran);
 
+            //把该线索下所有的备注转换到交易备注表中一份
+            TranRemark tranRemark=null;
+            List<TranRemark> tranRemarkList=new ArrayList<>();
+            for (ClueRemark clueRemark : clueRemarkList) {
+                tranRemark=new TranRemark();
+                tranRemark.setId(UUIDUtils.getUUID());
+                tranRemark.setNoteContent(clueRemark.getNoteContent());
+                tranRemark.setCreateBy(user.getId());
+                tranRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+                tranRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+                tranRemark.setTranId(tran.getId());
 
+                tranRemarkList.add(tranRemark);
+            }
+            //调用service
+            tranRemarkMapper.insertTranRemarkByList(tranRemarkList);
 
 
         }
-
-        Tran tran=new Tran();
-        //初始化tran
-        tran.setId(UUIDUtils.getUUID());
-        tran.setCreateBy(user.getId());
-        tran.setCreateTime(DateUtils.formateDateTime(new Date()));
-        String activityId=(String) map.get("activityId");
-        tran.setActivityId(activityId);
-        String money=(String)map.get("money");
-        tran.setMoney(money);
-        String name=(String)map.get("name");
-        tran.setMoney(name);
 
 
     }

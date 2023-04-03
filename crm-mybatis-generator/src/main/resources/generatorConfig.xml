@@ -99,7 +99,7 @@
                                               enableDeleteByExample="false" enableSelectByExample="false"
                                               selectByExampleQueryId="false">
                                       </table>
-                  -->
+
 
                                       <table tableName="tbl_contacts" domainObjectName="Contacts"
                                              enableCountByExample="false" enableUpdateByExample="false"
@@ -118,6 +118,7 @@
                                              enableDeleteByExample="false" enableSelectByExample="false"
                                              selectByExampleQueryId="false">
                                       </table>
+                                      -->
         <!--
                       -->
         <!--
@@ -169,8 +170,8 @@
                                             selectByExampleQueryId="false">
                                      </table>
 
-                             -->
-        <!---
+
+
         <table tableName="tbl_tran_history" domainObjectName="TranHistory"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
@@ -182,7 +183,7 @@
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
-         -->
+ -->
 
     </context>
 </generatorConfiguration>
