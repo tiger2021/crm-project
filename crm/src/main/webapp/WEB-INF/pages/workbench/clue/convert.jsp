@@ -29,6 +29,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给”市场活动源“后面的搜索添加单击事件
 		$("#searchActivityBtn").click(function (){
+			//初始化市场活动的模态窗口
+			//清空搜索框
+			$("#searchActivityText").val("");
+			//清空列表
+			$("#tBody").html("");
+
 			//弹出搜索市场活动的模态窗口
 			$("#searchActivityModal").modal("show");
 		});
