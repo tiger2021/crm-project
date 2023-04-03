@@ -5,9 +5,11 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.Contacts;
 import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.mapper.ClueMapper;
+import com.bjpowernode.crm.workbench.mapper.ContactsMapper;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,10 @@ public class ClueServiceImpl implements ClueService {
     private ClueMapper clueMapper;
 
     @Autowired
-    CustomerMapper customerMapper;
+    private CustomerMapper customerMapper;
+
+    @Autowired
+    private ContactsMapper contactsMapper;
 
     @Override
     public int saveClue(Clue clue) {
@@ -72,7 +77,7 @@ public class ClueServiceImpl implements ClueService {
         //根据ClueId查询线索
         Clue clue = clueMapper.selectClueByIdForConvert(clueId);
         User user = (User) map.get(Contants.SESSION_USER);
-        //将线索中有关客户相关的内容保存到客户表中
+        //将线索中与客户相关的内容保存到客户表中
           //封装参数
         Customer customer=new Customer();
         customer.setId(UUIDUtils.getUUID());
@@ -88,6 +93,28 @@ public class ClueServiceImpl implements ClueService {
         customer.setAddress(clue.getAddress());
         //将封装好的Customer保存到客户表中
         int num = customerMapper.insertCustomer(customer);
+
+        //将线索中与联系人相关的内容保存到联系人表中
+        //封装参数
+        Contacts contacts=new Contacts();
+
+        contacts.setId(UUIDUtils.getUUID());
+        contacts.setOwner(user.getId());
+        contacts.setSource(clue.getSource());
+        contacts.setCustomerId(customer.getId());
+        contacts.setFullname(clue.getFullname());
+        contacts.setAppellation(clue.getAppellation());
+        contacts.setEmail(clue.getEmail());
+        contacts.setMphone(clue.getMphone());
+        contacts.setJob(clue.getJob());
+        contacts.setCreateBy(user.getId());
+        contacts.setCreateTime(DateUtils.formateDateTime(new Date()));
+        contacts.setDescription(clue.getDescription());
+        contacts.setContactSummary(clue.getContactSummary());
+        contacts.setNextContactTime(clue.getNextContactTime());
+        contacts.setAddress(clue.getAddress());
+        //将封装好的Contacts保存到联系人表中
+        int numContacts = contactsMapper.insertContact(contacts);
 
 
 //        Tran tran=new Tran();
