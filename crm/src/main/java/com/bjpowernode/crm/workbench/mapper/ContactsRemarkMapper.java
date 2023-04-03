@@ -50,4 +50,6 @@ public interface ContactsRemarkMapper {
      * @mbggenerated Mon Apr 03 14:41:50 CST 2023
      */
     int updateByPrimaryKey(ContactsRemark record);
+
+    int insertContactsRemark(ContactsRemark contactsRemark);
 }

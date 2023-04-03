@@ -165,4 +165,10 @@
       contacts_id = #{contactsId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+  <insert id="insertContactsRemark" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark">
+    insert into tbl_contacts_remark (id, note_content, create_by,create_time, edit_flag, contacts_id)
+    values (#{id}, #{ noteContent}, #{ createBy}, #{createTime}, #{ editFlag}, #{ contactsId});
+  </insert>
 </mapper>

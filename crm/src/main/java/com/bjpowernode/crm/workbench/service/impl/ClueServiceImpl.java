@@ -10,6 +10,7 @@ import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,15 @@ public class ClueServiceImpl implements ClueService {
 
     @Autowired
     private CustomerRemarkMapper customerRemarkMapper;
+
+    @Autowired
+    private ContactsRemarkMapper contactsRemarkMapper;
+
+    @Autowired
+    private ClueActivityRelationMapper clueActivityRelationMapper;
+
+    @Autowired
+    private ContactsActivityRelationMapper contactsActivityRelationMapper;
 
     @Override
     public int saveClue(Clue clue) {
@@ -132,6 +142,36 @@ public class ClueServiceImpl implements ClueService {
             customerRemark.setCustomerId(customer.getId());
             int customerRemarkNum = customerRemarkMapper.insertCustomerRemark(customerRemark);
         }
+
+        //把该线索下所有的备注转换到联系人备注表中一份
+        for (ClueRemark clueRemark : clueRemarkList) {
+            //封装参数
+            ContactsRemark contactsRemark=new ContactsRemark();
+            contactsRemark.setId(UUIDUtils.getUUID());
+            contactsRemark.setNoteContent(clueRemark.getNoteContent());
+            contactsRemark.setCreateBy(user.getId());
+            contactsRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+            contactsRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+            contactsRemark.setContactsId(contacts.getId());
+            contactsRemarkMapper.insertContactsRemark(contactsRemark);
+        }
+
+        //根据clueId查询该线索和市场活动的关联关系
+        List<ClueActivityRelation> clueActivityRelationList = clueActivityRelationMapper.selectClueActivityRelationByClueId(clueId);
+        //把该线索和市场活动的关联关系转换到联系人和市场活动的关联关系表中
+        List<ContactsActivityRelation> contactsActivityRelationList=new ArrayList<>();
+        ContactsActivityRelation contactsActivityRelation=null;
+        //封装参数
+        for (ClueActivityRelation clueActivityRelation : clueActivityRelationList) {
+            contactsActivityRelation=new ContactsActivityRelation();
+            contactsActivityRelation.setId(UUIDUtils.getUUID());
+            contactsActivityRelation.setActivityId(clueActivityRelation.getActivityId());
+            contactsActivityRelation.setContactsId(contacts.getId());
+            contactsActivityRelationList.add(contactsActivityRelation);
+        }
+        //调用service
+        contactsActivityRelationMapper.insertContactsActivityRelationByList(contactsActivityRelationList);
+
 
 
 
