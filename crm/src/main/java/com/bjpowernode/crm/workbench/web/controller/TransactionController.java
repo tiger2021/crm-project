@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import com.bjpowernode.crm.commons.contants.Contants;
 import com.bjpowernode.crm.commons.domain.ReturnObject;
 import com.bjpowernode.crm.settings.domain.DicValue;
 import com.bjpowernode.crm.settings.domain.User;
@@ -11,9 +12,11 @@ import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,4 +106,27 @@ public class TransactionController {
         List<String> customerNameList = customerService.queryCustomerNameByName(customerName);
         return customerNameList;
     }
+
+
+    @RequestMapping("/workbench/transaction/saveCreateTransaction.do")
+    @ResponseBody
+    public Object saveCreateTransaction(@RequestParam Map<String,Object> map, HttpSession session){
+        //封装参数
+        map.put(Contants.SESSION_USER,session.getAttribute(Contants.SESSION_USER));
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            transactionService.saveCreateTran(map);
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+
+        return returnObject;
+    }
+
+
 }

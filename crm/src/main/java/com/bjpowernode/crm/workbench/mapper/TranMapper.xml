@@ -303,7 +303,7 @@
     join tbl_user u1 on t.owner=u1.id
     join tbl_user u2 on u2.id=t.create_by
     join tbl_customer c on c.id=t.customer_id
-    join tbl_contacts ct on ct.id=t.contacts_id
+    left join tbl_contacts ct on ct.id=t.contacts_id
     left join tbl_user u3 on u3.id=t.edit_by
     <where>
       <if test="owner!=null and owner!=''">
@@ -338,7 +338,7 @@
     join tbl_user u1 on t.owner=u1.id
     join tbl_user u2 on u2.id=t.create_by
     join tbl_customer c on c.id=t.customer_id
-    join tbl_contacts ct on ct.id=t.contacts_id
+    left join tbl_contacts ct on ct.id=t.contacts_id
     left join tbl_user u3 on u3.id=t.edit_by
     <where>
       <if test="owner!=null and owner!=''">

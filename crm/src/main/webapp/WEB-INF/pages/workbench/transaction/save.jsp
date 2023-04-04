@@ -67,6 +67,61 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给“保存”按钮添加单击事件
+		$("#create-saveCreateTransactionBtn").click(function (){
+			//收集参数
+			var owner          =$("#create-owner").val();
+			var money          =$.trim($("#create-money").val());
+			var name           =$.trim($("#create-name").val());
+			var expectedDate   =$("#create-expectedDate").val();
+			var customerName   =$.trim($("#create-customerName").val());
+			var stage          =$("#create-TransactionStage").val();
+			var type           =$("#create-type").val();
+			var source         =$("#create-source").val();
+			var activityId     =$("#create-activityId").val();
+			var contactsId     =$("#create-contactsId").val();
+			var description    =$.trim($("#create-description").val());
+			var contactSummary =$.trim($("#create-contactSummary").val());
+			var nextContactTime=$("#create-nextContactTime").val();
+			//表单验证(作业)
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/transaction/saveCreateTransaction.do",
+				type:"post",
+				data:{
+					owner:owner,
+					money:money,
+					name:name,
+					expectedDate:expectedDate,
+					customerName:customerName,
+					stage:stage,
+					type:type,
+					source:source,
+					activityId:activityId,
+					contactsId:contactsId,
+					description:description,
+					contactSummary:contactSummary,
+					nextContactTime:nextContactTime,
+				},
+				success:function (data){
+					if(data.code=="1"){
+						//返回交易主页面
+						window.location.href="workbench/transaction/toTransactionIndex.do";
+					}else{
+						alert(data.message);
+						return;
+					}
+				}
+			});
+		});
+
+		//给“取消”按钮添加单击事件
+		$("#create-cancelCreateTransactionBtn").click(function (){
+			//返回交易主页面
+			window.location.href="workbench/transaction/toTransactionIndex.do";
+		});
+
 	});
 </script>
 </head>
@@ -175,35 +230,35 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
-			<button type="button" class="btn btn-default">取消</button>
+			<button type="button" class="btn btn-primary" id="create-saveCreateTransactionBtn">保存</button>
+			<button type="button" class="btn btn-default" id="create-cancelCreateTransactionBtn">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
 	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
-			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionOwner">
+				<select class="form-control" id="create-owner">
 					<c:forEach items="${userList}" var="user">
 						<option value="${user.id}">${user.name}</option>
 					</c:forEach>
 				</select>
 			</div>
-			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
+			<label for="create-money" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-amountOfMoney">
+				<input type="text" class="form-control" id="create-money">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName">
+				<input type="text" class="form-control" id="create-name">
 			</div>
-			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-expectedDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" class="form-control" id="create-expectedDate">
 			</div>
 		</div>
 		
@@ -225,9 +280,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 		
 		<div class="form-group">
-			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
+			<label for="create-type" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionType">
+				<select class="form-control" id="create-type">
 				  <option></option>
 				  <option>已有业务</option>
 				  <option>新业务</option>
@@ -240,9 +295,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 		
 		<div class="form-group">
-			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
+			<label for="create-source" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
+				<select class="form-control" id="create-source">
 				  <option></option>
 				  <option>广告</option>
 				  <option>推销电话</option>
@@ -260,23 +315,23 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				  <option>聊天</option>
 				</select>
 			</div>
-			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activityId" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc">
+				<input type="text" class="form-control" id="create-activityId">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsId" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName">
+				<input type="text" class="form-control" id="create-contactsId">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-describe" class="col-sm-2 control-label">描述</label>
+			<label for="create-description" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-describe"></textarea>
+				<textarea class="form-control" rows="3" id="create-description"></textarea>
 			</div>
 		</div>
 		

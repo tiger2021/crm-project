@@ -56,4 +56,7 @@ public interface CustomerMapper {
     int insertCustomer(Customer customer);
 
     List<String> selectCustomerNameByName(String name);
+
+    //根据客户名称精确查询客户
+    Customer selectCustomerByName(String name);
 }

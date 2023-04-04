@@ -17,4 +17,6 @@ public interface TransactionService {
 
     int queryCountOfTransactionByConditionForPage(Map<String,Object> map);
 
+    void saveCreateTran(Map<String,Object> map);
+
 }

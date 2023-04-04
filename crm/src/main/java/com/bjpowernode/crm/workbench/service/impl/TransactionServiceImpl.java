@@ -1,13 +1,21 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.commons.contants.Contants;
+import com.bjpowernode.crm.commons.utils.DateUtils;
+import com.bjpowernode.crm.commons.utils.UUIDUtils;
+import com.bjpowernode.crm.settings.domain.User;
+import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
 import com.bjpowernode.crm.workbench.mapper.TranMapper;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Author 小镇做题家
@@ -20,6 +28,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private TranMapper tranMapper;
 
+    @Autowired
+    private CustomerMapper customerMapper;
+
+
 
     @Override
     public List<Tran> selectTransactionByCondition(Map<String, Object> map) {
@@ -29,5 +41,50 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public int queryCountOfTransactionByConditionForPage(Map<String, Object> map) {
         return tranMapper.selectCountOfTransactionByConditionForPage(map);
+    }
+
+    @Override
+    public void saveCreateTran(Map<String, Object> map) {
+        User user=(User)map.get(Contants.SESSION_USER);
+        //获取CustomerName
+        String customerName = (String) map.get("customerName");
+        //根据customerName查询customer
+        Customer customer = customerMapper.selectCustomerByName(customerName);
+        //判断是否customer是否存在
+        if(customer==null){
+            customer=new Customer();
+            //封装参数，保存customer
+            customer.setId(UUIDUtils.getUUID());
+            customer.setOwner(user.getId());
+            customer.setName(customerName);
+            customer.setCreateBy(user.getId());
+            customer.setCreateTime(DateUtils.formateDateTime(new Date()));
+
+            //调用Service保存
+            customerMapper.insertCustomer(customer);
+        }
+
+        //保存创建的交易
+        Tran tran=new Tran();
+        tran.setStage((String) map.get("stage"));
+        tran.setOwner((String) map.get("owner"));
+        tran.setNextContactTime((String) map.get("nextContactTime"));
+        tran.setName((String) map.get("name"));
+        tran.setMoney((String) map.get("money"));
+        tran.setId(UUIDUtils.getUUID());
+        tran.setExpectedDate((String) map.get("expectedDate"));
+        tran.setCustomerId(customer.getId());
+        tran.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tran.setCreateBy(user.getId());
+        tran.setContactSummary((String) map.get("contactSummary"));
+        tran.setContactsId((String) map.get("contactsId"));
+        tran.setActivityId((String) map.get("activityId"));
+        tran.setDescription((String) map.get("description"));
+        tran.setSource((String) map.get("source"));
+        tran.setType((String) map.get("type"));
+        //调用tranMapper保存tran
+        tranMapper.insertTran(tran);
+
+
     }
 }
