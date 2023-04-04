@@ -128,5 +128,11 @@ public class TransactionController {
         return returnObject;
     }
 
+    @RequestMapping("/workbench/transaction/toTransactionDetail.do")
+    public String toTransactionDetail(String id){
+
+        return "/workbench/transaction/detail";
+    }
+
 
 }

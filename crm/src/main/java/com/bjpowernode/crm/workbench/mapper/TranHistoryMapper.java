@@ -50,4 +50,6 @@ public interface TranHistoryMapper {
      * @mbggenerated Mon Apr 03 16:53:12 CST 2023
      */
     int updateByPrimaryKey(TranHistory record);
+
+    int insertTransactionHistory(TranHistory tranHistory);
 }

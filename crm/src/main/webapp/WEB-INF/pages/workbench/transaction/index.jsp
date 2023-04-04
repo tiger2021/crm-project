@@ -40,6 +40,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
            window.location.href="workbench/transaction/toTransactionSave.do";
        });
 
+		//给“全选”按钮添加单击事件
+		$("#checkAll").click(function (){
+			//选中tBody标签中的input中类型为checkbox的对象，prop是给属性赋值的
+			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		})
+		//给列表中的所有checkBox添加点击事件,注意固有元素和动态生成元素的区别，选择器的书写格式会不同
+		$("#tBody").on("click","input[type='checkbox']",function (){
+			//判断列表中的所有checkbox是否全部是选中状态或取消状态
+			//获取列表中所有被选中的checkbox的数量
+			// $("#tBody input[type='checkbox']:checked").size()
+			//获取列表中所有的checkbox的数量
+			// $("#tBody input[type='checkbox']").size()
+			if($("#tBody input[type='checkbox']").size()
+					==$("#tBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				$("#checkAll").prop("checked",false);
+			}
+		});
+
+
+
 
 		
 		
@@ -80,7 +102,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 					htmlStr+="<tr>";
 					htmlStr+="<td><input type=\"checkbox\" value=\""+tran.id+"\" /></td>";
-					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+tran.name+"</a></td>";
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/transaction/toTransactionDetail.do?id="+tran.id+"'\">"+tran.name+"</a></td>";
 					htmlStr+="<td>"+tran.customerId+"</td>";
 					htmlStr+="<td>"+tran.stage+"</td>";
 					htmlStr+="<td>"+tran.type+"</td>";
@@ -246,7 +268,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll" /></td>
 							<td>名称</td>
 							<td>客户名称</td>
 							<td>阶段</td>

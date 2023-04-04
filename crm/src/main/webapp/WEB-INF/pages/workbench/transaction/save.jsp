@@ -20,6 +20,16 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 	//人入口函数
 	$(function (){
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
 		//给“阶段”下拉框添加change事件
 		$("#create-TransactionStage").change(function (){
 			//      var stageValue=$(this).find("option:selected").text();
@@ -258,7 +268,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<label for="create-expectedDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedDate">
+				<input type="text" class="form-control mydate" id="create-expectedDate" readonly>
 			</div>
 		</div>
 		
@@ -345,7 +355,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control mydate" id="create-nextContactTime" readonly>
 			</div>
 		</div>
 		

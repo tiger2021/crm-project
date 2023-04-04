@@ -6,7 +6,9 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.domain.TranHistory;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
+import com.bjpowernode.crm.workbench.mapper.TranHistoryMapper;
 import com.bjpowernode.crm.workbench.mapper.TranMapper;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 /**
  * @Author 小镇做题家
@@ -30,6 +32,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private TranHistoryMapper tranHistoryMapper;
 
 
 
@@ -85,6 +90,18 @@ public class TransactionServiceImpl implements TransactionService {
         //调用tranMapper保存tran
         tranMapper.insertTran(tran);
 
+        //保存交易历史
+        TranHistory tranHistory=new TranHistory();
+        tranHistory.setId(UUIDUtils.getUUID());
+        tranHistory.setStage(tran.getStage());
+        tranHistory.setMoney(tran.getMoney());
+        tranHistory.setExpectedDate(tran.getExpectedDate());
+        tranHistory.setCreateBy(user.getId());
+        tranHistory.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tranHistory.setTranId(tran.getId());
+
+        //调用service保存交易历史
+        tranHistoryMapper.insertTransactionHistory(tranHistory);
 
     }
 }
