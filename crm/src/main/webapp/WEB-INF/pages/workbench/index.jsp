@@ -49,6 +49,54 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			//弹出“我的资料”模态窗口
 			$("#myInformationModal").modal("show");
 		});
+
+		//给“更新”按钮添加单击事件
+		$("#editLoginPwdBtn").click(function (){
+			//收集参数
+			var id="${sessionUser.id}";
+			var confirmOldLoginPwd="${sessionUser.loginPwd}";
+			var oldLoginPwd=$.trim($("#oldPwd").val());
+			var loginPwd=$.trim($("#newPwd").val());
+			var confirmLoginPwd1=$.trim($("#confirmPwd").val());
+			//验证表单数据
+			if(confirmOldLoginPwd!=oldLoginPwd){
+				alert("原始密码不正确，请重新输入");
+				return;
+			}
+			if(loginPwd==oldLoginPwd){
+				alert("新密码与原来的密码相同，请重新输入新密码");
+				return;
+			}
+			if(loginPwd!=confirmLoginPwd1){
+				alert("两次输入的新密码不一样，请重新输入新密码");
+				return;
+			}
+			if(loginPwd==""){
+				alert("新密码不能为空");
+				return;
+			}
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/editUserLoginPwdById.do",
+				type:"post",
+				data:{
+					id:id,
+					loginPwd:loginPwd
+				},
+				dataType:"json",
+				success:function (data){
+					if(data.code=="1"){
+						//关闭修改密码的模态窗口
+						$("#editPwdModal").modal("hide");
+					}else{
+						alert(data.message);
+						return;
+					}
+				}
+			});
+
+
+		});
 		
 	});
 	
@@ -120,7 +168,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='login.html';">更新</button>
+					<button type="button" class="btn btn-primary"  id="editLoginPwdBtn" >更新</button>
 				</div>
 			</div>
 		</div>

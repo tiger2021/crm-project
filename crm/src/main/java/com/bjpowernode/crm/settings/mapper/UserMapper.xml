@@ -245,4 +245,10 @@
     where id=#{id};
   </select>
 
+  <update id="updateUserLoginPwdById" parameterType="map" >
+    update tbl_user
+    set login_pwd = #{loginPwd}
+    where id = #{id}
+  </update>
+
 </mapper>

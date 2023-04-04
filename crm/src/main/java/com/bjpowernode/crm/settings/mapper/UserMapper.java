@@ -63,5 +63,7 @@ public interface UserMapper {
 
     User selecetUserInformationById(String id);
 
+    int updateUserLoginPwdById(Map<String,String> map);
+
 
 }

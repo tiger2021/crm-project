@@ -11,4 +11,6 @@ public interface UserService {
     List<User> queryAllUsers();
 
     User queryUserInformationById(String id);
+
+    int editUserLoginPwdById(Map<String,String> map);
 }

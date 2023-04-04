@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService {
     public User queryUserInformationById(String id) {
         return userMapper.selecetUserInformationById(id);
     }
+
+    @Override
+    public int editUserLoginPwdById(Map<String,String> map) {
+        return userMapper.updateUserLoginPwdById(map);
+    }
 }
