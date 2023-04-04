@@ -54,6 +54,7 @@ public class TransactionController {
     @Autowired
     private TranHistoryService tranHistoryService;
 
+
     @RequestMapping("/workbench/transaction/toTransactionIndex.do")
     public String toTransactionIndex(HttpServletRequest request){
         return "workbench/transaction/index";
@@ -158,6 +159,10 @@ public class TransactionController {
         request.setAttribute("tran",tran);
         request.setAttribute("tranRemarkList",tranRemarkList);
         request.setAttribute("tranHistorieList",tranHistorieList);
+
+        //调用service方法，查询交易所有的阶段,将来在前端显示“交易阶段”时使用
+        List<DicValue> stageList=dicValueService.queryDicValueByTypeCode("stage");
+        request.setAttribute("stageList",stageList);
 
         return "/workbench/transaction/detail";
     }
