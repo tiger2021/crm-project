@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.workbench.mapper;
 
+import com.bjpowernode.crm.workbench.domain.FunnelVO;
 import com.bjpowernode.crm.workbench.domain.Tran;
 
 import java.util.List;
@@ -65,4 +66,6 @@ public interface TranMapper {
     int selectCountOfTransactionByConditionForPage(Map<String,Object> map);
 
     Tran selectTransactionForDetailById(String id);
+
+    List<FunnelVO> selectCountOfTranGroupByStage();
 }

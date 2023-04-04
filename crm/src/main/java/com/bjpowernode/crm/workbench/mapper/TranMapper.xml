@@ -384,6 +384,13 @@
     where t.id=#{id};
   </select>
 
+  <select id="selectCountOfTranGroupByStage" resultType="com.bjpowernode.crm.workbench.domain.FunnelVO">
+    select count(*) as value,dv.value as name
+    from tbl_tran t
+      join tbl_dic_value dv on t.stage=dv.value
+    group by t.stage
+  </select>
+
 
 
 

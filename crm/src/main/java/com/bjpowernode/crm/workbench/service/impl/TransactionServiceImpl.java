@@ -5,6 +5,7 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.domain.FunnelVO;
 import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.domain.TranHistory;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
@@ -108,5 +109,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Tran queryTransactionForDetailById(String id) {
         return tranMapper.selectTransactionForDetailById(id);
+    }
+
+    @Override
+    public List<FunnelVO> queryCountOfTranGroupByStage() {
+        return tranMapper.selectCountOfTranGroupByStage();
     }
 }
