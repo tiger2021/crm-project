@@ -239,4 +239,10 @@
     where lock_state="1";
   </select>
 
+  <select id="selecetUserInformationById" parameterType="string" resultMap="BaseResultMap">
+    select id, login_act, name, login_pwd, email, expire_time, lock_state, deptno, allow_ips
+    from tbl_user
+    where id=#{id};
+  </select>
+
 </mapper>

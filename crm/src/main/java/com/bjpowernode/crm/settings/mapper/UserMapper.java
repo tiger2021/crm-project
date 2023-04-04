@@ -61,5 +61,7 @@ public interface UserMapper {
 
     List<User> selectAllUsers();
 
+    User selecetUserInformationById(String id);
+
 
 }

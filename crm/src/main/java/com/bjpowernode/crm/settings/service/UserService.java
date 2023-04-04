@@ -9,4 +9,6 @@ public interface UserService {
     User queryUserByLoginActAndLoginPwd(Map<String,Object> map);
 
     List<User> queryAllUsers();
+
+    User queryUserInformationById(String id);
 }

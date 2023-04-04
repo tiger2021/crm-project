@@ -43,6 +43,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			//发同步请求
 			window.location.href="settings/qx/user/logout.do";
 		});
+
+		//给“我的资料”按钮添加单击事件
+		$("#myProfileBtn").click(function(){
+			//弹出“我的资料”模态窗口
+			$("#myInformationModal").modal("show");
+		});
 		
 	});
 	
@@ -52,7 +58,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <body>
 	
 	<!-- 我的资料 -->
-	<div class="modal fade" id="myInformation" role="dialog">
+	<div class="modal fade" id="myInformationModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 30%;">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -63,12 +69,12 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-body">
 					<div style="position: relative; left: 40px;">
-						姓名：<b>张三</b><br><br>
-						登录帐号：<b>zhangsan</b><br><br>
-						组织机构：<b>1005，市场部，二级部门</b><br><br>
-						邮箱：<b>zhangsan@bjpowernode.com</b><br><br>
-						失效时间：<b>2017-02-14 10:10:10</b><br><br>
-						允许访问IP：<b>127.0.0.1,192.168.100.2</b>
+						姓名：<b>${sessionUser.name}</b><br><br>
+						登录帐号：<b>${sessionUser.loginAct}</b><br><br>
+						组织机构：<b>${sessionUser.deptno}</b><br><br>
+						邮箱：<b>${sessionUser.email}</b><br><br>
+						失效时间：<b>${sessionUser.expireTime}</b><br><br>
+						允许访问IP：<b>${sessionUser.allowIps}</b>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -143,7 +149,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	
 	<!-- 顶部 -->
 	<div id="top" style="height: 50px; background-color: #3C3C3C; width: 100%;">
-		<div style="position: absolute; top: 5px; left: 0px; font-size: 30px; font-weight: 400; color: white; font-family: 'times new roman'">CRM &nbsp;<span style="font-size: 12px;">&copy;2019&nbsp;动力节点</span></div>
+		<div style="position: absolute; top: 5px; left: 0px; font-size: 30px; font-weight: 400; color: white; font-family: 'times new roman'">客户关系管理系统 &nbsp;</div>
 		<div style="position: absolute; top: 15px; right: 15px;">
 			<ul>
 				<li class="dropdown user-dropdown">
@@ -151,7 +157,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 						<span class="glyphicon glyphicon-user"></span> ${sessionScope.sessionUser.name} <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
+						<li><a href="javascript:void(0)" id="myProfileBtn"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
 					</ul>
