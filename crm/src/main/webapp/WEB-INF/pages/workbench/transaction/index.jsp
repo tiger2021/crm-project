@@ -27,13 +27,18 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript">
 
 	$(function(){
-		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的市场活动
+		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的交易
 		queryTransactionByConditionForPage(1,10);
 
 		//给“查询”按钮添加单击事件
 		$("#search-transactionBtn").click(function (){
 			queryTransactionByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
 		});
+
+       //给“创建”按钮添加单击事件
+       $("#createTransactionBtn").click(function (){
+           window.location.href="workbench/transaction/toTransactionSave.do";
+       });
 
 
 		
@@ -230,7 +235,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" onclick="window.location.href='save.html';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createTransactionBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>

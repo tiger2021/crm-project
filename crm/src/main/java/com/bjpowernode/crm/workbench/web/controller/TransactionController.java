@@ -1,6 +1,10 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
 import com.bjpowernode.crm.commons.domain.ReturnObject;
+import com.bjpowernode.crm.settings.domain.DicValue;
+import com.bjpowernode.crm.settings.domain.User;
+import com.bjpowernode.crm.settings.service.DicValueService;
+import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,12 @@ import java.util.Map;
  */
 @Controller
 public class TransactionController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private DicValueService dicValueService;
 
     @Autowired
     private TransactionService transactionService;
@@ -56,5 +66,17 @@ public class TransactionController {
 
         return resMap;
 
+    }
+
+    @RequestMapping("/workbench/transaction/toTransactionSave.do")
+    public String toTransactionSave(HttpServletRequest request){
+        //调用service层方法，查询动态数据
+        List<User> userList=userService.queryAllUsers();
+        List<DicValue> stageList=dicValueService.queryDicValueByTypeCode("stage");
+        //把数据保存到request中
+        request.setAttribute("userList",userList);
+        request.setAttribute("stageList",stageList);
+
+        return "workbench/transaction/save";
     }
 }
