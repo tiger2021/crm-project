@@ -6,6 +6,7 @@ import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.service.CustomerService;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @Description:
@@ -33,6 +35,9 @@ public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private CustomerService customerService;
     @RequestMapping("/workbench/transaction/toTransactionIndex.do")
     public String toTransactionIndex(HttpServletRequest request){
         return "workbench/transaction/index";
@@ -78,5 +83,24 @@ public class TransactionController {
         request.setAttribute("stageList",stageList);
 
         return "workbench/transaction/save";
+    }
+
+
+    @RequestMapping("/workbench/transaction/getPossibilityByStage.do")
+    @ResponseBody
+    public Object getPossibilityByStage(String stageValue){
+        // //解析properties配置文件，根据阶段获取可能性
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        String possibility = bundle.getString(stageValue);
+        //返回响应信息
+        return  possibility;
+
+    }
+
+    @RequestMapping("/workbench/transaction/queryCustomerNameByName.do")
+    @ResponseBody
+    public Object queryCustomerNameByName(String customerName){
+        List<String> customerNameList = customerService.queryCustomerNameByName(customerName);
+        return customerNameList;
     }
 }

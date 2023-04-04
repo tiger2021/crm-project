@@ -232,4 +232,10 @@
     values(  #{id}, #{ owner}, #{ name}, #{ website}, #{phone}, #{ createBy}, #{ createTime},
            #{contactSummary}, #{nextContactTime}, #{ description}, #{ address })
   </insert>
+
+  <select id="selectCustomerNameByName" parameterType="string" resultType="string">
+    select name
+    from   tbl_customer
+    where name like "%"#{name}"%";
+  </select>
 </mapper>

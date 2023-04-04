@@ -15,7 +15,60 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<%--引入自动补全的插件--%>
+<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript">
+	//人入口函数
+	$(function (){
+		//给“阶段”下拉框添加change事件
+		$("#create-TransactionStage").change(function (){
+			//      var stageValue=$(this).find("option:selected").text();
+			var stageValue=$("#create-TransactionStage option:selected").text();
+			//表单验证
+			if(stageValue==""){
+				//清空可能性框
+				$("#create-possibility").val("");
+				return;
+			}
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/transaction/getPossibilityByStage.do",
+				type:"post",
+				data:{
+					stageValue:stageValue,
+				},
+				dataType:"json",
+				success:function (data){
+					//将查询到的数据填写到可能性框
+					$("#create-possibility").val(data+"%");
 
+				}
+			});
+		});
+
+		//当容器加载完成之后，对容器调用工具函数，客户名称自动补全
+		$("#create-customerName").typeahead({
+			source:function (jquery,process) {//每次键盘弹起，都自动触发本函数；我们可以向后台送请求，查询客户表中所有的名称，把客户名称以[]字符串形式返回前台，赋值给source
+				//process：是个函数，能够将['xxx','xxxxx','xxxxxx',.....]字符串赋值给source，从而完成自动补全
+				//jquery：在容器中输入的关键字
+				//var customerName=$("#customerName").val();
+				//发送查询请求
+				$.ajax({
+					url:'workbench/transaction/queryCustomerNameByName.do',
+					data:{
+						customerName:jquery
+					},
+					type:'post',
+					dataType:'json',
+					success:function (data) {//['xxx','xxxxx','xxxxxx',.....]
+						process(data);
+					}
+				});
+			}
+		});
+
+	});
+</script>
 </head>
 <body>
 
@@ -135,9 +188,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<c:forEach items="${userList}" var="user">
 						<option value="${user.id}">${user.name}</option>
 					</c:forEach>
-<%--				  <option>zhangsan</option>   --%>
-<%--				  <option>lisi</option>    --%>
-<%--				  <option>wangwu</option>    --%>
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
@@ -158,13 +208,13 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 		
 		<div class="form-group">
-			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-customerName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
-			<label for="create-stage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-TransactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-stage">
+			  <select class="form-control" id="create-TransactionStage">
 			  	<option></option>
 				<c:forEach items="${stageList}" var="stage">
 					<option value="${stage.id}">${stage.value}</option>
@@ -185,7 +235,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility">
+				<input type="text" class="form-control" id="create-possibility" readonly>
 			</div>
 		</div>
 		
