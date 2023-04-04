@@ -159,4 +159,11 @@
     insert into tbl_tran_history (id,stage,money,expected_date,create_time,create_by,tran_id)
     values (#{id},#{stage},#{money},#{expectedDate},#{createTime},#{createBy},#{tranId})
   </insert>
+
+  <select id="selectTranHistoryForDetailByTranId" parameterType="string" resultMap="BaseResultMap">
+    select th.id, th.stage, th.money, th.expected_date, th.create_time, u.name as create_by, tran_id
+    from tbl_tran_history th
+    join tbl_user u on th.create_by=u.id
+    where th.tran_id = #{tranId}
+  </select>
 </mapper>

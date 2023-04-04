@@ -104,4 +104,9 @@ public class TransactionServiceImpl implements TransactionService {
         tranHistoryMapper.insertTransactionHistory(tranHistory);
 
     }
+
+    @Override
+    public Tran queryTransactionForDetailById(String id) {
+        return tranMapper.selectTransactionForDetailById(id);
+    }
 }

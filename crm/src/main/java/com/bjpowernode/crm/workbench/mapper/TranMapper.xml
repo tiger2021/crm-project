@@ -366,5 +366,23 @@
   </select>
 
 
+  <select id="selectTransactionForDetailById" parameterType="string" resultMap="BaseResultMap">
+    select t.id, u1.name as owner, t.money, t.name,
+           t.expected_date,c.name as customer_id, t.stage,
+           t.type, t.source, t.activity_id,
+           ct.fullname as contacts_id,u2.name as create_by, t.create_time,
+           u3.name as edit_by, t.edit_time, t.description,
+           t.contact_summary, t.next_contact_time
+    from tbl_tran t
+           join tbl_user u1 on t.owner=u1.id
+           join tbl_user u2 on u2.id=t.create_by
+           join tbl_customer c on c.id=t.customer_id
+           left join tbl_contacts ct on ct.id=t.contacts_id
+           left join tbl_user u3 on u3.id=t.edit_by
+    where t.id=#{id};
+  </select>
+
+
+
 
 </mapper>

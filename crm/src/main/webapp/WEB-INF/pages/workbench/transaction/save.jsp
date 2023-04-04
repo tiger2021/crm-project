@@ -85,7 +85,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			var name           =$.trim($("#create-name").val());
 			var expectedDate   =$("#create-expectedDate").val();
 			var customerName   =$.trim($("#create-customerName").val());
-			var stage          =$("#create-TransactionStage").val();
+			var stage          =$("#create-TransactionStage option:selected").val();
 			var type           =$("#create-type").val();
 			var source         =$("#create-source").val();
 			var activityId     =$("#create-activityId").val();
@@ -282,7 +282,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			  <select class="form-control" id="create-TransactionStage">
 			  	<option></option>
 				<c:forEach items="${stageList}" var="stage">
-					<option value="${stage.id}">${stage.value}</option>
+					<option >${stage.value}</option>
 				</c:forEach>
 
 			  </select>

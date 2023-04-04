@@ -19,4 +19,6 @@ public interface TransactionService {
 
     void saveCreateTran(Map<String,Object> map);
 
+    Tran queryTransactionForDetailById(String id);
+
 }

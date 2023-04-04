@@ -7,7 +7,11 @@ import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.domain.TranHistory;
+import com.bjpowernode.crm.workbench.domain.TranRemark;
 import com.bjpowernode.crm.workbench.service.CustomerService;
+import com.bjpowernode.crm.workbench.service.TranHistoryService;
+import com.bjpowernode.crm.workbench.service.TranRemarkService;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,8 +43,17 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+
+
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private TranRemarkService tranRemarkService;
+
+    @Autowired
+    private TranHistoryService tranHistoryService;
+
     @RequestMapping("/workbench/transaction/toTransactionIndex.do")
     public String toTransactionIndex(HttpServletRequest request){
         return "workbench/transaction/index";
@@ -92,7 +105,7 @@ public class TransactionController {
     @RequestMapping("/workbench/transaction/getPossibilityByStage.do")
     @ResponseBody
     public Object getPossibilityByStage(String stageValue){
-        // //解析properties配置文件，根据阶段获取可能性
+        //解析properties配置文件，根据阶段获取可能性
         ResourceBundle bundle = ResourceBundle.getBundle("possibility");
         String possibility = bundle.getString(stageValue);
         //返回响应信息
@@ -129,7 +142,22 @@ public class TransactionController {
     }
 
     @RequestMapping("/workbench/transaction/toTransactionDetail.do")
-    public String toTransactionDetail(String id){
+    public String toTransactionDetail(String id,HttpServletRequest request){
+        //调用service层方法，查询相关数据
+        Tran tran = transactionService.queryTransactionForDetailById(id);
+        List<TranRemark> tranRemarkList = tranRemarkService.queryTransactionRemarkForDetailByTranId(id);
+        List<TranHistory> tranHistorieList = tranHistoryService.queryTranHistoryForDetailByTranId(id);
+
+        //根据tran所处阶段名称查询可能性
+        String stageValue=tran.getStage();
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        String possibility = bundle.getString(stageValue);
+        tran.setPossibility(possibility);
+
+        //将响应的数据添加到请求域中
+        request.setAttribute("tran",tran);
+        request.setAttribute("tranRemarkList",tranRemarkList);
+        request.setAttribute("tranHistorieList",tranHistorieList);
 
         return "/workbench/transaction/detail";
     }

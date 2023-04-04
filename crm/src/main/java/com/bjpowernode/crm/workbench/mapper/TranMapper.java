@@ -63,4 +63,6 @@ public interface TranMapper {
     List<Tran> selectTransactionByCondition(Map<String,Object> map);
 
     int selectCountOfTransactionByConditionForPage(Map<String,Object> map);
+
+    Tran selectTransactionForDetailById(String id);
 }
