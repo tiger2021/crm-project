@@ -302,7 +302,7 @@
 				$.each(data.customerList,function (index,customer){
 					htmlStr+="<tr>";
 					htmlStr+="<td><input type=\"checkbox\" value=\""+customer.id+"\"/></td>";
-					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/activity/avtivityDetail.do?id="+customer.id+"'\">"+customer.name+"</a></td>";
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/customer/toCustomerDetail.do?id="+customer.id+"'\">"+customer.name+"</a></td>";
 					htmlStr+="<td>"+customer.owner+"</td>";
 					htmlStr+="<td>"+customer.phone+"</td>";
 					htmlStr+="<td>"+customer.website+"</td>";

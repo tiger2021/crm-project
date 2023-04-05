@@ -52,4 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
     public int renewCustomerById(Customer customer) {
         return customerMapper.updateCustomerById(customer);
     }
+
+    @Override
+    public Customer queryCustomerForDetailById(String id) {
+        return customerMapper.selectCustomerForDetailById(id);
+    }
 }

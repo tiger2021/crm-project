@@ -24,4 +24,6 @@ public interface CustomerService {
     Customer queryCustomerById(String id);
 
     int renewCustomerById(Customer customer);
+
+    Customer queryCustomerForDetailById(String id);
 }

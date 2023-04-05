@@ -72,4 +72,6 @@ public interface CustomerMapper {
     Customer selectCustomerById(String id);
 
     int updateCustomerById(Customer customer);
+
+    Customer selectCustomerForDetailById(String id);
 }

@@ -163,6 +163,15 @@ public class CustomerController {
         return returnObject;
     }
 
+    @RequestMapping("/workbench/customer/toCustomerDetail.do")
+    public String toCustomerDetail(String id,HttpServletRequest request){
+        //调用service查询customer
+        Customer customer = customerService.queryCustomerForDetailById(id);
+        request.setAttribute("customer",customer);
+
+        return "workbench/customer/detail";
+    }
+
 
 
 }
