@@ -48,6 +48,31 @@
 
 		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的市场活动
 		queryCustomerByConditionForPage(1,10);
+
+		//给“查询”按钮添加单击事件
+		$("#queryCustomerBtn").click(function (){
+			queryCustomerByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+		});
+
+		//给“全选”按钮添加单击事件
+		$("#checkAll").click(function (){
+			//选中tBody标签中的input中类型为checkbox的对象，prop是给属性赋值的
+			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		})
+		//给列表中的所有checkBox添加点击事件,注意固有元素和动态生成元素的区别，选择器的书写格式会不同
+		$("#tBody").on("click","input[type='checkbox']",function (){
+			//判断列表中的所有checkbox是否全部是选中状态或取消状态
+			//获取列表中所有被选中的checkbox的数量
+			// $("#tBody input[type='checkbox']:checked").size()
+			//获取列表中所有的checkbox的数量
+			// $("#tBody input[type='checkbox']").size()
+			if($("#tBody input[type='checkbox']").size()
+					==$("#tBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				$("#checkAll").prop("checked",false);
+			}
+		});
 		
 	});
 
@@ -338,7 +363,7 @@
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryCustomerBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -354,7 +379,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll"/></td>
 							<td>名称</td>
 							<td>所有者</td>
 							<td>公司座机</td>
