@@ -70,4 +70,6 @@ public interface TranMapper {
     List<FunnelVO> selectCountOfTranGroupByStage();
 
     List<Tran> selectTransactionByCustomerId(String customerId);
+
+    int deleteTransactionById(String id);
 }

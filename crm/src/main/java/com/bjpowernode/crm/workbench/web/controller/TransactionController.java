@@ -167,5 +167,22 @@ public class TransactionController {
         return "/workbench/transaction/detail";
     }
 
+    @RequestMapping("/workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do")
+    @ResponseBody
+    public Object deleteTransactionAndTransactionRemarkByTransactionId(String id){
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调对应的service进行操作
+            transactionService.deleteTransactionAndTransactionRemarkByTransactionId(id);
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
 
 }

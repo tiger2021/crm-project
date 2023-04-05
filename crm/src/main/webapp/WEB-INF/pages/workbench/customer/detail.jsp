@@ -57,6 +57,30 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//调用queryTransactionAndContactsByCustomerId()
 		queryTransactionAndContactsByCustomerId();
+
+		//给所有”删除交易图标“添加单击事件
+		$("#transactionTBody").on("click","a[name=transactionDeleteA]",function (){
+			var id=$(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//调用queryTransactionAndContactsByCustomerId()
+						queryTransactionAndContactsByCustomerId();
+
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		})
 	});
 
 	//定义查询交易和联系人的函数
@@ -77,13 +101,13 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				var tranHtmlStr="";
 				$.each(data.tranList,function (index,tran){
 					tranHtmlStr+="<tr id=\"transaction-"+tran.id+"\">";
-					tranHtmlStr+="<td><a href=\"transaction/detail.jsp\" style=\"text-decoration: none;\">"+tran.name+"</a></td>";
+					tranHtmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\"  onclick=\"window.location.href='workbench/transaction/toTransactionDetail.do?id="+tran.id+"'\">"+tran.name+"</a></td>";
 					tranHtmlStr+="<td>"+tran.money+"</td>";
 					tranHtmlStr+="<td>"+tran.stage+"</td>";
 					tranHtmlStr+="<td>"+tran.possibility+"</td>";
 					tranHtmlStr+="<td>"+tran.expectedDate+"</td>";
 					tranHtmlStr+="<td>"+tran.type+"</td>";
-					tranHtmlStr+="<td><a href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeTransactionModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					tranHtmlStr+="<td><a deleteTransactionId=\""+tran.id+"\" name=\"transactionDeleteA\" href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeTransactionModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
 					tranHtmlStr+="</tr>";
 				});
 				$("#transactionTBody").html( tranHtmlStr)
@@ -455,7 +479,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			
 			<div>
-				<a href="transaction/save.jsp" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
+				<a href="workbench/transaction/toTransactionSave.do" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
 			</div>
 		</div>
 	</div>

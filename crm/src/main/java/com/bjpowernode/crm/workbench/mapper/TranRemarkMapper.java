@@ -56,4 +56,6 @@ public interface TranRemarkMapper {
     int insertTranRemarkByList(List<TranRemark> tranRemarkList);
 
     List<TranRemark> selectTransactionRemarkForDetailByTranId(String tranId);
+
+    int deleteTransactionRemarkByTranId(String tranId);
 }

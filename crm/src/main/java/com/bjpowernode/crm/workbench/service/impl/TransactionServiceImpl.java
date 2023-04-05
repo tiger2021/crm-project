@@ -11,6 +11,7 @@ import com.bjpowernode.crm.workbench.domain.TranHistory;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
 import com.bjpowernode.crm.workbench.mapper.TranHistoryMapper;
 import com.bjpowernode.crm.workbench.mapper.TranMapper;
+import com.bjpowernode.crm.workbench.mapper.TranRemarkMapper;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,13 @@ import java.util.Map;
  * @Description:
  */
 
-@Service
+@Service("transactionService")
 public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private TranMapper tranMapper;
+
+    @Autowired
+    private TranRemarkMapper tranRemarkMapper;
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -119,5 +123,12 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Tran> queryTransactionByCustomerId(String customerId) {
         return tranMapper.selectTransactionByCustomerId(customerId);
+    }
+
+    @Override
+    public void deleteTransactionAndTransactionRemarkByTransactionId(String id) {
+        //先删除评论
+        tranRemarkMapper.deleteTransactionRemarkByTranId(id);
+        tranMapper.deleteTransactionById(id);
     }
 }

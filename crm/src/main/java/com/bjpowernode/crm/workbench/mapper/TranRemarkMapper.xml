@@ -182,4 +182,9 @@
     left join tbl_user u2 on tr.edit_by=u2.id
     where tr.tran_id = #{tranId}
   </select>
+
+  <delete id="deleteTransactionRemarkByTranId" parameterType="string">
+    delete from tbl_tran_remark
+    where tran_id = #{tranId}
+  </delete>
 </mapper>

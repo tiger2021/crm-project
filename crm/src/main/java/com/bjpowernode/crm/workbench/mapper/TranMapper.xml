@@ -409,6 +409,11 @@
   </select>
 
 
+  <delete id="deleteTransactionById" parameterType="string" >
+    delete from tbl_tran
+    where id = #{id}
+  </delete>
+
 
 
 </mapper>

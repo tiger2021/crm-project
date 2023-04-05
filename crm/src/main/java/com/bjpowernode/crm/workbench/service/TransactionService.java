@@ -25,4 +25,6 @@ public interface TransactionService {
 
     List<Tran> queryTransactionByCustomerId(String customerId);
 
+    void deleteTransactionAndTransactionRemarkByTransactionId(String id);
+
 }
