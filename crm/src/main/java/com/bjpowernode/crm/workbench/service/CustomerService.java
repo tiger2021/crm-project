@@ -18,4 +18,6 @@ public interface CustomerService {
     int queryCountOfCustomerForPageByCondition(Map<String,Object> map);
 
     int saveCreateCustomer(Customer customer);
+
+    int removeCustomerByIds(String[] id);
 }

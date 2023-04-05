@@ -137,6 +137,46 @@
 
 		});
 
+		//给”删除“按钮添加单击事件
+		$("#deleteCustomerBtn").click(function (){
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择需要删除的数据");
+				return;
+			}else{
+				//提示用户是否确定要删除这些数据
+				if(window.confirm("确定要删除吗？")==true){
+					/*将需要删除的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
+                    * 所以在发送Ajax请求的时候不能写为json的格式
+                    * */
+					var ids="";
+					$.each(checkedIds,function (index,obj){
+						ids+="id="+this.value+"&";
+					});
+
+					//删除拼接的字符最后多出来的&
+					ids=ids.substr(0,ids.length-1);
+					//发送Ajax请求
+					$.ajax({
+						url:"workbench/customer/removeCustomerByIds.do",
+						type:"post",
+						data:ids,
+						success:function (data){
+							if(data.code=="1"){
+								//刷新市场活动页面
+								queryCustomerByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+							}else{
+								//显示提示信息
+								alert(data.message);
+							}
+						}
+					})
+				}
+
+
+			}
+		});
+
 		
 	});
 
@@ -441,7 +481,7 @@
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createCustomerBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteCustomerBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>

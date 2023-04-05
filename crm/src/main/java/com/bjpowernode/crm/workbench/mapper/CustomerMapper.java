@@ -66,4 +66,6 @@ public interface CustomerMapper {
     int selectCountOfCustomerForPageByCondition(Map<String,Object> map);
 
     int insertCreateCustomer(Customer customer);
+
+    int deleteCustomerByIds(String[] id);
 }

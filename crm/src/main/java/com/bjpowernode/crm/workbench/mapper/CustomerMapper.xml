@@ -300,5 +300,13 @@
             #{contactSummary},#{nextContactTime}, #{description}, #{address})
   </insert>
 
+  <delete id="deleteCustomerByIds" parameterType="string" >
+    delete from tbl_customer
+    where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+
 
 </mapper>
