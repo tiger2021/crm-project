@@ -64,4 +64,6 @@ public interface CustomerMapper {
     List<Customer> selectCustomerForPageByCondition(Map<String,Object> map);
 
     int selectCountOfCustomerForPageByCondition(Map<String,Object> map);
+
+    int insertCreateCustomer(Customer customer);
 }

@@ -16,4 +16,6 @@ public interface CustomerService {
     List<Customer> queryCustomerForPageByCondition(Map<String,Object> map);
 
     int queryCountOfCustomerForPageByCondition(Map<String,Object> map);
+
+    int saveCreateCustomer(Customer customer);
 }

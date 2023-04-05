@@ -32,4 +32,9 @@ public class CustomerServiceImpl implements CustomerService {
     public int queryCountOfCustomerForPageByCondition(Map<String, Object> map) {
         return customerMapper.selectCountOfCustomerForPageByCondition(map);
     }
+
+    @Override
+    public int saveCreateCustomer(Customer customer) {
+        return customerMapper.insertCreateCustomer(customer);
+    }
 }
