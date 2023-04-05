@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import com.bjpowernode.crm.settings.domain.User;
+import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +25,17 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private UserService userService;
+
 
     @RequestMapping("/workbench/customer/toCustomerIndex.do")
-    public String toCustomerIndex(){
+    public String toCustomerIndex(HttpServletRequest request){
+
+        //调用userService，查询所有的user
+        List<User> ownerList = userService.queryAllUsers();
+        request.setAttribute("ownerList",ownerList);
+
         return "workbench/customer/index";
     }
 
