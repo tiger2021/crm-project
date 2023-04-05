@@ -22,4 +22,6 @@ public interface CustomerService {
     int removeCustomerByIds(String[] id);
 
     Customer queryCustomerById(String id);
+
+    int renewCustomerById(Customer customer);
 }

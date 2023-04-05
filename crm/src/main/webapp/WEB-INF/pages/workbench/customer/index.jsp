@@ -215,6 +215,61 @@
 				}
 		});
 
+		//给“更新”按钮添加点击事件
+		$("#updateCustomerBtn").click(function (){
+			//获取表单数据
+			var id=$("#edit-customerId").val();
+			var owner=$("#edit-customerOwner").val();
+			var name=$("#edit-customerName").val();
+			var website=$("#edit-website").val();
+			var phone=$("#edit-phone").val();
+			var description=$("#edit-description").val();
+			var contactSummary=$("#edit-contactSummary").val();
+			var nextContactTime=$("#edit-nextContactTime").val();
+			var address=$("#edit-address").val();
+
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(name==""){
+				alert("活动名称不能为空");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/customer/renewCustomerById.do",
+				data:{
+					id:id,
+					owner:owner,
+					name:name,
+					website:website,
+					phone:phone,
+					contactSummary:contactSummary,
+					nextContactTime:nextContactTime,
+					address:address,
+					description:description
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#editCustomerModal").modal("hide");
+						//刷新市场活动页面
+						queryCustomerByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+					}else{
+						alert(data.message);
+						$("#editCustomerModal").modal("show");
+					}
+				}
+			})
+
+		})
+
 
 		
 	});
@@ -462,7 +517,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateCustomerBtn">更新</button>
 				</div>
 			</div>
 		</div>

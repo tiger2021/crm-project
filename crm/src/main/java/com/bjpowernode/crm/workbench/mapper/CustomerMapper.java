@@ -70,4 +70,6 @@ public interface CustomerMapper {
     int deleteCustomerByIds(String[] id);
 
     Customer selectCustomerById(String id);
+
+    int updateCustomerById(Customer customer);
 }

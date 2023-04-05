@@ -315,5 +315,20 @@
     where c.id=#{id};
   </select>
 
+  <update id="updateCustomerById" parameterType="com.bjpowernode.crm.workbench.domain.Customer" >
+    update tbl_customer
+    set owner = #{owner},
+        name = #{name},
+        website = #{website},
+        phone = #{phone},
+        edit_by = #{editBy},
+        edit_time = #{editTime},
+        contact_summary = #{contactSummary},
+        next_contact_time = #{nextContactTime},
+        description = #{description},
+        address = #{address}
+    where id = #{id}
+  </update>
+
 
 </mapper>
