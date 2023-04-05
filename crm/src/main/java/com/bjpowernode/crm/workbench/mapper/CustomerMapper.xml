@@ -308,5 +308,12 @@
     </foreach>
   </delete>
 
+  <select id="selectCustomerById" parameterType="string" resultMap="BaseResultMap">
+    select c.id, c.owner, c.name, c.website, c.phone, c.create_by, c.create_time,c.edit_by,
+           c.edit_time, c.contact_summary, c.next_contact_time, c.description, c.address
+    from tbl_customer c
+    where c.id=#{id};
+  </select>
+
 
 </mapper>

@@ -177,6 +177,45 @@
 			}
 		});
 
+		//给“修改”按钮添加单击事件
+		$("#editCustomerBtn").click(function (){
+
+				//获取被选中的元素
+				var checkedIds=$("#tBody input[type='checkbox']:checked");
+				if(checkedIds.size()==0) {
+					alert("请选择需要修改的数据");
+					return;
+				}else if(checkedIds.size()>1){
+					alert("只能选择一条数据进行修改");
+					return;
+				}else {
+					var customerId=checkedIds.val();
+
+					//发送Ajax请求
+					$.ajax({
+						url:"workbench/customer/queryCustomerById.do",
+						type:'post',
+						data:{customerId:customerId},
+						success:function (data){
+							//将后台发送过来的数据填写到模态窗口中
+							$("#edit-customerId").val(data.id);
+							//向下拉列表中填入信息
+							$("#edit-customerOwner").val(data.owner);
+							$("#edit-customerName").val(data.name);
+							$("#edit-website").val(data.website);
+							$("#edit-phone").val(data.phone);
+							$("#edit-description").val(data.description);
+							$("#edit-contactSummary").val(data.contactSummary);
+							$("#edit-nextContactTime").val(data.nextContactTime);
+							$("#edit-address").val(data.address);
+							//显示修改市场活动的模态窗口
+							$("#editCustomerModal").modal("show");
+						}
+					});
+				}
+		});
+
+
 		
 	});
 
@@ -352,6 +391,8 @@
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
+						<%--这儿设置一个隐藏域用来保存市场活动的id--%>
+						<input type="hidden" id="edit-customerId">
 					
 						<div class="form-group">
 							<label for="edit-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -367,25 +408,25 @@
 							</div>
 							<label for="edit-customerName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-customerName" value="动力节点">
+								<input type="text" class="form-control" id="edit-customerName" >
 							</div>
 						</div>
 						
 						<div class="form-group">
                             <label for="edit-website" class="col-sm-2 control-label">公司网站</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-website" value="http://www.bjpowernode.com">
+                                <input type="text" class="form-control" id="edit-website" >
                             </div>
 							<label for="edit-phone" class="col-sm-2 control-label">公司座机</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-phone" value="010-84846003">
+								<input type="text" class="form-control" id="edit-phone" >
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
+								<textarea class="form-control" rows="3" id="edit-description"></textarea>
 							</div>
 						</div>
 						
@@ -393,15 +434,15 @@
 
                         <div style="position: relative;top: 15px;">
                             <div class="form-group">
-                                <label for="create-contactSummary1" class="col-sm-2 control-label">联系纪要</label>
+                                <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="3" id="create-contactSummary1"></textarea>
+                                    <textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
+                                <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control mydate" id="create-nextContactTime2" readonly>
+                                    <input type="text" class="form-control mydate" id="edit-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +521,7 @@
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createCustomerBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" id="editCustomerBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger" id="deleteCustomerBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				

@@ -68,4 +68,6 @@ public interface CustomerMapper {
     int insertCreateCustomer(Customer customer);
 
     int deleteCustomerByIds(String[] id);
+
+    Customer selectCustomerById(String id);
 }

@@ -42,4 +42,9 @@ public class CustomerServiceImpl implements CustomerService {
     public int removeCustomerByIds(String[] id) {
         return customerMapper.deleteCustomerByIds(id);
     }
+
+    @Override
+    public Customer queryCustomerById(String id) {
+        return customerMapper.selectCustomerById(id);
+    }
 }

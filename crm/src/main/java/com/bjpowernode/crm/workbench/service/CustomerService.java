@@ -20,4 +20,6 @@ public interface CustomerService {
     int saveCreateCustomer(Customer customer);
 
     int removeCustomerByIds(String[] id);
+
+    Customer queryCustomerById(String id);
 }

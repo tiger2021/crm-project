@@ -122,4 +122,15 @@ public class CustomerController {
         }
         return returnObject;
     }
+
+    @RequestMapping("/workbench/customer/queryCustomerById.do")
+    @ResponseBody
+    public Object queryCustomerById(String customerId){
+        ReturnObject returnObject=new ReturnObject();
+
+        //调用service进行查询
+        Customer customer = customerService.queryCustomerById(customerId);
+
+        return customer;
+    }
 }
