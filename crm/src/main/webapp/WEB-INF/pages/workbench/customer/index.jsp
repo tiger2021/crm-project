@@ -73,6 +73,16 @@
 				$("#checkAll").prop("checked",false);
 			}
 		});
+
+		//给“创建”按钮添加单击事件
+		$("#createCustomerBtn").click(function (){
+			//清空创建交易的模态窗口form表单中的内容
+			//get(0)的作用是将jQuery对象转换为dom对象，然后用dom对象中的reset函数
+			$("#createCustomerForm").get(0).reset();
+
+			//显示创建客户的模态窗口
+			$("#createCustomerModal").modal("show");
+		});
 		
 	});
 
@@ -162,7 +172,7 @@
 					<h4 class="modal-title" id="myModalLabel1">创建客户</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="createCustomerForm">
 					
 						<div class="form-group">
 							<label for="create-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -375,7 +385,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCustomerModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createCustomerBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
