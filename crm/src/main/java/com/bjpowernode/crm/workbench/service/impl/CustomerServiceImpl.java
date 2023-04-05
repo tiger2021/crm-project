@@ -1,11 +1,13 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
 import com.bjpowernode.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 小镇做题家
@@ -19,5 +21,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<String> queryCustomerNameByName(String name) {
         return customerMapper.selectCustomerNameByName(name);
+    }
+
+    @Override
+    public List<Customer> queryCustomerForPageByCondition(Map<String, Object> map) {
+        return customerMapper.selectCustomerForPageByCondition(map);
+    }
+
+    @Override
+    public int queryCountOfCustomerForPageByCondition(Map<String, Object> map) {
+        return customerMapper.selectCountOfCustomerForPageByCondition(map);
     }
 }

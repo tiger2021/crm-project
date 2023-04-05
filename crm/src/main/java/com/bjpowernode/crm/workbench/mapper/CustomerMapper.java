@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.mapper;
 import com.bjpowernode.crm.workbench.domain.Customer;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerMapper {
     /**
@@ -59,4 +60,8 @@ public interface CustomerMapper {
 
     //根据客户名称精确查询客户
     Customer selectCustomerByName(String name);
+
+    List<Customer> selectCustomerForPageByCondition(Map<String,Object> map);
+
+    int selectCountOfCustomerForPageByCondition(Map<String,Object> map);
 }
