@@ -24,6 +24,17 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			//防止下拉菜单消失
 	        e.stopPropagation();
 	    });
+
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
 		
 	});
 	
@@ -87,7 +98,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                             <div class="form-group">
                                 <label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime">
+                                    <input type="text" class="form-control mydate" id="create-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +182,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                             <div class="form-group">
                                 <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime2">
+                                    <input type="text" class="form-control mydate" id="create-nextContactTime2" readonly>
                                 </div>
                             </div>
                         </div>

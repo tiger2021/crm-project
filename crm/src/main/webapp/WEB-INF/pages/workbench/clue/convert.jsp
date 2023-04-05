@@ -27,6 +27,17 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
+
 		//给”市场活动源“后面的搜索添加单击事件
 		$("#searchActivityBtn").click(function (){
 			//初始化市场活动的模态窗口
@@ -207,7 +218,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>
-		    <input type="text" class="form-control" id="expectedClosingDate">
+		    <input type="text" class="form-control mydate" id="expectedClosingDate" readonly>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="stage">阶段</label>
