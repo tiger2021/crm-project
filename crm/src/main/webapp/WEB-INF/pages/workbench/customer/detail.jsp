@@ -73,7 +73,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			},
 			dataType:"json",
 			success:function (data){
-				//将查询到的结果展示到对应的地方
+				//将查询到的交易信息展示到对应的地方
 				var tranHtmlStr="";
 				$.each(data.tranList,function (index,tran){
 					tranHtmlStr+="<tr id=\"transaction-"+tran.id+"\">";
@@ -88,8 +88,17 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				});
 				$("#transactionTBody").html( tranHtmlStr)
 
-
-
+				//将查询到的联系人信息展示到对应的地方
+				var contactsHtmlStr="";
+				$.each(data.contactList,function (index,contacts){
+					contactsHtmlStr+="<tr>";
+					contactsHtmlStr+="<td><a href=\"contacts/detail.html\" style=\"text-decoration: none;\">"+contacts.name+"</a></td>";
+					contactsHtmlStr+="<td>"+contacts.email+"</td>";
+					contactsHtmlStr+="<td>"+contacts.mphone+"</td>";
+					contactsHtmlStr+="<td><a href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeContactsModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					contactsHtmlStr+="</tr>";
+				});
+				$("#contactsTBody").html(contactsHtmlStr)
 			}
 		});
 
@@ -467,13 +476,13 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="contacts/detail.html" style="text-decoration: none;">李四</a></td>
-							<td>lisi@bjpowernode.com</td>
-							<td>13543645364</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#removeContactsModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>
-						</tr>
+					<tbody id="contactsTBody">
+<%--						<tr>--%>
+<%--							<td><a href="contacts/detail.html" style="text-decoration: none;">李四</a></td>--%>
+<%--							<td>lisi@bjpowernode.com</td>--%>
+<%--							<td>13543645364</td>--%>
+<%--							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#removeContactsModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>--%>
+<%--						</tr>--%>
 					</tbody>
 				</table>
 			</div>
