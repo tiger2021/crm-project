@@ -54,4 +54,6 @@ public interface CustomerRemarkMapper {
     int updateByPrimaryKey(CustomerRemark record);
 
     int insertCustomerRemark(CustomerRemark clueRemark);
+
+    List<CustomerRemark> selectCustomerRemarkForDetailByCustomerId(String customerId);
 }

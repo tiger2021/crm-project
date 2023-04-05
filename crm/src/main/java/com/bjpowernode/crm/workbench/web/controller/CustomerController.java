@@ -7,6 +7,8 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.domain.CustomerRemark;
+import com.bjpowernode.crm.workbench.service.CustomerRemarkService;
 import com.bjpowernode.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class CustomerController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CustomerRemarkService customerRemarkService;
 
 
     @RequestMapping("/workbench/customer/toCustomerIndex.do")
@@ -168,6 +173,8 @@ public class CustomerController {
         //调用service查询customer
         Customer customer = customerService.queryCustomerForDetailById(id);
         request.setAttribute("customer",customer);
+        List<CustomerRemark> customerRemarkList = customerRemarkService.queryCustomerRemarkForDetailByCustomerId(id);
+        request.setAttribute("customerRemarkList",customerRemarkList);
 
         return "workbench/customer/detail";
     }
