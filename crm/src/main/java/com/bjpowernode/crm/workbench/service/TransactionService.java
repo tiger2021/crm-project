@@ -23,4 +23,6 @@ public interface TransactionService {
     Tran queryTransactionForDetailById(String id);
     List<FunnelVO> queryCountOfTranGroupByStage();
 
+    List<Tran> queryTransactionByCustomerId(String customerId);
+
 }

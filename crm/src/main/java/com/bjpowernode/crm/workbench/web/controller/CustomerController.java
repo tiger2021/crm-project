@@ -6,10 +6,14 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
+import com.bjpowernode.crm.workbench.domain.Contacts;
 import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.domain.CustomerRemark;
+import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.service.ContactsService;
 import com.bjpowernode.crm.workbench.service.CustomerRemarkService;
 import com.bjpowernode.crm.workbench.service.CustomerService;
+import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description:
@@ -38,6 +39,12 @@ public class CustomerController {
 
     @Autowired
     private CustomerRemarkService customerRemarkService;
+
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private ContactsService contactsService;
 
 
     @RequestMapping("/workbench/customer/toCustomerIndex.do")
@@ -179,6 +186,30 @@ public class CustomerController {
         return "workbench/customer/detail";
     }
 
+
+    @RequestMapping("/workbench/customer/queryTransactionAndContactsByCustomerId.do")
+    @ResponseBody
+    public Object queryTransactionAndContactsByCustomerId(String customerId){
+        //调用service进行查询
+        List<Tran> tranList = transactionService.queryTransactionByCustomerId(customerId);
+        List<Contacts> contactList = contactsService.queryContactsByCustomerId(customerId);
+
+        //根据tran所处阶段名称查询可能性
+        for (Tran tran : tranList) {
+            String stageValue=tran.getStage();
+            ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+            String possibility = bundle.getString(stageValue);
+            tran.setPossibility(possibility);
+        }
+
+
+        //封装结果，响应前端
+        Map<String,Object> map=new HashMap<>();
+        map.put("tranList",tranList);
+        map.put("contactList",contactList);
+
+        return map;
+    }
 
 
 }

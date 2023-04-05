@@ -54,7 +54,46 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//调用queryTransactionAndContactsByCustomerId()
+		queryTransactionAndContactsByCustomerId();
 	});
+
+	//定义查询交易和联系人的函数
+	function queryTransactionAndContactsByCustomerId(){
+		//收集参数
+		var customerId="${customer.id}";
+
+		//向后台发送Ajax请求
+		$.ajax({
+			url:"workbench/customer/queryTransactionAndContactsByCustomerId.do",
+			type:"post",
+			data:{
+				customerId:customerId
+			},
+			dataType:"json",
+			success:function (data){
+				//将查询到的结果展示到对应的地方
+				var tranHtmlStr="";
+				$.each(data.tranList,function (index,tran){
+					tranHtmlStr+="<tr id=\"transaction-"+tran.id+"\">";
+					tranHtmlStr+="<td><a href=\"transaction/detail.jsp\" style=\"text-decoration: none;\">"+tran.name+"</a></td>";
+					tranHtmlStr+="<td>"+tran.money+"</td>";
+					tranHtmlStr+="<td>"+tran.stage+"</td>";
+					tranHtmlStr+="<td>"+tran.possibility+"</td>";
+					tranHtmlStr+="<td>"+tran.expectedDate+"</td>";
+					tranHtmlStr+="<td>"+tran.type+"</td>";
+					tranHtmlStr+="<td><a href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeTransactionModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					tranHtmlStr+="</tr>";
+				});
+				$("#transactionTBody").html( tranHtmlStr)
+
+
+
+			}
+		});
+
+	}
 	
 </script>
 
@@ -400,16 +439,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="transaction/detail.jsp" style="text-decoration: none;">动力节点-交易01</a></td>
-							<td>5,000</td>
-							<td>谈判/复审</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>新业务</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#removeTransactionModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>
-						</tr>
+					<tbody id="transactionTBody">
+
 					</tbody>
 				</table>
 			</div>

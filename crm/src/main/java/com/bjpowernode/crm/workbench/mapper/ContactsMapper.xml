@@ -281,4 +281,17 @@
             #{ mphone}, #{ job}, #{ createBy}, #{ createTime}, #{description}, #{ contactSummary},
             #{nextContactTime}, #{ address})
   </insert>
+
+  <select id="selectContactsByCustomerId" parameterType="string" resultMap="BaseResultMap">
+    select c.id, u1.name as owner, c.source, cu.name as customer_id, c.fullname, c.appellation, c.email, c.mphone, c.job,
+           u2.name as create_by,c.create_time, u3.name as edit_by, c.edit_time, c.description, c.contact_summary,
+           c.next_contact_time,c.address
+    from tbl_contacts c
+           join tbl_user u1 on c.owner=u1.id
+           join tbl_user u2 on u2.id=c.create_by
+           join tbl_customer cu on c.id=c.customer_id
+           left join tbl_user u3 on u3.id=c.edit_by
+    where c.customer_id=#{customerId};
+
+  </select>
 </mapper>

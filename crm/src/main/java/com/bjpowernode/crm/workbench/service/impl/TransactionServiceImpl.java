@@ -115,4 +115,9 @@ public class TransactionServiceImpl implements TransactionService {
     public List<FunnelVO> queryCountOfTranGroupByStage() {
         return tranMapper.selectCountOfTranGroupByStage();
     }
+
+    @Override
+    public List<Tran> queryTransactionByCustomerId(String customerId) {
+        return tranMapper.selectTransactionByCustomerId(customerId);
+    }
 }
