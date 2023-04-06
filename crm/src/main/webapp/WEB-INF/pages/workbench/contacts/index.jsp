@@ -74,6 +74,16 @@
 			}
 		});
 
+		//给“创建”按钮添加单击事件
+		$("#createContactsBtn").click(function (){
+			//清空创建交易的模态窗口form表单中的内容
+			//get(0)的作用是将jQuery对象转换为dom对象，然后用dom对象中的reset函数
+			$("#createContactForm").get(0).reset();
+
+			//显示创建客户的模态窗口
+			$("#createContactModal").modal("show");
+		});
+
 
 	});
 
@@ -158,7 +168,7 @@
 
 	
 	<!-- 创建联系人的模态窗口 -->
-	<div class="modal fade" id="createContactsModal" role="dialog">
+	<div class="modal fade" id="createContactModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 85%;">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -168,7 +178,7 @@
 					<h4 class="modal-title" id="myModalLabelx">创建联系人</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="createContactForm">
 					
 						<div class="form-group">
 							<label for="create-contactsOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -508,7 +518,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createContactsModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createContactsBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editContactsModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
