@@ -1,20 +1,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%--添加js标签库--%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
+
 <%
-String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
+	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
 <html>
 <head>
 	<base href="<%=basePath%>">
-<meta charset="UTF-8">
 
-<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<%--引入日历的插件--%>
+	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<%--引入分页的插件--%>
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination-master/css/jquery.bs_pagination.min.css">
+	<%--引入jQuery函数库--%>
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<%--引入bootstrap框架--%>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<%--引入日历的插件--%>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<%--引入分页的插件--%>
+	<script type="text/javascript" src="jquery/bs_pagination-master/js/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/localization/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -60,9 +70,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<label for="create-contactsOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-contactsOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+									<c:forEach items="${ownerList}" var="owner">
+										<option value="${owner.id}">${owner.name}</option>
+									</c:forEach>
 								</select>
 							</div>
 							<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
@@ -197,9 +207,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							<label for="edit-contactsOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="edit-contactsOwner">
-								  <option selected>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+									<c:forEach items="${ownerList}" var="owner">
+										<option value="${owner.id}">${owner.name}</option>
+									</c:forEach>
 								</select>
 							</div>
 							<label for="edit-clueSource1" class="col-sm-2 control-label">来源</label>
