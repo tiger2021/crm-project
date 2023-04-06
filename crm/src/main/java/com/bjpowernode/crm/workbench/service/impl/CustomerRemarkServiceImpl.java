@@ -31,4 +31,9 @@ public class CustomerRemarkServiceImpl implements CustomerRemarkService {
     public int deleteCustomerRemarkById(String id) {
         return customerRemarkMapper.deleteCustomerRemarkById(id);
     }
+
+    @Override
+    public int updateCustomerRemarkById(CustomerRemark customerRemark) {
+        return customerRemarkMapper.updateCustomerRemarkById(customerRemark);
+    }
 }

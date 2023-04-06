@@ -269,4 +269,36 @@ public class CustomerController {
     }
 
 
+    @RequestMapping("/workbench/customer/updateCustomerRemarkById.do")
+    @ResponseBody
+    public Object updateCustomerRemarkById(CustomerRemark customerRemark,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        customerRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES_EDITED);
+        customerRemark.setEditBy(user.getId());
+        customerRemark.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service进行保存
+            int num = customerRemarkService.updateCustomerRemarkById(customerRemark);
+            //判断是否修改成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(customerRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+
+    }
+
+
 }

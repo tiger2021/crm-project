@@ -59,4 +59,6 @@ public interface CustomerRemarkMapper {
 
     int deleteCustomerRemarkById(String id);
 
+    int updateCustomerRemarkById(CustomerRemark customerRemark);
+
 }
