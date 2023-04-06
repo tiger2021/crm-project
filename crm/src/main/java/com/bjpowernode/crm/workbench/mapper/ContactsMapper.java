@@ -68,4 +68,6 @@ public interface ContactsMapper {
     int updateContactsById(Contacts contacts);
 
     Contacts selectContactsForUpdateById(String id);
+
+    int deleteContactsByIds(String[] id);
 }

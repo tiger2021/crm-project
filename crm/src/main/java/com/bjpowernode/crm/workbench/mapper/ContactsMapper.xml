@@ -418,4 +418,12 @@
            left join tbl_user u3 on u3.id=c.edit_by
     where c.id=#{id};
   </select>
+
+  <delete id="deleteContactsByIds" parameterType="string">
+    delete from tbl_contacts
+    where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>
