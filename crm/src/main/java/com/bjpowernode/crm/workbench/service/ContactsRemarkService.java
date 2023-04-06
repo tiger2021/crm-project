@@ -13,4 +13,6 @@ public interface ContactsRemarkService {
     List<ContactsRemark> queryContactsRemarkByContactsId(String contactsId);
 
     int insertContactsRemark(ContactsRemark contactsRemark);
+
+    int removeContactsRemarkById(String id);
 }

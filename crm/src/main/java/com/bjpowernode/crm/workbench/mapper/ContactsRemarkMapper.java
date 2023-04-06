@@ -60,5 +60,6 @@ public interface ContactsRemarkMapper {
     List<ContactsRemark> selectContactsRemarkByContactsId(String contactsId);
 
 
+    int deleteContactsRemarkById(String id);
 
 }

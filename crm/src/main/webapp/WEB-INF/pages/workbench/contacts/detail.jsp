@@ -242,6 +242,29 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给所有”删除评论的图标“添加单击事件
+		$("#remarkDivList").on("click","a[name=deleteA]",function (){
+			var id=$(this).attr("remarkId");  //this代表正在被点击的dom对象
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/removeContactsRemarkById.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//刷新备注列表,删除div
+						$("#div_"+id).remove();
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		})
+
 
 	});
 	

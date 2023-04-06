@@ -183,6 +183,11 @@
 
   </select>
 
+  <delete id="deleteContactsRemarkById" parameterType="string">
+    delete from tbl_contacts_remark
+    where id = #{id}
+  </delete>
+
 
 
 </mapper>
