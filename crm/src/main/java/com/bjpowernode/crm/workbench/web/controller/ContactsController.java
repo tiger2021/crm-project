@@ -198,6 +198,35 @@ public class ContactsController {
         return returnObject;
     }
 
+    @RequestMapping("/workbench/contacts/updateContactsForDetailById.do")
+    @ResponseBody
+    public Object updateContactsForDetailById(Contacts contact,HttpSession session,HttpServletRequest request){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        contact.setEditBy(user.getId());
+        contact.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service保存修改
+            int num = contactsService.updateContactsById(contact);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                //将更新后的contact放到请求域中
+                request.setAttribute("contact",contact);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
 
 }
 

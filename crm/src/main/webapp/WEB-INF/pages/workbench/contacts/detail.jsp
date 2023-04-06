@@ -123,6 +123,72 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				});
 		});
 
+		//给“更新”联系人按钮添加单击事件
+		//给“更新”按钮添加点击事件
+		$("#updateContactBtn").click(function (){
+			//获取表单数据
+			var id=$("#edit-id").val();
+			var owner=$("#edit-owner").val();
+			var source=$("#edit-source").val();
+			var fullname=$("#edit-fullname").val();
+			var appellation=$("#edit-appellation").val();
+			var job=$("#edit-job").val();
+			var mphone=$("#edit-mphone").val();
+			var email=$("#edit-email").val();
+			var nextContactTime=$("#edit-nextContactTime").val();
+			var customerId=$("#edit-customerId").val();
+			var description=$("#edit-description").val();
+			var contactSummary=$("#edit-contactSummary").val();
+			var address=$("#edit-address").val();
+
+
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(fullname==""){
+				alert("活动名称不能为空");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/updateContactsForDetailById.do",
+				data:{
+					id:id,
+					owner:owner,
+					source:source,
+					fullname:fullname,
+					appellation:appellation,
+					job:job,
+					mphone:mphone,
+					email:email,
+					nextContactTime:nextContactTime,
+					customerId:customerId,
+					description:description,
+					contactSummary:contactSummary,
+					address:address
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#editContactsModal").modal("hide");
+						//刷新页面
+						window.location.reload();
+
+					}else{
+						alert(data.message);
+						$("#editContactsModal").modal("show");
+					}
+				}
+			})
+
+		})
+
 
 	});
 	
