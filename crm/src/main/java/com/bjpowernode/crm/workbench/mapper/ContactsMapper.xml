@@ -438,4 +438,9 @@
            left join tbl_customer cu on cu.id=c.customer_id
     where c.id=#{id};
   </select>
+
+  <delete id="deleteContactsForDetailByIds" parameterType="string" >
+    delete from tbl_contacts
+    where id=#{id};
+  </delete>
 </mapper>

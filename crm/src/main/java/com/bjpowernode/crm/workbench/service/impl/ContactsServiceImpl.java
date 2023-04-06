@@ -58,4 +58,9 @@ public class ContactsServiceImpl implements ContactsService {
     public Contacts queryContactsForDetailById(String id) {
         return contactsMapper.selectContactsForDetailById(id);
     }
+
+    @Override
+    public int removeContactsForDetailByIds(String id) {
+        return contactsMapper.deleteContactsForDetailByIds(id);
+    }
 }

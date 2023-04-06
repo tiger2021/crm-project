@@ -172,6 +172,29 @@ public class ContactsController {
     }
 
 
+    @RequestMapping("/workbench/contacts/removeContactsForDetailByIds.do")
+    @ResponseBody
+    public Object removeContactsForDetailByIds(String id){
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service进行删除操作
+            int num = contactsService.removeContactsForDetailByIds(id);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
+
 }
 
 

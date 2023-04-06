@@ -65,6 +65,28 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//给“删除”联系人按钮添加单击事件
+
+		$("#deleteContactBtn").click(function (){
+			var id="${contact.id}";
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/removeContactsForDetailByIds.do",
+				type:"post",
+				data:{id:id},
+				success:function (data){
+					if(data.code=="1"){
+						//跳转到联系人主页面
+						window.location.href="workbench/contacts/toContactsIndex.do";
+					}else{
+						//显示提示信息
+						alert(data.message);
+					}
+				}
+			})
+		});
+
 	});
 	
 </script>
@@ -297,7 +319,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editContactsModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-danger" id="deleteContactBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	

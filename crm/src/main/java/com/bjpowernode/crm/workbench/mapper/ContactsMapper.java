@@ -72,4 +72,7 @@ public interface ContactsMapper {
     int deleteContactsByIds(String[] id);
 
     Contacts selectContactsForDetailById(String id);
+
+    int deleteContactsForDetailByIds(String id);
+
 }

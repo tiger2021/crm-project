@@ -27,4 +27,6 @@ public interface ContactsService {
     int deleteContactsByIds(String[] id);
 
     Contacts queryContactsForDetailById(String id);
+
+    int removeContactsForDetailByIds(String id);
 }
