@@ -318,6 +318,30 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
+		//给所有”删除交易图标“添加单击事件
+		$("#transactionTBody").on("click","a[name=transactionDeleteA]",function (){
+			var id=$(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//调用queryTransactionByContactsId()
+						queryTransactionByContactsId()
+
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		})
+
 
 	});
 
