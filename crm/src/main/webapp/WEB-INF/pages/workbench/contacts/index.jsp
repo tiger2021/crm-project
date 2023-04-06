@@ -183,23 +183,75 @@
 						//显示修改市场活动的模态窗口
 						$("#editContactsModal").modal("show");
 					}
-					// var id=$("#edit-id").val(data.id);
-					// var owner=$("#edit-owner").val(data.owner);
-					// var source=$("#edit-source").val(data.source);
-					// var fullname=$("#edit-fullname").val(data.fullname);
-					// var appellation=$("#edit-appellation").val(data.appellation);
-					// var job=$("#edit-job").val(data.job);
-					// var mphone=$("#edit-mphone").val(data.mphone);
-					// var email=$("#edit-email").val(data.email);
-					// var nextContactTime=$("#edit-nextContactTime").val(data.nextContactTime);
-					// var customerId=$("#edit-customerId").val(data.customerId);
-					// var description=$("#edit-description").val(data.description);
-					// var contactSummary=$("#edit-contactSummary").val(data.contactSummary);
-					// var address=$("#edit-address").val(data.address);
 
 				});
 			}
 		});
+
+
+		//给“更新”按钮添加点击事件
+		$("#updateContactBtn").click(function (){
+			//获取表单数据
+			var id=$("#edit-id").val();
+			var owner=$("#edit-owner").val();
+			var source=$("#edit-source").val();
+			var fullname=$("#edit-fullname").val();
+			var appellation=$("#edit-appellation").val();
+			var job=$("#edit-job").val();
+			var mphone=$("#edit-mphone").val();
+			var email=$("#edit-email").val();
+			var nextContactTime=$("#edit-nextContactTime").val();
+			var customerId=$("#edit-customerId").val();
+			var description=$("#edit-description").val();
+			var contactSummary=$("#edit-contactSummary").val();
+			var address=$("#edit-address").val();
+
+
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(fullname==""){
+				alert("活动名称不能为空");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/updateContactsById.do",
+				data:{
+					id:id,
+					owner:owner,
+					source:source,
+					fullname:fullname,
+					appellation:appellation,
+					job:job,
+					mphone:mphone,
+					email:email,
+					nextContactTime:nextContactTime,
+					customerId:customerId,
+					description:description,
+					contactSummary:contactSummary,
+					address:address
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#editContactsModal").modal("hide");
+						//刷新市场活动页面
+						queryContactsByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+					}else{
+						alert(data.message);
+						$("#editContactsModal").modal("show");
+					}
+				}
+			})
+
+		})
 
 
 	});
@@ -541,7 +593,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateContactBtn">更新</button>
 				</div>
 			</div>
 		</div>
