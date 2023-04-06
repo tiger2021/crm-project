@@ -72,4 +72,6 @@ public interface TranMapper {
     List<Tran> selectTransactionByCustomerId(String customerId);
 
     int deleteTransactionById(String id);
+
+    List<Tran> selectTransactionByContactsId(String contactsId);
 }

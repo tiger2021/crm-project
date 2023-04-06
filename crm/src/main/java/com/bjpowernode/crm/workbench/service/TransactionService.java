@@ -27,4 +27,6 @@ public interface TransactionService {
 
     void deleteTransactionAndTransactionRemarkByTransactionId(String id);
 
+    List<Tran> queryTransactionByContactsId(String contactsId);
+
 }

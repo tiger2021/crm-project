@@ -67,6 +67,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			$(this).children("span").css("color","#E6E6E6");
 		})
 
+		//调用queryTransactionByContactsId()来查询交易
+		queryTransactionByContactsId();
+
 		//给“删除”联系人按钮添加单击事件
 		$("#deleteContactBtn").click(function (){
 			var id="${contact.id}";
@@ -317,6 +320,41 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 
 	});
+
+	//定义查询交易和联系人的函数
+	function queryTransactionByContactsId(){
+		//收集参数
+		var contactsId="${contact.id}";
+
+		//向后台发送Ajax请求
+		$.ajax({
+			url:"workbench/contacts/queryTransactionByContactsId.do",
+			type:"post",
+			data:{
+				contactsId:contactsId
+			},
+			dataType:"json",
+			success:function (data){
+				//将查询到的交易信息展示到对应的地方
+				var tranHtmlStr="";
+				$.each(data.tranList,function (index,tran){
+					tranHtmlStr+="<tr id=\"transaction-"+tran.id+"\">";
+					tranHtmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\"  onclick=\"window.location.href='workbench/transaction/toTransactionDetail.do?id="+tran.id+"'\">"+tran.name+"</a></td>";
+					tranHtmlStr+="<td>"+tran.money+"</td>";
+					tranHtmlStr+="<td>"+tran.stage+"</td>";
+					tranHtmlStr+="<td>"+tran.possibility+"</td>";
+					tranHtmlStr+="<td>"+tran.expectedDate+"</td>";
+					tranHtmlStr+="<td>"+tran.type+"</td>";
+					tranHtmlStr+="<td><a deleteTransactionId=\""+tran.id+"\" name=\"transactionDeleteA\" href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeTransactionModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					tranHtmlStr+="</tr>";
+				});
+				$("#transactionTBody").html( tranHtmlStr)
+
+
+			}
+		});
+
+	}
 	
 </script>
 
@@ -455,7 +493,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
          	</div>
          </div>
 
-	<!-- 修改联系人备注的模态窗口 -->
+	<!-- 修改备注的模态窗口 -->
 	<div class="modal fade" id="editRemarkModal" role="dialog">
 		<%-- 备注的id --%>
 		<input type="hidden" id="remarkId">
@@ -602,7 +640,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			<div style="width: 300px; color: gray;">客户名称</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${contact.customerId}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">姓名</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${contact.fullname}${contact.appellation}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${contact.fullname}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -694,51 +732,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
         		</form>
         	</div>
         </div>
-<%--	<!-- 备注 -->--%>
-<%--	<div style="position: relative; top: 20px; left: 40px;">--%>
-<%--		<div class="page-header">--%>
-<%--			<h4>备注</h4>--%>
-<%--		</div>--%>
-<%--		--%>
-<%--		<!-- 备注1 -->--%>
-<%--		<div class="remarkDiv" style="height: 60px;">--%>
-<%--			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">--%>
-<%--			<div style="position: relative; top: -40px; left: 40px;" >--%>
-<%--				<h5>哎呦！</h5>--%>
-<%--				<font color="gray">联系人</font> <font color="gray">-</font> <b>李四先生-北京动力节点</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>--%>
-<%--				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--					&nbsp;&nbsp;&nbsp;&nbsp;--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--		--%>
-<%--		<!-- 备注2 -->--%>
-<%--		<div class="remarkDiv" style="height: 60px;">--%>
-<%--			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">--%>
-<%--			<div style="position: relative; top: -40px; left: 40px;" >--%>
-<%--				<h5>呵呵！</h5>--%>
-<%--				<font color="gray">联系人</font> <font color="gray">-</font> <b>李四先生-北京动力节点</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>--%>
-<%--				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--					&nbsp;&nbsp;&nbsp;&nbsp;--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--		--%>
-<%--		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">--%>
-<%--			<form role="form" style="position: relative;top: 10px; left: 10px;">--%>
-<%--				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>--%>
-<%--				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">--%>
-<%--					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>--%>
-<%--					<button type="button" class="btn btn-primary">保存</button>--%>
-<%--				</p>--%>
-<%--			</form>--%>
-<%--		</div>--%>
-<%--	</div>--%>
-	
+
+
 	<!-- 交易 -->
 	<div>
 		<div style="position: relative; top: 20px; left: 40px;">
@@ -748,35 +743,66 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			<div style="position: relative;top: 0px;">
 				<table id="activityTable3" class="table table-hover" style="width: 900px;">
 					<thead>
-						<tr style="color: #B3B3B3;">
-							<td>名称</td>
-							<td>金额</td>
-							<td>阶段</td>
-							<td>可能性</td>
-							<td>预计成交日期</td>
-							<td>类型</td>
-							<td></td>
-						</tr>
+					<tr style="color: #B3B3B3;">
+						<td>名称</td>
+						<td>金额</td>
+						<td>阶段</td>
+						<td>可能性</td>
+						<td>预计成交日期</td>
+						<td>类型</td>
+						<td></td>
+					</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="../transaction/detail.jsp" style="text-decoration: none;">动力节点-交易01</a></td>
-							<td>5,000</td>
-							<td>谈判/复审</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>新业务</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>
-						</tr>
+					<tbody id="transactionTBody">
+
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div>
-				<a href="../transaction/save.jsp" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
+				<a href="workbench/transaction/toTransactionSave.do" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
 			</div>
 		</div>
 	</div>
+
+<%--	<!-- 交易 -->--%>
+<%--	<div>--%>
+<%--		<div style="position: relative; top: 20px; left: 40px;">--%>
+<%--			<div class="page-header">--%>
+<%--				<h4>交易</h4>--%>
+<%--			</div>--%>
+<%--			<div style="position: relative;top: 0px;">--%>
+<%--				<table id="activityTable3" class="table table-hover" style="width: 900px;">--%>
+<%--					<thead>--%>
+<%--						<tr style="color: #B3B3B3;">--%>
+<%--							<td>名称</td>--%>
+<%--							<td>金额</td>--%>
+<%--							<td>阶段</td>--%>
+<%--							<td>可能性</td>--%>
+<%--							<td>预计成交日期</td>--%>
+<%--							<td>类型</td>--%>
+<%--							<td></td>--%>
+<%--						</tr>--%>
+<%--					</thead>--%>
+<%--					<tbody>--%>
+<%--						<tr>--%>
+<%--							<td><a href="../transaction/detail.jsp" style="text-decoration: none;">动力节点-交易01</a></td>--%>
+<%--							<td>5,000</td>--%>
+<%--							<td>谈判/复审</td>--%>
+<%--							<td>90</td>--%>
+<%--							<td>2017-02-07</td>--%>
+<%--							<td>新业务</td>--%>
+<%--							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>--%>
+<%--						</tr>--%>
+<%--					</tbody>--%>
+<%--				</table>--%>
+<%--			</div>--%>
+<%--			--%>
+<%--			<div>--%>
+<%--				<a href="../transaction/save.jsp" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>--%>
+<%--			</div>--%>
+<%--		</div>--%>
+<%--	</div>--%>
 	
 	<!-- 市场活动 -->
 	<div>

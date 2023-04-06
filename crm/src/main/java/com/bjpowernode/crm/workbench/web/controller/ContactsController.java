@@ -9,8 +9,10 @@ import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Contacts;
 import com.bjpowernode.crm.workbench.domain.ContactsRemark;
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.service.ContactsRemarkService;
 import com.bjpowernode.crm.workbench.service.ContactsService;
+import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description:
@@ -39,6 +38,9 @@ public class ContactsController {
 
     @Autowired
     private ContactsRemarkService contactsRemarkService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @RequestMapping("/workbench/contacts/toContactsIndex.do")
     public String toContactsIndex(HttpServletRequest request){
@@ -325,6 +327,27 @@ public class ContactsController {
             returnObject.setMessage("系统繁忙，请稍后重试...");
         }
         return returnObject;
+    }
+
+    @RequestMapping("/workbench/contacts/queryTransactionByContactsId.do")
+    @ResponseBody
+    public Object queryTransactionByContactsId(String contactsId){
+        //调用service进行查询
+        List<Tran> tranList = transactionService.queryTransactionByContactsId(contactsId);
+
+        //根据tran所处阶段名称查询可能性
+        for (Tran tran : tranList) {
+            String stageValue=tran.getStage();
+            ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+            String possibility = bundle.getString(stageValue);
+            tran.setPossibility(possibility);
+        }
+
+
+        //封装结果，响应前端
+        Map<String,Object> map=new HashMap<>();
+        map.put("tranList",tranList);
+        return map;
     }
 
 }
