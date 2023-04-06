@@ -15,4 +15,6 @@ public interface ContactsRemarkService {
     int insertContactsRemark(ContactsRemark contactsRemark);
 
     int removeContactsRemarkById(String id);
+
+    int updateContactsRemarkById(ContactsRemark contactsRemark);
 }

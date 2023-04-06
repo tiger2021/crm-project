@@ -33,4 +33,9 @@ public class ContactsRemarkServiceImpl implements ContactsRemarkService {
     public int removeContactsRemarkById(String id) {
         return contactsRemarkMapper.deleteContactsRemarkById(id);
     }
+
+    @Override
+    public int updateContactsRemarkById(ContactsRemark contactsRemark) {
+        return contactsRemarkMapper.updateContactsRemarkById(contactsRemark);
+    }
 }

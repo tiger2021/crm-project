@@ -188,6 +188,15 @@
     where id = #{id}
   </delete>
 
+  <update id="updateContactsRemarkById" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark">
+    update tbl_contacts_remark
+    set note_content = #{noteContent},
+        edit_by = #{editBy},
+        edit_time = #{editTime},
+        edit_flag = #{editFlag}
+    where id = #{id}
+  </update>
+
 
 
 </mapper>

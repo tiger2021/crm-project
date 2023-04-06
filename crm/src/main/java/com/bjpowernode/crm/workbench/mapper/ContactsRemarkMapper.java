@@ -62,4 +62,6 @@ public interface ContactsRemarkMapper {
 
     int deleteContactsRemarkById(String id);
 
+    int updateContactsRemarkById(ContactsRemark contactsRemark);
+
 }
