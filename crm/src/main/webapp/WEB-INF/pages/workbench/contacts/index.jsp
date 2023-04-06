@@ -45,8 +45,91 @@
 			todayBtn:true,   //是否显示“今天”按钮
 			clearBtn:true    //是否显示“清空按钮”
 		});
+
+		//当主页面加载完成之后，向后台发送Ajax请求，查询要显示的联系人信息
+		queryContactsByConditionForPage(1,10);
+
+		//给“查询”按钮添加单击事件
+		$("#queryContactsByConditionBtn").click(function (){
+			queryContactsByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+		});
 		
 	});
+
+	//定义查询市场活动的函数
+	function queryContactsByConditionForPage(pageNo,pageSize){
+		//收集参数
+		var owner=$("#query-owner").val();
+		var name=$("#query-name").val();
+		var customerName=$("#query-customerName").val();
+		var source=$("#query-source").val();
+		var nextContactTime=$("#query-nextContactTime").val();
+
+
+		//向后台发送Ajax请求
+		$.ajax({
+			url:"workbench/contacts/queryContactsForPageByCondition.do",
+			type:"post",
+			data: {
+				name:name,
+				owner:owner,
+				customerName:customerName,
+				source:source,
+				nextContactTime:nextContactTime,
+				pageNo:pageNo,
+				pageSize:pageSize
+			},
+			success:function (data){
+				//显示查询出的市场活动的总记录数
+				$("#totalRowsB").text(data.totalRows);
+				//遍历List，拼接字符串
+				var htmlStr="";
+				$.each(data.contactsList,function (index,contact){
+					htmlStr+="<tr>";
+					htmlStr+="<td><input type=\"checkbox\" value=\""+contact.id+"\" /></td>";
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+contact.fullname+"</a></td>";
+					htmlStr+="<td>"+contact.customerId+"</td>";
+					htmlStr+="<td>"+contact.owner+"</td>";
+					htmlStr+="<td>"+contact.source+"</td>";
+					htmlStr+="<td>"+contact.nextContactTime+"</td>";
+					htmlStr+="</tr>";
+				});
+				$("#tBody").html(htmlStr);
+
+
+				//计算总页数
+				var totalPages=1;
+				if(data.totalRows%pageSize==0){
+					totalPages=data.totalRows/pageSize;
+				}else{
+					//parseInt()用来取整数部分的，  eval()模拟执行js代码
+					totalPages=parseInt(data.totalRows/pageSize)+1;
+				}
+
+				//对容器调用bs_pagination工具函数，显示翻页信息
+				$("#demo_page1").bs_pagination({
+					currentPage:pageNo,//当前页号,相当于pageNo
+
+					rowsPerPage:pageSize,//每页显示条数,相当于pageSize
+					totalRows:data.totalRows,//总条数
+					totalPages: totalPages,  //总页数,必填参数.
+
+					visiblePageLinks:5,//最多可以显示的卡片数
+
+					showGoToPage:true,//是否显示"跳转到"部分,默认true--显示
+					showRowsPerPage:true,//是否显示"每页显示条数"部分。默认true--显示
+					showRowsInfo:true,//是否显示记录的信息，默认true--显示
+
+					//用户每次切换页号，都自动触发本函数;
+					//每次返回切换页号之后的pageNo和pageSize
+					onChangePage: function(event,pageObj) { // returns page_num and rows_per_page after a link has clicked
+						//js代码
+						queryContactsByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
+					}
+				});
+			}
+		})
+	}
 	
 </script>
 </head>
@@ -132,7 +215,7 @@
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control" id="create-email">
 							</div>
-							<label for="create-birth" class="col-sm-2 control-label">生日</label>
+							<label for="create-birth" class="col-sm-2 control-label">下次联系时间</label>
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control mydate" id="create-birth" readonly>
 							</div>
@@ -268,7 +351,7 @@
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control" id="edit-email" value="lisi@bjpowernode.com">
 							</div>
-							<label for="edit-birth" class="col-sm-2 control-label">生日</label>
+							<label for="edit-birth" class="col-sm-2 control-label">下次联系时间</label>
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control mydate" id="edit-birth" readonly>
 							</div>
@@ -348,21 +431,21 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-owner">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">姓名</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">客户名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-customerName">
 				    </div>
 				  </div>
 				  
@@ -371,7 +454,7 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">来源</div>
-				      <select class="form-control" id="edit-clueSource">
+				      <select class="form-control" id="query-source">
 						  <option></option>
 						  <option>广告</option>
 						  <option>推销电话</option>
@@ -393,12 +476,12 @@
 				  
 				  <div class="form-group">
 				    <div class="input-group">
-				      <div class="input-group-addon">生日</div>
-				      <input class="form-control mydate" type="text" readonly>
+				      <div class="input-group-addon">下次联系时间</div>
+				      <input class="form-control mydate" type="text" id="query-nextContactTime" readonly>
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryContactsByConditionBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -420,64 +503,67 @@
 							<td>客户名称</td>
 							<td>所有者</td>
 							<td>来源</td>
-							<td>生日</td>
+							<td>下次联系时间</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
-							<td>动力节点</td>
-							<td>zhangsan</td>
-							<td>广告</td>
-							<td>2000-10-10</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
-                            <td>动力节点</td>
-                            <td>zhangsan</td>
-                            <td>广告</td>
-                            <td>2000-10-10</td>
-                        </tr>
+					<tbody id="tBody">
+<%--						<tr>--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>--%>
+<%--							<td>动力节点</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td>广告</td>--%>
+<%--							<td>2000-10-10</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>--%>
+<%--                            <td>动力节点</td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>广告</td>--%>
+<%--                            <td>2000-10-10</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
+
+				<%--显示分页--%>
+				<div id="demo_page1"></div>
 			</div>
 			
-			<div style="height: 50px; position: relative;top: 10px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
-			</div>
+<%--			<div style="height: 50px; position: relative;top: 10px;">--%>
+<%--				<div>--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>--%>
+<%--				</div>--%>
+<%--				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>--%>
+<%--					<div class="btn-group">--%>
+<%--						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">--%>
+<%--							10--%>
+<%--							<span class="caret"></span>--%>
+<%--						</button>--%>
+<%--						<ul class="dropdown-menu" role="menu">--%>
+<%--							<li><a href="#">20</a></li>--%>
+<%--							<li><a href="#">30</a></li>--%>
+<%--						</ul>--%>
+<%--					</div>--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>--%>
+<%--				</div>--%>
+<%--				<div style="position: relative;top: -88px; left: 285px;">--%>
+<%--					<nav>--%>
+<%--						<ul class="pagination">--%>
+<%--							<li class="disabled"><a href="#">首页</a></li>--%>
+<%--							<li class="disabled"><a href="#">上一页</a></li>--%>
+<%--							<li class="active"><a href="#">1</a></li>--%>
+<%--							<li><a href="#">2</a></li>--%>
+<%--							<li><a href="#">3</a></li>--%>
+<%--							<li><a href="#">4</a></li>--%>
+<%--							<li><a href="#">5</a></li>--%>
+<%--							<li><a href="#">下一页</a></li>--%>
+<%--							<li class="disabled"><a href="#">末页</a></li>--%>
+<%--						</ul>--%>
+<%--					</nav>--%>
+<%--				</div>--%>
+<%--			</div>--%>
 			
 		</div>
 		

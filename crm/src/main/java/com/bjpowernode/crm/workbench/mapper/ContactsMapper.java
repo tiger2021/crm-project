@@ -1,8 +1,10 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.domain.Contacts;
+import com.bjpowernode.crm.workbench.domain.Customer;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ContactsMapper {
     /**
@@ -56,4 +58,8 @@ public interface ContactsMapper {
     int insertContact(Contacts contacts);
 
     List<Contacts> selectContactsByCustomerId(String customerId);
+
+    List<Contacts> selectContactsForPageByCondition(Map<String,Object> map);
+
+    int selectCountOfContactsForPageByCondition(Map<String,Object> map);
 }

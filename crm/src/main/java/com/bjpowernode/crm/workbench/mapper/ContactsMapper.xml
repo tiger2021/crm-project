@@ -293,4 +293,61 @@
     where c.customer_id=#{customerId};
 
   </select>
+
+
+  <select id="selectContactsForPageByCondition" parameterType="map" resultMap="BaseResultMap">
+    select c.id, u1.name as owner, c.source, cu.name as customer_id, c.fullname, c.appellation, c.email, c.mphone,
+           c.job, u2.name as create_by, c.create_time, u3.name as edit_by, c.edit_time,c.description, c.contact_summary,
+           c.next_contact_time,c.address
+    from tbl_contacts c
+    join tbl_user u1 on c.owner=u1.id
+    join tbl_user u2 on c.create_by=u2.id
+    left join tbl_user u3 on c.edit_by=u3.id
+    left join tbl_customer cu on cu.id=c.customer_id
+    <where>
+      <if test="owner!=null and owner!=''">
+        and u1.name like "%" #{owner} "%"
+      </if>
+      <if test="name!=null and name!=''">
+        and c.name like "%"#{name}"%"
+      </if>
+      <if test="customerName!=null and customerName!=''">
+        and cu.name like "%"#{customerName}"%"
+      </if>
+      <if test="source!=null and source!=''">
+        and c.source like "%"#{source}"%"
+      </if>
+      <if test="nextContactTime!=null and nextContactTime!=''">
+        and c.next_contact_time like "%"#{nextContactTime}"%"
+      </if>
+    </where>
+    order by c.create_time desc
+    limit #{pageNo},#{pageSize}
+  </select>
+
+  <select id="selectCountOfContactsForPageByCondition" parameterType="map" resultType="int">
+    select count(*)
+    from tbl_contacts c
+    join tbl_user u1 on c.owner=u1.id
+    join tbl_user u2 on c.create_by=u2.id
+    left join tbl_user u3 on c.edit_by=u3.id
+    left join tbl_customer cu on cu.id=c.customer_id
+    <where>
+      <if test="owner!=null and owner!=''">
+        and u1.name like "%" #{owner} "%"
+      </if>
+      <if test="name!=null and name!=''">
+        and c.name like "%"#{name}"%"
+      </if>
+      <if test="customerName!=null and customerName!=''">
+        and cu.name like "%"#{customerName}"%"
+      </if>
+      <if test="source!=null and source!=''">
+        and c.source like "%"#{source}"%"
+      </if>
+      <if test="nextContactTime!=null and nextContactTime!=''">
+        and c.next_contact_time like "%"#{nextContactTime}"%"
+      </if>
+    </where>
+  </select>
 </mapper>

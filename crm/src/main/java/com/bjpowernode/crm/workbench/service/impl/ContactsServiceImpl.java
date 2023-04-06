@@ -1,12 +1,14 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
 import com.bjpowernode.crm.workbench.domain.Contacts;
+import com.bjpowernode.crm.workbench.domain.Customer;
 import com.bjpowernode.crm.workbench.mapper.ContactsMapper;
 import com.bjpowernode.crm.workbench.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 小镇做题家
@@ -20,5 +22,15 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     public List<Contacts> queryContactsByCustomerId(String customerId) {
         return contactsMapper.selectContactsByCustomerId(customerId);
+    }
+
+    @Override
+    public List<Contacts> queryContactsForPageByCondition(Map<String, Object> map) {
+        return contactsMapper.selectContactsForPageByCondition(map);
+    }
+
+    @Override
+    public int queryCountOfContactsForPageByCondition(Map<String, Object> map) {
+        return contactsMapper.selectCountOfContactsForPageByCondition(map);
     }
 }
