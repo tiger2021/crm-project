@@ -33,4 +33,19 @@ public class ContactsServiceImpl implements ContactsService {
     public int queryCountOfContactsForPageByCondition(Map<String, Object> map) {
         return contactsMapper.selectCountOfContactsForPageByCondition(map);
     }
+
+    @Override
+    public int saveCreateContacts(Contacts contacts) {
+        return contactsMapper.insertCreateContacts(contacts);
+    }
+
+    @Override
+    public int updateContactsById(Contacts contacts) {
+        return contactsMapper.updateContactsById(contacts);
+    }
+
+    @Override
+    public Contacts queryContactsForUpdateById(String id) {
+        return contactsMapper.selectContactsForUpdateById(id);
+    }
 }

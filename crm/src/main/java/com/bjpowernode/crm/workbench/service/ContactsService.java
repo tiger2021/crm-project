@@ -17,4 +17,10 @@ public interface ContactsService {
     List<Contacts> queryContactsForPageByCondition(Map<String,Object> map);
 
     int queryCountOfContactsForPageByCondition(Map<String,Object> map);
+
+    int saveCreateContacts(Contacts contacts);
+
+    int updateContactsById(Contacts contacts);
+
+    Contacts queryContactsForUpdateById(String id);
 }

@@ -1,5 +1,9 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import com.bjpowernode.crm.commons.contants.Contants;
+import com.bjpowernode.crm.commons.domain.ReturnObject;
+import com.bjpowernode.crm.commons.utils.DateUtils;
+import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Contacts;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,5 +67,73 @@ public class ContactsController {
         resMap.put("contactsList",contactsList);
         resMap.put("totalRows",totalRows);
         return resMap;
+    }
+
+
+    @RequestMapping("/workbench/contacts/saveCreateContacts.do")
+    @ResponseBody
+    public Object saveCreateContacts(Contacts contacts, HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        contacts.setId(UUIDUtils.getUUID());
+        contacts.setCreateBy(user.getId());
+        contacts.setCreateTime(DateUtils.formateDateTime(new Date()));
+
+
+        ReturnObject returnObject=new ReturnObject();
+        try {
+            //调用Service保存customer
+            int num = contactsService.saveCreateContacts(contacts);
+            //判断是否保存成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
+    @RequestMapping("/workbench/contacts/queryContactsForUpdateById.do")
+    @ResponseBody
+    public Object queryContactsForUpdateById(String id){
+
+        //调用service进行查找
+        Contacts contact = contactsService.queryContactsForUpdateById(id);
+
+        return contact;
+
+    }
+
+    @RequestMapping("/workbench/contacts/updateContactsById.do")
+    @ResponseBody
+    public Object updateContactsById(Contacts contacts,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        contacts.setEditBy(user.getId());
+        contacts.setEditTime(DateUtils.formateDateTime(new Date()));
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service保存修改
+            int num = contactsService.updateContactsById(contacts);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
     }
 }

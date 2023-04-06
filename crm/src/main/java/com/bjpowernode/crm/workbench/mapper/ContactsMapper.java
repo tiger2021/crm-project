@@ -62,4 +62,10 @@ public interface ContactsMapper {
     List<Contacts> selectContactsForPageByCondition(Map<String,Object> map);
 
     int selectCountOfContactsForPageByCondition(Map<String,Object> map);
+
+    int insertCreateContacts(Contacts contacts);
+
+    int updateContactsById(Contacts contacts);
+
+    Contacts selectContactsForUpdateById(String id);
 }
