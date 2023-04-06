@@ -21,7 +21,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
-		$("#remark").focus(function(){
+		$("#createCustomerRemark").focus(function(){
 			if(cancelAndSaveBtnDefault){
 				//设置remarkDiv的高度为130px
 				$("#remarkDiv").css("height","130px");
@@ -38,25 +38,101 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			$("#remarkDiv").css("height","90px");
 			cancelAndSaveBtnDefault = true;
 		});
-		
-		$(".remarkDiv").mouseover(function(){
+
+
+		$("#remarkDivList").on("mouseover",".remarkDiv",function (){
 			$(this).children("div").children("div").show();
-		});
-		
-		$(".remarkDiv").mouseout(function(){
+		})
+
+		$("#remarkDivList").on("mouseout",".remarkDiv",function (){
 			$(this).children("div").children("div").hide();
-		});
-		
-		$(".myHref").mouseover(function(){
+		})
+
+		$("#remarkDivList").on("mouseover",".myHref",function (){
 			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
+		})
+
+		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
-		});
+		})
+		
+
 
 		//调用queryTransactionAndContactsByCustomerId()
 		queryTransactionAndContactsByCustomerId();
+
+		//给“保存”按钮添加单击事件
+		$("#saveCreateCustomerRemarkBtn").click(function (){
+			//收集参数
+			var noteContent=$.trim($("#createCustomerRemark").val());
+			var customerId='${customer.id}';
+			//验证表单
+			if(noteContent==""){
+				alert("请输入评论");
+				return;
+			}else {
+				//发送Ajax请求
+				$.ajax({
+					url: "workbench/customer/insertCustomerRemark.do",
+					type: "post",
+					data: {
+						noteContent: noteContent,
+						customerId: customerId
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data.code=="1"){
+							//清空输入框
+							$("#createCustomerRemark").val("");
+							//拼接数据
+							var htmlStr="";
+							htmlStr+="<div id=\"div_"+data.retData.id+"\" class=\"remarkDiv\" style=\"height: 60px;\">";
+							htmlStr+="<img title=\"${sessionScope.sessionUser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
+							htmlStr+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
+							htmlStr+="<h5>"+data.retData.noteContent+"</h5>";
+							htmlStr+="<font color=\"gray\">客户</font> <font color=\"gray\">-</font> <b>${customer.name}</b> <small style=\"color: gray;\"> "+data.retData.createTime+"由${sessionScope.sessionUser.name}创建</small>";
+							htmlStr+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
+							htmlStr+="<a remarkId="+data.retData.id+" name=\"editA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="&nbsp;&nbsp;&nbsp;&nbsp;";
+							htmlStr+="<a remarkId="+data.retData.id+" name=\"deleteA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="</div>";
+							htmlStr+="</div>";
+							htmlStr+="</div>";
+							$("#createCustomerRemark").before(htmlStr);
+
+						}else {
+							alert(data.message);
+						}
+
+					}
+
+
+				});
+			}
+		});
+
+		//给所有”删除评论的图标“添加单击事件
+		$("#remarkDivList").on("click","a[name=deleteA]",function (){
+			var id=$(this).attr("remarkId");  //this代表正在被点击的dom对象
+			//向后台发送Ajax请求
+			$.ajax({
+				url:"workbench/customer/deleteCustomerRemarkById.do",
+				type: "post",
+				data:{
+					id:id
+				},
+				dataType: "json",
+				success:function (data){
+					if(data.code=='1'){
+						//刷新备注列表,删除div
+						$("#div_"+id).remove();
+					}else{
+						alert(data.message);
+					}
+				}
+
+			})
+		})
 
 		//给所有”删除交易图标“添加单击事件
 		$("#transactionTBody").on("click","a[name=transactionDeleteA]",function (){
@@ -393,7 +469,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 10px; left: 40px;">
+	<div id="remarkDivList" style="position: relative; top: 10px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
@@ -444,10 +520,10 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
-				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
+				<textarea id="createCustomerRemark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" id="saveCreateCustomerRemarkBtn" class="btn btn-primary">保存</button>
 				</p>
 			</form>
 		</div>

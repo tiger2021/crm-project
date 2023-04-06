@@ -38,33 +38,19 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			$("#remarkDiv").css("height","90px");
 			cancelAndSaveBtnDefault = true;
 		});
-		
-		// $(".remarkDiv").mouseover(function(){
-		// 	$(this).children("div").children("div").show();
-		// });
+
 		$("#remarkDivList").on("mouseover",".remarkDiv",function (){
 			$(this).children("div").children("div").show();
 		})
 
-		
-		// $(".remarkDiv").mouseout(function(){
-		// 	$(this).children("div").children("div").hide();
-		// });
 		$("#remarkDivList").on("mouseout",".remarkDiv",function (){
 			$(this).children("div").children("div").hide();
 		})
-		//
-		// $(".myHref").mouseover(function(){
-		// 	$(this).children("span").css("color","red");
-		// });
 
 		$("#remarkDivList").on("mouseover",".myHref",function (){
 			$(this).children("span").css("color","red");
 		})
 
-		// $(".myHref").mouseout(function(){
-		// 	$(this).children("span").css("color","#E6E6E6");
-		// });
 		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
 		})
@@ -94,7 +80,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							$("#remark").val("");
 							//拼接数据
 							var htmlStr="";
-							htmlStr+="<div id=\"div_"+data.retData.id+" class=\"remarkDiv\" style=\"height: 60px;\">";
+							htmlStr+="<div id=\"div_"+data.retData.id+" \" class=\"remarkDiv\" style=\"height: 60px;\">";
 						    htmlStr+="<img title=\"${sessionScope.sessionUser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
 						    htmlStr+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
 							htmlStr+="<h5>"+data.retData.noteContent+"</h5>";

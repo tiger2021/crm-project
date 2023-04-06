@@ -11,4 +11,8 @@ import java.util.List;
  */
 public interface CustomerRemarkService {
     List<CustomerRemark> queryCustomerRemarkForDetailByCustomerId(String customerId);
+
+    int insertCustomerRemark(CustomerRemark customerRemark);
+
+    int deleteCustomerRemarkById(String id);
 }

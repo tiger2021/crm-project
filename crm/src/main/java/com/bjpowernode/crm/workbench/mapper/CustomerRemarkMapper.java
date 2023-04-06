@@ -53,7 +53,10 @@ public interface CustomerRemarkMapper {
      */
     int updateByPrimaryKey(CustomerRemark record);
 
-    int insertCustomerRemark(CustomerRemark clueRemark);
+    int insertCustomerRemark(CustomerRemark customerRemark);
 
     List<CustomerRemark> selectCustomerRemarkForDetailByCustomerId(String customerId);
+
+    int deleteCustomerRemarkById(String id);
+
 }

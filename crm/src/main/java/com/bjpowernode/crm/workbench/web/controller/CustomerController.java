@@ -211,5 +211,62 @@ public class CustomerController {
         return map;
     }
 
+    @RequestMapping("/workbench/customer/insertCustomerRemark.do")
+    @ResponseBody
+    public Object insertCustomerRemark(CustomerRemark customerRemark,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        customerRemark.setId(UUIDUtils.getUUID());
+        customerRemark.setCreateBy(user.getId());
+        customerRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+        customerRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service
+            int num = customerRemarkService.insertCustomerRemark(customerRemark);
+            //判断是否保存成功
+            if(num>0){
+               returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+               returnObject.setRetData(customerRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+
+        return returnObject;
+    }
+
+
+    @RequestMapping("/workbench/customer/deleteCustomerRemarkById.do")
+    @ResponseBody
+    public Object deleteCustomerRemarkById(String id){
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service进行删除
+            int num = customerRemarkService.deleteCustomerRemarkById(id);
+
+            //判断是否删除成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
 
 }

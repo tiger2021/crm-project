@@ -180,4 +180,11 @@
     left join tbl_user u2 on u2.id=cr.edit_by
     where cr.customer_id=#{customerId}
   </select>
+
+  <delete id="deleteCustomerRemarkById" parameterType="string">
+    delete from tbl_customer_remark
+    where id = #{id}
+  </delete>
+
+
 </mapper>
