@@ -167,6 +167,10 @@ public class ContactsController {
         //将查询到的结果放到请求域中
         request.setAttribute("contact",contact);
 
+        //调用userService，查询所有的user
+        List<User> ownerList = userService.queryAllUsers();
+        request.setAttribute("ownerList",ownerList);
+
 
         return "workbench/contacts/detail";
     }
