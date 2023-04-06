@@ -158,4 +158,20 @@ public class ContactsController {
         }
         return returnObject;
     }
+
+
+    @RequestMapping("/workbench/contacts/toContactDetails.do")
+    public String toContactDetail(String contactsId,HttpServletRequest request){
+
+        Contacts contact = contactsService.queryContactsForDetailById(contactsId);
+        //将查询到的结果放到请求域中
+        request.setAttribute("contact",contact);
+
+
+        return "workbench/contacts/detail";
+    }
+
+
 }
+
+

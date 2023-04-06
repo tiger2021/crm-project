@@ -100,6 +100,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							htmlStr+="</div>";
 							$("#createCustomerRemark").before(htmlStr);
 
+							//该语句的作用为重新加载页面
+							window.location.reload();
+
 						}else {
 							alert(data.message);
 						}
@@ -242,7 +245,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				var contactsHtmlStr="";
 				$.each(data.contactList,function (index,contacts){
 					contactsHtmlStr+="<tr>";
-					contactsHtmlStr+="<td><a href=\"contacts/detail.html\" style=\"text-decoration: none;\">"+contacts.name+"</a></td>";
+					contactsHtmlStr+="<td><a href=\"contacts/detail.jsp\" style=\"text-decoration: none;\">"+contacts.name+"</a></td>";
 					contactsHtmlStr+="<td>"+contacts.email+"</td>";
 					contactsHtmlStr+="<td>"+contacts.mphone+"</td>";
 					contactsHtmlStr+="<td><a href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeContactsModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
@@ -659,7 +662,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					</thead>
 					<tbody id="contactsTBody">
 <%--						<tr>--%>
-<%--							<td><a href="contacts/detail.html" style="text-decoration: none;">李四</a></td>--%>
+<%--							<td><a href="contacts/detail.jsp" style="text-decoration: none;">李四</a></td>--%>
 <%--							<td>lisi@bjpowernode.com</td>--%>
 <%--							<td>13543645364</td>--%>
 <%--							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#removeContactsModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>--%>

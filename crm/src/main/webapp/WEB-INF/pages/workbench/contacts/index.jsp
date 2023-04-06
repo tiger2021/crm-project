@@ -327,7 +327,7 @@
 				$.each(data.contactsList,function (index,contact){
 					htmlStr+="<tr>";
 					htmlStr+="<td><input type=\"checkbox\" value=\""+contact.id+"\" /></td>";
-					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.jsp';\">"+contact.fullname+"</a></td>";
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/contacts/toContactDetails.do?contactsId="+contact.id+"'\">"+contact.fullname+"</a></td>";
 					htmlStr+="<td>"+contact.customerId+"</td>";
 					htmlStr+="<td>"+contact.owner+"</td>";
 					htmlStr+="<td>"+contact.source+"</td>";
