@@ -251,7 +251,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
 		<input class="btn btn-primary" type="button" id="saveConcertClueBtn" value="转换">
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input class="btn btn-default" type="button" value="取消">
+		<input class="btn btn-default" type="button" onclick="window.history.back();" value="取消">
 	</div>
 </body>
 </html>

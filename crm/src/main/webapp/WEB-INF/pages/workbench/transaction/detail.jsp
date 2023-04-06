@@ -229,7 +229,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<img title="${tr.createBy}" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 				<div style="position: relative; top: -40px; left: 40px;" >
 					<h5>${tr.noteContent}</h5>
-					<font color="gray">交易</font> <font color="gray">-</font> <b>${tran.name}</b> <small style="color: gray;"> ${tr.editFlag=='0'?tr.createTime:tr.editTime} 由${tr.editFlag=='0'?tr.creayeBy:tr.editBy}${tr.editFlag=='0'?'创建':'修改'}</small>
+					<font color="gray">交易</font> <font color="gray">-</font> <b>${tran.name}</b> <small style="color: gray;"> ${tr.editFlag=='0'?tr.createTime:tr.editTime} 由${tr.editFlag=='0'?tr.createBy:tr.editBy}${tr.editFlag=='0'?'创建':'修改'}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
 						<a class="myHref" name="editA" remarkId="${tr.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;

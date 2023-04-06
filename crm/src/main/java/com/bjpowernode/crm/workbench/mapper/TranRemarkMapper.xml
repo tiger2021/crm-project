@@ -167,12 +167,17 @@
   </update>
 
 
-  <insert id="insertTranRemarkByList" parameterType="com.bjpowernode.crm.workbench.domain.TranRemark">
-    insert into tbl_tran_remark (id,note_content,create_by,create_time,edit_flag,tran_id)
+  <insert id="insertTranRemarkByList" parameterType="com.bjpowernode.crm.workbench.domain.TranRemark" >
+    insert into tbl_tran_remark(id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, tran_id)
     values
-        <foreach collection="list" item="obj" separator=",">
-          (#{obj.id}, #{obj.noteContent}, #{obj.createBy}, #{obj.createTime}, #{obj.editFlag}, #{obj.tranId})
-        </foreach>
+    <foreach collection="list" item="obj" separator="," index="index">
+      (#{obj.id},#{obj.noteContent},#{obj.createBy},#{obj.createTime},#{obj.editBy},#{obj.editTime},#{obj.editFlag},#{obj.tranId})
+    </foreach>
+  </insert>
+
+  <insert id="insertTranRemark" parameterType="com.bjpowernode.crm.workbench.domain.TranRemark">
+    insert into tbl_tran_remark (id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, tran_id)
+    values (#{id},#{noteContent},#{createBy},#{createTime},#{editBy},#{editTime},#{editFlag},#{tranId})
   </insert>
 
   <select id="selectTransactionRemarkForDetailByTranId" parameterType="string" resultMap="BaseResultMap">

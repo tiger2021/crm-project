@@ -189,7 +189,7 @@ public class ClueServiceImpl implements ClueService {
             String money=(String)map.get("money");
             tran.setMoney(money);
             String name=(String)map.get("name");
-            tran.setMoney(name);
+            tran.setName(name);
             String expectedDate=(String)map.get("expectedDate");
             tran.setExpectedDate(expectedDate);
             tran.setCustomerId(customer.getId());
