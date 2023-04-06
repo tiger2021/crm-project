@@ -57,4 +57,8 @@ public interface ContactsRemarkMapper {
     int insertContactsRemark(ContactsRemark contactsRemark);
 
 
+    List<ContactsRemark> selectContactsRemarkByContactsId(String contactsId);
+
+
+
 }

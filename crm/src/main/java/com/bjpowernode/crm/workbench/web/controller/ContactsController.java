@@ -7,7 +7,9 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Contacts;
+import com.bjpowernode.crm.workbench.domain.ContactsRemark;
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.service.ContactsRemarkService;
 import com.bjpowernode.crm.workbench.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class ContactsController {
 
     @Autowired
     private ContactsService contactsService;
+
+    @Autowired
+    private ContactsRemarkService contactsRemarkService;
 
     @RequestMapping("/workbench/contacts/toContactsIndex.do")
     public String toContactsIndex(HttpServletRequest request){
@@ -163,9 +168,15 @@ public class ContactsController {
     @RequestMapping("/workbench/contacts/toContactDetails.do")
     public String toContactDetail(String contactsId,HttpServletRequest request){
 
+        //调用service查询联系人详细信息
         Contacts contact = contactsService.queryContactsForDetailById(contactsId);
         //将查询到的结果放到请求域中
         request.setAttribute("contact",contact);
+
+        //调用service查询联系人备注的信息（可能有多个备注）
+        List<ContactsRemark> contactsRemarkList = contactsRemarkService.queryContactsRemarkByContactsId(contactsId);
+        //将查询到的结果放到请求域中
+        request.setAttribute("contactsRemarkList",contactsRemarkList);
 
         //调用userService，查询所有的user
         List<User> ownerList = userService.queryAllUsers();
@@ -227,6 +238,38 @@ public class ContactsController {
         return returnObject;
     }
 
+    @RequestMapping("/workbench/contacts/saveCreateContactsRemark.do")
+    @ResponseBody
+    public Object saveCreateContactsRemark(ContactsRemark contactsRemark,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        contactsRemark.setId(UUIDUtils.getUUID());
+        contactsRemark.setCreateBy(user.getId());
+        contactsRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+        contactsRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service
+            int num = contactsRemarkService.insertContactsRemark(contactsRemark);
+            //判断是否保存成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(contactsRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+
+        return returnObject;
+
+    }
 
 }
 
