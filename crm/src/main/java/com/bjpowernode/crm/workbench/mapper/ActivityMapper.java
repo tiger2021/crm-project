@@ -81,4 +81,8 @@ public interface ActivityMapper {
     List<Activity> selectActivityForClueDetailByIdArray(String[] idArray);
 
     List<Activity> selectActivityForConvertByNameClueId(Map<String,Object> map);
+
+    List<Activity> selectActivityForContactsDetailByNameContactsId(Map<String,Object> map);
+
+    List<Activity> selectActivityForContactsDetailByContactsId(String contactsId);
 }

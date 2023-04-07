@@ -6,10 +6,8 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
-import com.bjpowernode.crm.workbench.domain.Contacts;
-import com.bjpowernode.crm.workbench.domain.ContactsRemark;
-import com.bjpowernode.crm.workbench.domain.Customer;
-import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.domain.*;
+import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ContactsRemarkService;
 import com.bjpowernode.crm.workbench.service.ContactsService;
 import com.bjpowernode.crm.workbench.service.TransactionService;
@@ -41,6 +39,9 @@ public class ContactsController {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping("/workbench/contacts/toContactsIndex.do")
     public String toContactsIndex(HttpServletRequest request){
@@ -183,6 +184,9 @@ public class ContactsController {
         //调用userService，查询所有的user
         List<User> ownerList = userService.queryAllUsers();
         request.setAttribute("ownerList",ownerList);
+
+        List<Activity> activityList = activityService.queryActivityForContactsDetailByContactsId(contactsId);
+        request.setAttribute("activityList",activityList);
 
 
         return "workbench/contacts/detail";
@@ -348,6 +352,21 @@ public class ContactsController {
         Map<String,Object> map=new HashMap<>();
         map.put("tranList",tranList);
         return map;
+    }
+
+
+    @RequestMapping("/workbench/contacts/queryActivityForContactsDetailByNameContactsId.do")
+    @ResponseBody
+    public Object queryActivityForContactsDetailByNameContactsId(String activityName,String contactsId){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("activityName",activityName);
+        map.put("contactsId",contactsId);
+
+        List<Activity> activityList = activityService.queryActivityForContactsDetailByNameContactsId(map);
+
+        //返回响应信息
+        return activityList;
     }
 
 }

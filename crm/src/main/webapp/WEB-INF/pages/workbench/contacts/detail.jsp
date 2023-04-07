@@ -346,6 +346,49 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		})
 
+		//给"关联市场活动"按钮添加单击事件
+		$("#bundActivityBtn").click(function () {
+			//初始化工作
+			//清空搜索框
+			$("#searchActivityTxt").val("");
+			//清空搜索的市场活动列表
+			$("#tBody").html("");
+
+			//弹出"线索关联市场活动"的模态窗口
+			$("#bundModal").modal("show");
+		});
+
+		//给市场活动搜索框添加键盘弹起事件
+		$("#searchActivityTxt").keyup(function (){
+			//收集参数
+			var activityName=$("#searchActivityTxt").val();
+			var contactsId='${contact.id}';
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/queryActivityForContactsDetailByNameContactsId.do",
+				type:"post",
+				data:{
+					activityName:activityName,
+					contactsId:contactsId
+				},
+				dataType:"json",
+				success:function (data){
+					var htmlStr="";
+					$.each(data,function (index,obj){
+						htmlStr+="<tr>";
+						htmlStr+="<td><input type=\"checkbox\" value=\""+obj.id+"\"/></td>";
+						htmlStr+="<td>"+obj.name+"</td>";
+						htmlStr+="<td>"+obj.startDate+"</td>";
+						htmlStr+="<td>"+obj.endDate+"</td>";
+						htmlStr+="<td>"+obj.owner+"</td>";
+						htmlStr+="</tr>";
+					});
+					$("#tBody").html(htmlStr);
+				}
+			});
+		});
+
 
 	});
 
@@ -554,29 +597,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 
 
-	<!-- 解除联系人和市场活动关联的模态窗口 -->
-	<div class="modal fade" id="unbundActivityModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 30%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title">解除关联</h4>
-				</div>
-				<div class="modal-body">
-					<p>您确定要解除该关联关系吗？</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">解除</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
 	
 	<!-- 联系人和市场活动关联的模态窗口 -->
-	<div class="modal fade" id="bundActivityModal" role="dialog">
+	<!-- 关联市场活动的模态窗口 -->
+	<div class="modal fade" id="bundModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -588,44 +613,44 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="modal-body">
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
-						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
-						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
-						  </div>
+							<div class="form-group has-feedback">
+								<input type="text" class="form-control" id="searchActivityTxt" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+								<span class="glyphicon glyphicon-search form-control-feedback"></span>
+							</div>
 						</form>
 					</div>
-					<table id="activityTable2" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
+					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
-							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
-								<td>名称</td>
-								<td>开始日期</td>
-								<td>结束日期</td>
-								<td>所有者</td>
-								<td></td>
-							</tr>
+						<tr style="color: #B3B3B3;">
+							<td><input type="checkbox"/></td>
+							<td>名称</td>
+							<td>开始日期</td>
+							<td>结束日期</td>
+							<td>所有者</td>
+							<td></td>
+						</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="tBody">
+						<%--							<tr>--%>
+						<%--								<td><input type="checkbox"/></td>--%>
+						<%--								<td>发传单</td>--%>
+						<%--								<td>2020-10-10</td>--%>
+						<%--								<td>2020-10-20</td>--%>
+						<%--								<td>zhangsan</td>--%>
+						<%--							</tr>--%>
+						<%--							<tr>--%>
+						<%--								<td><input type="checkbox"/></td>--%>
+						<%--								<td>发传单</td>--%>
+						<%--								<td>2020-10-10</td>--%>
+						<%--								<td>2020-10-20</td>--%>
+						<%--								<td>zhangsan</td>--%>
+						<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundleBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -793,45 +818,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		</div>
 	</div>
 
-<%--	<!-- 交易 -->--%>
-<%--	<div>--%>
-<%--		<div style="position: relative; top: 20px; left: 40px;">--%>
-<%--			<div class="page-header">--%>
-<%--				<h4>交易</h4>--%>
-<%--			</div>--%>
-<%--			<div style="position: relative;top: 0px;">--%>
-<%--				<table id="activityTable3" class="table table-hover" style="width: 900px;">--%>
-<%--					<thead>--%>
-<%--						<tr style="color: #B3B3B3;">--%>
-<%--							<td>名称</td>--%>
-<%--							<td>金额</td>--%>
-<%--							<td>阶段</td>--%>
-<%--							<td>可能性</td>--%>
-<%--							<td>预计成交日期</td>--%>
-<%--							<td>类型</td>--%>
-<%--							<td></td>--%>
-<%--						</tr>--%>
-<%--					</thead>--%>
-<%--					<tbody>--%>
-<%--						<tr>--%>
-<%--							<td><a href="../transaction/detail.jsp" style="text-decoration: none;">动力节点-交易01</a></td>--%>
-<%--							<td>5,000</td>--%>
-<%--							<td>谈判/复审</td>--%>
-<%--							<td>90</td>--%>
-<%--							<td>2017-02-07</td>--%>
-<%--							<td>新业务</td>--%>
-<%--							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>--%>
-<%--						</tr>--%>
-<%--					</tbody>--%>
-<%--				</table>--%>
-<%--			</div>--%>
-<%--			--%>
-<%--			<div>--%>
-<%--				<a href="../transaction/save.jsp" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--	</div>--%>
-	
+
+
 	<!-- 市场活动 -->
 	<div>
 		<div style="position: relative; top: 60px; left: 40px;">
@@ -839,30 +827,32 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<h4>市场活动</h4>
 			</div>
 			<div style="position: relative;top: 0px;">
-				<table id="activityTable" class="table table-hover" style="width: 900px;">
+				<table class="table table-hover" style="width: 900px;">
 					<thead>
-						<tr style="color: #B3B3B3;">
-							<td>名称</td>
-							<td>开始日期</td>
-							<td>结束日期</td>
-							<td>所有者</td>
-							<td></td>
-						</tr>
+					<tr style="color: #B3B3B3;">
+						<td>名称</td>
+						<td>开始日期</td>
+						<td>结束日期</td>
+						<td>所有者</td>
+						<td></td>
+					</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="../activity/detail.jsp" style="text-decoration: none;">发传单</a></td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundActivityModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+					<tbody id="relatedTBody">
+					<c:forEach items="${activityList}" var="activity">
+						<tr id="tr_${activity.id}">
+							<td>${activity.name}</td>
+							<td>${activity.startDate}</td>
+							<td>${activity.endDate}</td>
+							<td>${activity.owner}</td>
+							<td><a href="javascript:void(0);" activityId="${activity.id}" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
 						</tr>
+					</c:forEach>
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundActivityModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bundActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>
