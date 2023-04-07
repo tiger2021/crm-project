@@ -189,26 +189,56 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 		//给所有”删除交易图标“添加单击事件
 		$("#transactionTBody").on("click","a[name=transactionDeleteA]",function (){
-			var id=$(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
-			//向后台发送Ajax请求
-			$.ajax({
-				url:"workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
-				type: "post",
-				data:{
-					id:id
-				},
-				dataType: "json",
-				success:function (data){
-					if(data.code=='1'){
-						//调用queryTransactionAndContactsByCustomerId()
-						queryTransactionAndContactsByCustomerId();
+			//提示用户是否确定要删除这些数据
+			if(window.confirm("确定要删除吗？")==true) {
+				var id = $(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
+				//向后台发送Ajax请求
+				$.ajax({
+					url: "workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
+					type: "post",
+					data: {
+						id: id
+					},
+					dataType: "json",
+					success: function (data) {
+						if (data.code == '1') {
+							//调用queryTransactionAndContactsByCustomerId()
+							queryTransactionAndContactsByCustomerId();
 
-					}else{
-						alert(data.message);
+						} else {
+							alert(data.message);
+						}
 					}
-				}
 
-			})
+				})
+			}
+		})
+
+		//给所有”删除联系人图标“添加单击事件
+		$("#contactsTBody").on("click","a[name=contactsDeleteA]",function (){
+			//提示用户是否确定要删除这些数据
+			if(window.confirm("确定要删除吗？")==true) {
+				var id = $(this).attr("deleteContactsId");  //this代表正在被点击的dom对象
+				//向后台发送Ajax请求
+				$.ajax({
+					url: "workbench/contacts/removeContactsForDetailByIds.do",
+					type: "post",
+					data: {
+						id: id
+					},
+					dataType: "json",
+					success: function (data) {
+						if (data.code == '1') {
+							//调用queryTransactionAndContactsByCustomerId()
+							queryTransactionAndContactsByCustomerId();
+
+						} else {
+							alert(data.message);
+						}
+					}
+
+				})
+			}
 		})
 	});
 
@@ -236,7 +266,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					tranHtmlStr+="<td>"+tran.possibility+"</td>";
 					tranHtmlStr+="<td>"+tran.expectedDate+"</td>";
 					tranHtmlStr+="<td>"+tran.type+"</td>";
-					tranHtmlStr+="<td><a deleteTransactionId=\""+tran.id+"\" name=\"transactionDeleteA\" href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeTransactionModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					tranHtmlStr+="<td><a deleteTransactionId=\""+tran.id+"\" name=\"transactionDeleteA\" href=\"javascript:void(0);\"  style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
 					tranHtmlStr+="</tr>";
 				});
 				$("#transactionTBody").html( tranHtmlStr)
@@ -245,10 +275,10 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				var contactsHtmlStr="";
 				$.each(data.contactList,function (index,contacts){
 					contactsHtmlStr+="<tr>";
-					contactsHtmlStr+="<td><a href=\"contacts/detail.jsp\" style=\"text-decoration: none;\">"+contacts.name+"</a></td>";
+					contactsHtmlStr+="<td><a href=\"workbench/contacts/toContactDetails.do?contactsId="+contacts.id+"\"  style=\"text-decoration: none;\">"+contacts.fullname+"</a></td>";
 					contactsHtmlStr+="<td>"+contacts.email+"</td>";
 					contactsHtmlStr+="<td>"+contacts.mphone+"</td>";
-					contactsHtmlStr+="<td><a href=\"javascript:void(0);\" data-toggle=\"modal\" data-target=\"#removeContactsModal\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
+					contactsHtmlStr+="<td><a deleteContactsId=\""+contacts.id+"\" name=\"contactsDeleteA\" href=\"javascript:void(0);\"  style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>删除</a></td>";
 					contactsHtmlStr+="</tr>";
 				});
 				$("#contactsTBody").html(contactsHtmlStr)
@@ -262,7 +292,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 </head>
 <body>
 
-<!-- 修改市场活动备注的模态窗口 -->
+<!-- 修改客户备注的模态窗口 -->
    <div class="modal fade" id="editRemarkModal" role="dialog">
 	<%-- 备注的id --%>
 	<input type="hidden" id="remarkId">
@@ -293,47 +323,8 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	</div>
 </div>
 
-	<!-- 删除联系人的模态窗口 -->
-	<div class="modal fade" id="removeContactsModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 30%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title">删除联系人</h4>
-				</div>
-				<div class="modal-body">
-					<p>您确定要删除该联系人吗？</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">删除</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-    <!-- 删除交易的模态窗口 -->
-    <div class="modal fade" id="removeTransactionModal" role="dialog">
-        <div class="modal-dialog" role="document" style="width: 30%;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">删除交易</h4>
-                </div>
-                <div class="modal-body">
-                    <p>您确定要删除该交易吗？</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">删除</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 	
 	<!-- 创建联系人的模态窗口 -->
 	<div class="modal fade" id="createContactsModal" role="dialog">
