@@ -32,6 +32,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
 				//设置remarkDiv的高度为130px
@@ -41,7 +42,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				cancelAndSaveBtnDefault = false;
 			}
 		});
-		
+
 		$("#cancelBtn").click(function(){
 			//显示
 			$("#cancelAndSaveBtn").hide();
@@ -49,22 +50,76 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			$("#remarkDiv").css("height","90px");
 			cancelAndSaveBtnDefault = true;
 		});
-		
-		$(".remarkDiv").mouseover(function(){
+
+		$("#remarkDivList").on("mouseover",".remarkDiv",function (){
 			$(this).children("div").children("div").show();
-		});
-		
-		$(".remarkDiv").mouseout(function(){
+		})
+
+		$("#remarkDivList").on("mouseout",".remarkDiv",function (){
 			$(this).children("div").children("div").hide();
-		});
-		
-		$(".myHref").mouseover(function(){
+		})
+
+		$("#remarkDivList").on("mouseover",".myHref",function (){
 			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
+		})
+
+		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
+		})
+
+		//给“保存”按钮添加单击事件
+		$("#saveCreateTransactionRemarkBtn").click(function (){
+			//收集参数
+			var noteContent=$.trim($("#remark").val());
+			var tranId='${tran.id}';
+			//验证表单
+			if(noteContent==""){
+				alert("请输入评论");
+				return;
+			}else {
+				//发送Ajax请求
+				$.ajax({
+					url: "workbench/transaction/saveTransactionRemark.do",
+					type: "post",
+					data: {
+						noteContent: noteContent,
+						tranId: tranId
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data.code=="1"){
+							//清空输入框
+							$("#remark").val("");
+							//拼接数据
+							var htmlStr="";
+							htmlStr+="<div id=\"div_"+data.retData.id+" \" class=\"remarkDiv\" style=\"height: 60px;\">";
+							htmlStr+="<img title=\"${sessionScope.sessionUser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
+							htmlStr+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
+							htmlStr+="<h5>"+data.retData.noteContent+"</h5>";
+							htmlStr+="<font color=\"gray\">交易</font> <font color=\"gray\">-</font> <b>${tran.name}</b> <small style=\"color: gray;\"> "+data.retData.createTime+"由${sessionScope.sessionUser.name}创建</small>";
+							htmlStr+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
+							htmlStr+="	<a remarkId="+data.retData.id+" name=\"editA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="	&nbsp;&nbsp;&nbsp;&nbsp;";
+							htmlStr+="<a remarkId="+data.retData.id+" name=\"deleteA\" class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+							htmlStr+="  </div>";
+							htmlStr+="  </div>";
+							htmlStr+=" </div>";
+							$("#remarkDiv").before(htmlStr);
+						}else {
+							alert(data.message);
+						}
+
+					}
+
+
+				});
+			}
 		});
+
+
+
+
+
 		
 		
 		//阶段提示框
@@ -87,6 +142,11 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                         }
                     }, 100);
                 });
+
+
+
+
+
 	});
 	
 	
@@ -220,7 +280,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 100px; left: 40px;">
+	<div style="position: relative; top: 100px; left: 40px;" id="remarkDivList">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
@@ -238,41 +298,14 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 			</div>
 		</c:forEach>
-		
-		<!-- 备注1 -->
-<%--		<div class="remarkDiv" style="height: 60px;">--%>
-<%--			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">--%>
-<%--			<div style="position: relative; top: -40px; left: 40px;" >--%>
-<%--				<h5>哎呦！</h5>--%>
-<%--				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>--%>
-<%--				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--					&nbsp;&nbsp;&nbsp;&nbsp;--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--		--%>
-<%--		<!-- 备注2 -->--%>
-<%--		<div class="remarkDiv" style="height: 60px;">--%>
-<%--			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">--%>
-<%--			<div style="position: relative; top: -40px; left: 40px;" >--%>
-<%--				<h5>呵呵！</h5>--%>
-<%--				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>--%>
-<%--				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--					&nbsp;&nbsp;&nbsp;&nbsp;--%>
-<%--					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</div>--%>
+
 		
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-primary" id="saveCreateTransactionRemarkBtn">保存</button>
 				</p>
 			</form>
 		</div>

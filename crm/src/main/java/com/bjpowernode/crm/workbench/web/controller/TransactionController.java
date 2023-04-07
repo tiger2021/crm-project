@@ -2,6 +2,8 @@ package com.bjpowernode.crm.workbench.web.controller;
 
 import com.bjpowernode.crm.commons.contants.Contants;
 import com.bjpowernode.crm.commons.domain.ReturnObject;
+import com.bjpowernode.crm.commons.utils.DateUtils;
+import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.DicValue;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
@@ -21,10 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @Description:
@@ -204,5 +203,34 @@ public class TransactionController {
         return returnObject;
     }
 
+
+    @RequestMapping("/workbench/transaction/saveTransactionRemark.do")
+    @ResponseBody
+    public Object saveTransactionRemark(TranRemark tranRemark,HttpSession session){
+        //封装参数，保存交易评论
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        tranRemark.setId(UUIDUtils.getUUID());
+        tranRemark.setCreateBy(user.getId());
+        tranRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tranRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_NO_EDITED);
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用Service保存
+            int num = tranRemarkService.insertTranRemark(tranRemark);
+            //判断是否保存成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(tranRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return returnObject;
+    }
 
 }

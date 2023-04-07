@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface TranRemarkService {
     List<TranRemark> queryTransactionRemarkForDetailByTranId(String tranId);
+
+    int insertTranRemark(TranRemark tranRemark);
 }

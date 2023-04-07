@@ -139,6 +139,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void removeTransactionsByIds(String[] id) {
+
            tranMapper.deleteTransactionsByIds(id);
     }
 }
