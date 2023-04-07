@@ -136,4 +136,9 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Tran> queryTransactionByContactsId(String contactsId) {
         return tranMapper.selectTransactionByContactsId(contactsId);
     }
+
+    @Override
+    public void removeTransactionsByIds(String[] id) {
+           tranMapper.deleteTransactionsByIds(id);
+    }
 }

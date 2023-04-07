@@ -117,4 +117,9 @@
       (#{obj.id}, #{obj.contactsId}, #{obj.activityId})
     </foreach>
   </insert>
+
+  <delete id="deleteContactsActivityRelationByContactsIdAndActivityId" parameterType="com.bjpowernode.crm.workbench.domain.ContactsActivityRelation">
+    delete from tbl_contacts_activity_relation
+    where contacts_id = #{contactsId} and activity_id=#{activityId};
+  </delete>
 </mapper>

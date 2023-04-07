@@ -435,6 +435,36 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			});
 		});
 
+		//给所有的“解除关联”按钮添加单击事件
+		$("#relatedTBody").on("click","a",function (){
+			//收集参数
+			var activityId=$(this).attr("activityId");
+			var contactsId="${contact.id}";
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/disassociate.do",
+				type:"post",
+				data: {
+					activityId:activityId,
+					contactsId:contactsId
+				},
+				dataType:"json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						return;
+					}else{
+						//这儿用到了扩展定位属性
+						$("#tr_"+activityId).remove();
+					}
+
+
+				}
+			});
+
+		});
+
 
 	});
 

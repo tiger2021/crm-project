@@ -61,6 +61,47 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		});
 
 
+		//给”删除“按钮添加单击事件
+		$("#deleteTransactionsBtn").click(function (){
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择需要删除的数据");
+				return;
+			}else{
+				//提示用户是否确定要删除这些数据
+				if(window.confirm("确定要删除吗？")==true){
+					/*将需要删除的市场活动的id拼接成字符串，因为这里面的key都为id，所有的key都是相同的,
+                    * 所以在发送Ajax请求的时候不能写为json的格式
+                    * */
+					var ids="";
+					$.each(checkedIds,function (index,obj){
+						ids+="id="+this.value+"&";
+					});
+
+					//删除拼接的字符最后多出来的&
+					ids=ids.substr(0,ids.length-1);
+					//发送Ajax请求
+					$.ajax({
+						url:"workbench/transaction/removeTransactionsByIds.do",
+						type:"post",
+						data:ids,
+						success:function (data){
+							if(data.code=="1"){
+								//刷新市场活动页面
+								queryTransactionByConditionForPage(1,$("#demo_page1").bs_pagination('getOption','rowsPerPage'));
+							}else{
+								//显示提示信息
+								alert(data.message);
+							}
+						}
+					})
+				}
+
+
+			}
+		});
+
+
 
 
 		
@@ -259,7 +300,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createTransactionBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteTransactionsBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
@@ -280,26 +321,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					</thead>
 					<tbody id="tBody">
 
-<%--						<tr>--%>
-<%--							<td><input type="checkbox" /></td>--%>
-<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点-交易01</a></td>--%>
-<%--							<td>动力节点</td>--%>
-<%--							<td>谈判/复审</td>--%>
-<%--							<td>新业务</td>--%>
-<%--							<td>zhangsan</td>--%>
-<%--							<td>广告</td>--%>
-<%--							<td>李四</td>--%>
-<%--						</tr>--%>
-<%--                        <tr class="active">--%>
-<%--                            <td><input type="checkbox" /></td>--%>
-<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点-交易01</a></td>--%>
-<%--                            <td>动力节点</td>--%>
-<%--                            <td>谈判/复审</td>--%>
-<%--                            <td>新业务</td>--%>
-<%--                            <td>zhangsan</td>--%>
-<%--                            <td>广告</td>--%>
-<%--                            <td>李四</td>--%>
-<%--                        </tr>--%>
 					</tbody>
 				</table>
 				<%--显示分页--%>

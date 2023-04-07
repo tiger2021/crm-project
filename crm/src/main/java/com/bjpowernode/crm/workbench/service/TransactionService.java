@@ -29,4 +29,6 @@ public interface TransactionService {
 
     List<Tran> queryTransactionByContactsId(String contactsId);
 
+    void removeTransactionsByIds(String[] id);
+
 }

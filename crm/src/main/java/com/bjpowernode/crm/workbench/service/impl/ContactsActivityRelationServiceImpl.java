@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 小镇做题家
@@ -22,5 +23,10 @@ public class ContactsActivityRelationServiceImpl implements ContactsActivityRela
     @Override
     public int saveContactsActivityRelationByList(List<ContactsActivityRelation> contactsActivityRelation) {
         return contactsActivityRelationMapper.insertContactsActivityRelationByList(contactsActivityRelation);
+    }
+
+    @Override
+    public int removeContactsActivityRelationByContactsIdAndActivityId(ContactsActivityRelation contactsActivityRelation) {
+        return contactsActivityRelationMapper.deleteContactsActivityRelationByContactsIdAndActivityId(contactsActivityRelation);
     }
 }

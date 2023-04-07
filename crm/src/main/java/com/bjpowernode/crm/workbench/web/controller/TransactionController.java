@@ -185,4 +185,24 @@ public class TransactionController {
     }
 
 
+    @RequestMapping("/workbench/transaction/removeTransactionsByIds.do")
+    @ResponseBody
+    public Object removeTransactionsByIds(String[] id){
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service删除transaction
+            transactionService.removeTransactionsByIds(id);
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+
+        return returnObject;
+    }
+
+
 }

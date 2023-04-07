@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.mapper;
 import com.bjpowernode.crm.workbench.domain.ContactsActivityRelation;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ContactsActivityRelationMapper {
     /**
@@ -54,4 +55,6 @@ public interface ContactsActivityRelationMapper {
     int updateByPrimaryKey(ContactsActivityRelation record);
 
     int insertContactsActivityRelationByList(List<ContactsActivityRelation> contactsActivityRelation);
+
+    int deleteContactsActivityRelationByContactsIdAndActivityId(ContactsActivityRelation contactsActivityRelation);
 }
