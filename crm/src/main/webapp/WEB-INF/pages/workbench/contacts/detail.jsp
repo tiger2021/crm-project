@@ -389,6 +389,52 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			});
 		});
 
+		//给“关联”按钮添加单击事件
+		$("#bundleBtn").click(function (){
+			//收集参数
+			var checkedIds=$("#tBody input[type='checkbox']:checked");
+			//表单验证
+			if(checkedIds.size()==0){
+				alert("请选择要关联的市场活动");
+				return;
+			}
+			var ids="";
+			$.each(checkedIds,function (index,obj){
+				ids+="activityId="+obj.value+"&";
+			});
+			ids+="contactsId=${contact.id}";
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/saveBundle.do",
+				type:"post",
+				data:ids,
+				dataType:"json",
+				success:function (data){
+					if(data.code=="0"){
+						alert(data.message);
+						return;
+					}else{
+						var htmlStr="";
+						$.each(data.retData,function (index,obj){
+							htmlStr+="<tr id=\"tr_"+obj.id+"\">";
+							htmlStr+="<td>"+obj.name+"</td>";
+							htmlStr+="<td>"+obj.startDate+"</td>";
+							htmlStr+="<td>"+obj.endDate+"</td>";
+							htmlStr+="<td>"+obj.owner+"</td>";
+							htmlStr+="<td><a href=\"javascript:void(0);\" activityId=\""+obj.id+"\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>";
+							htmlStr+="</tr>";
+						});
+						$("#relatedTBody").append(htmlStr);
+
+						//关闭关联市场活动的模态窗口
+						$("#bundModal").modal("hide");
+					}
+
+
+				}
+			});
+		});
+
 
 	});
 

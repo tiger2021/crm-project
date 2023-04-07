@@ -7,10 +7,7 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.*;
-import com.bjpowernode.crm.workbench.service.ActivityService;
-import com.bjpowernode.crm.workbench.service.ContactsRemarkService;
-import com.bjpowernode.crm.workbench.service.ContactsService;
-import com.bjpowernode.crm.workbench.service.TransactionService;
+import com.bjpowernode.crm.workbench.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +39,9 @@ public class ContactsController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ContactsActivityRelationService contactsActivityRelationService;
 
     @RequestMapping("/workbench/contacts/toContactsIndex.do")
     public String toContactsIndex(HttpServletRequest request){
@@ -367,6 +367,42 @@ public class ContactsController {
 
         //返回响应信息
         return activityList;
+    }
+
+
+    @RequestMapping("/workbench/contacts/saveBundle.do")
+    @ResponseBody
+    public Object saveBundle(String[] activityId,String contactsId){
+        //封装参数
+        ContactsActivityRelation car=null;
+        List<ContactsActivityRelation> list=new ArrayList<>();
+        for (String ai : activityId) {
+            car=new ContactsActivityRelation();
+            car.setId(UUIDUtils.getUUID());
+            car.setContactsId(contactsId);
+            car.setActivityId(ai);
+            list.add(car);
+        }
+
+        ReturnObject returnObject=new ReturnObject();
+
+        //调用service
+        try {
+            int num = contactsActivityRelationService.saveContactsActivityRelationByList(list);
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                List<Activity> activityList = activityService.queryActivityForClueDetailByIdArray(activityId);
+                returnObject.setRetData(activityList);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
     }
 
 }
