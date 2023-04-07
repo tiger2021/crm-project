@@ -26,4 +26,14 @@ public class TranRemarkServiceImpl implements TranRemarkService {
     public int insertTranRemark(TranRemark tranRemark) {
         return tranRemarkMapper.insertTranRemark(tranRemark);
     }
+
+    @Override
+    public int updateTransactionRemarkById(TranRemark tranRemark) {
+        return tranRemarkMapper.updateTransactionRemarkById(tranRemark);
+    }
+
+    @Override
+    public int removeTransactionRemarkById(String id) {
+        return tranRemarkMapper.deleteTransactionRemarkById(id);
+    }
 }

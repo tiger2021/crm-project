@@ -60,4 +60,8 @@ public interface TranRemarkMapper {
     List<TranRemark> selectTransactionRemarkForDetailByTranId(String tranId);
 
     int deleteTransactionRemarkByTranId(String tranId);
+
+    int updateTransactionRemarkById(TranRemark tranRemark);
+
+    int deleteTransactionRemarkById(String id);
 }

@@ -233,4 +233,66 @@ public class TransactionController {
         return returnObject;
     }
 
+
+    @RequestMapping("/workbench/transaction/updateTransactionRemarkById.do")
+    @ResponseBody
+    public Object updateTransactionRemarkById(TranRemark tranRemark,HttpSession session){
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        tranRemark.setEditBy(user.getId());
+        tranRemark.setEditTime(DateUtils.formateDateTime(new Date()));
+        tranRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES_EDITED);
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service
+            int num = tranRemarkService.updateTransactionRemarkById(tranRemark);
+
+            //判断是否保存成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                returnObject.setRetData(tranRemark);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+        return returnObject;
+    }
+
+
+    @RequestMapping("/workbench/transaction/removeTransactionRemarkById.do")
+    @ResponseBody
+    public Object removeTransactionRemarkById(String id){
+
+        ReturnObject returnObject=new ReturnObject();
+
+        try {
+            //调用service
+            int num = tranRemarkService.removeTransactionRemarkById(id);
+
+            //判断是否保存成功
+            if(num>0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试...");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试...");
+        }
+
+        return returnObject;
+
+    }
+
+
 }

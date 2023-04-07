@@ -13,4 +13,8 @@ public interface TranRemarkService {
     List<TranRemark> queryTransactionRemarkForDetailByTranId(String tranId);
 
     int insertTranRemark(TranRemark tranRemark);
+
+    int updateTransactionRemarkById(TranRemark tranRemark);
+
+    int removeTransactionRemarkById(String id);
 }
