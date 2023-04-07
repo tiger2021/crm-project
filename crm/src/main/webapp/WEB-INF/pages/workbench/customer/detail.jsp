@@ -4,17 +4,27 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
 
 <%
-String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
+	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
 <html>
 <head>
 	<base href="<%=basePath%>">
-<meta charset="UTF-8">
 
-<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<%--引入日历的插件--%>
+	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<%--引入分页的插件--%>
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination-master/css/jquery.bs_pagination.min.css">
+	<%--引入jQuery函数库--%>
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<%--引入bootstrap框架--%>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<%--引入日历的插件--%>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<%--引入分页的插件--%>
+	<script type="text/javascript" src="jquery/bs_pagination-master/js/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/localization/en.js"></script>
 <script type="text/javascript">
 
 	//默认情况下取消和保存按钮是隐藏的
@@ -55,7 +65,18 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
 		})
-		
+
+
+		//当容器加载完成之后，对容器调用工具函数,在页面上显示日历(使用类加载器)
+		$(".mydate").datetimepicker({
+			language:'zh-CN',  //日历上显示的语言
+			format:'yyyy-mm-dd',  //日期的格式
+			minView:'month',   //可以选择的最小视图
+			initialDate:new Date(),    //初始化显示的日期
+			autoclose:true,    //设置选择完日期或者时间之后，是否自动关闭日历
+			todayBtn:true,   //是否显示“今天”按钮
+			clearBtn:true    //是否显示“清空按钮”
+		});
 
 
 		//调用queryTransactionAndContactsByCustomerId()
@@ -240,6 +261,78 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				})
 			}
 		})
+
+		//给”新建联系人“按钮添加单击时间
+		$("#createContactsBtn").click(function (){
+			//清空创建交易的模态窗口form表单中的内容
+			//get(0)的作用是将jQuery对象转换为dom对象，然后用dom对象中的reset函数
+			$("#createContactForm").get(0).reset();
+
+			//显示创建客户的模态窗口
+			$("#createContactModal").modal("show");
+
+		});
+
+		//给“保存”按钮添加单击事件
+		$("#saveCreateContactsBtn").click(function (){
+			//收集参数
+			var owner=$("#create-owner").val();
+			var source=$("#create-source").val();
+			var fullname=$("#create-fullname").val();
+			var appellation=$("#create-appellation").val();
+			var job=$("#create-job").val();
+			var mphone=$("#create-mphone").val();
+			var email=$("#create-email").val();
+			var nextContactTime=$("#create-nextContactTime").val();
+			var customerId=$("#create-customerId").val();
+			var description=$("#create-description").val();
+			var contactSummary=$("#create-contactSummary").val();
+			var address=$("#create-address").val();
+
+			//验证表单数据是否正确
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(name==""){
+				alert("活动名称不能为空");
+				return;
+			}
+
+			//发送Ajax请求
+			$.ajax({
+				url:"workbench/contacts/saveCreateContacts.do",
+				data:{
+					owner:owner,
+					source:source,
+					fullname:fullname,
+					appellation:appellation,
+					job:job,
+					mphone:mphone,
+					email:email,
+					nextContactTime:nextContactTime,
+					customerId:customerId,
+					description:description,
+					contactSummary:contactSummary,
+					address:address
+				},
+				type:'post',
+				dataType:'json',
+				//处理响应
+				success:function(data){
+					if(data.code=="1"){
+						//成功，关闭模态窗口
+						$("#createContactModal").modal("hide");
+						queryTransactionAndContactsByCustomerId();
+					}else{
+						alert(data.message);
+						$("#createContactModal").modal("show");
+					}
+				}
+			})
+
+		});
+
 	});
 
 	//定义查询交易和联系人的函数
@@ -324,144 +417,125 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 </div>
 
 
+        <!-- 创建联系人的模态窗口 -->
+        <div class="modal fade" id="createContactModal" role="dialog">
+	        <div class="modal-dialog" role="document" style="width: 85%;">
+		        <div class="modal-content">
+			        <div class="modal-header">
+				        <button type="button" class="close" onclick="$('#createContactsModal').modal('hide');">
+					        <span aria-hidden="true">×</span>
+				        </button>
+				        <h4 class="modal-title" id="myModalLabelx">创建联系人</h4>
+			        </div>
+			        <div class="modal-body">
+				        <form class="form-horizontal" role="form" id="createContactForm">
+					        <div class="form-group">
+						        <label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <select class="form-control" id="create-owner">
+								        <c:forEach items="${ownerList}" var="owner">
+									        <option value="${owner.id}">${owner.name}</option>
+								        </c:forEach>
+							        </select>
+						        </div>
+						        <label for="create-source" class="col-sm-2 control-label">来源</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <select class="form-control" id="create-source">
+								        <option></option>
+								        <option>广告</option>
+								        <option>推销电话</option>
+								        <option>员工介绍</option>
+								        <option>外部介绍</option>
+								        <option>在线商场</option>
+								        <option>合作伙伴</option>
+								        <option>公开媒介</option>
+								        <option>销售邮件</option>
+								        <option>合作伙伴研讨会</option>
+								        <option>内部研讨会</option>
+								        <option>交易会</option>
+								        <option>web下载</option>
+								        <option>web调研</option>
+								        <option>聊天</option>
+							        </select>
+						        </div>
+					        </div>
+					        <div class="form-group">
+						        <label for="create-fullname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control" id="create-fullname">
+						        </div>
+						        <label for="create-appellation" class="col-sm-2 control-label">称呼</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <select class="form-control" id="create-appellation">
+								        <option></option>
+								        <option>先生</option>
+								        <option>夫人</option>
+								        <option>女士</option>
+								        <option>博士</option>
+								        <option>教授</option>
+							        </select>
+						        </div>
+					        </div>
+					        <div class="form-group">
+						        <label for="create-job" class="col-sm-2 control-label">职位</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control" id="create-job">
+						        </div>
+						        <label for="create-mphone" class="col-sm-2 control-label">手机</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control" id="create-mphone">
+						        </div>
+					        </div>
+					        <div class="form-group" style="position: relative;">
+						        <label for="create-email" class="col-sm-2 control-label">邮箱</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control" id="create-email">
+						        </div>
+						        <label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control mydate" id="create-nextContactTime" readonly>
+						        </div>
+					        </div>
+					        <div class="form-group" style="position: relative;">
+						        <label for="create-customerId" class="col-sm-2 control-label">客户名称</label>
+						        <div class="col-sm-10" style="width: 300px;">
+							        <input type="text" class="form-control" id="create-customerId" placeholder="支持自动补全，输入客户不存在则新建">
+						        </div>
+					        </div>
+					        <div class="form-group" style="position: relative;">
+						        <label for="create-description" class="col-sm-2 control-label">描述</label>
+						        <div class="col-sm-10" style="width: 81%;">
+							        <textarea class="form-control" rows="3" id="create-description"></textarea>
+						        </div>
+					        </div>
+					        <div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
+					        <div style="position: relative;top: 15px;">
+						        <div class="form-group">
+							        <label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
+							        <div class="col-sm-10" style="width: 81%;">
+								        <textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
+							        </div>
+						        </div>
+					        </div>
+					        <div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative; top : 10px;"></div>
+					        <div style="position: relative;top: 20px;">
+						        <div class="form-group">
+							        <label for="create-address" class="col-sm-2 control-label">详细地址</label>
+							        <div class="col-sm-10" style="width: 81%;">
+								        <textarea class="form-control" rows="1" id="create-address"></textarea>
+							        </div>
+						        </div>
+					        </div>
+				        </form>
+			        </div>
+			        <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" class="btn btn-primary" id="saveCreateContactsBtn">保存</button>
+			        </div>
+		        </div>
+	        </div>
+        </div>
 
-	
-	<!-- 创建联系人的模态窗口 -->
-	<div class="modal fade" id="createContactsModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 85%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" onclick="$('#createContactsModal').modal('hide');">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel1">创建联系人</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal" role="form">
-					
-						<div class="form-group">
-							<label for="create-contactsOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-contactsOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
-								</select>
-							</div>
-							<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueSource">
-								  <option></option>
-								  <option>广告</option>
-								  <option>推销电话</option>
-								  <option>员工介绍</option>
-								  <option>外部介绍</option>
-								  <option>在线商场</option>
-								  <option>合作伙伴</option>
-								  <option>公开媒介</option>
-								  <option>销售邮件</option>
-								  <option>合作伙伴研讨会</option>
-								  <option>内部研讨会</option>
-								  <option>交易会</option>
-								  <option>web下载</option>
-								  <option>web调研</option>
-								  <option>聊天</option>
-								</select>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="create-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-surname">
-							</div>
-							<label for="create-call" class="col-sm-2 control-label">称呼</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-call">
-								  <option></option>
-								  <option>先生</option>
-								  <option>夫人</option>
-								  <option>女士</option>
-								  <option>博士</option>
-								  <option>教授</option>
-								</select>
-							</div>
-							
-						</div>
-						
-						<div class="form-group">
-							<label for="create-job" class="col-sm-2 control-label">职位</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-job">
-							</div>
-							<label for="create-mphone" class="col-sm-2 control-label">手机</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-mphone">
-							</div>
-						</div>
-						
-						<div class="form-group" style="position: relative;">
-							<label for="create-email" class="col-sm-2 control-label">邮箱</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-email">
-							</div>
-							<label for="create-birth" class="col-sm-2 control-label">生日</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-birth">
-							</div>
-						</div>
-						
-						<div class="form-group" style="position: relative;">
-							<label for="create-customerName" class="col-sm-2 control-label">客户名称</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
-							</div>
-						</div>
-						
-						<div class="form-group" style="position: relative;">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
-							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
-							</div>
-						</div>
-						
-						<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
-
-                        <div style="position: relative;top: 15px;">
-                            <div class="form-group">
-                                <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
-                                <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="3" id="edit-contactSummary">这个线索即将被转换</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
-                                <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="edit-nextContactTime" value="2017-05-01">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative; top : 10px;"></div>
-
-                        <div style="position: relative;top: 20px;">
-                            <div class="form-group">
-                                <label for="edit-address1" class="col-sm-2 control-label">详细地址</label>
-                                <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address1">北京大兴区大族企业湾</textarea>
-                                </div>
-                            </div>
-                        </div>
-					</form>
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	
 	
 
@@ -663,7 +737,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#createContactsModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建联系人</a>
+				<a href="javascript:void(0);" id="createContactsBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建联系人</a>
 			</div>
 		</div>
 	</div>

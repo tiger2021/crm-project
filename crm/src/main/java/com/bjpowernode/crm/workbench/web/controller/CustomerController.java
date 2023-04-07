@@ -183,6 +183,10 @@ public class CustomerController {
         List<CustomerRemark> customerRemarkList = customerRemarkService.queryCustomerRemarkForDetailByCustomerId(id);
         request.setAttribute("customerRemarkList",customerRemarkList);
 
+        //调用userService，查询所有的user
+        List<User> ownerList = userService.queryAllUsers();
+        request.setAttribute("ownerList",ownerList);
+
         return "workbench/customer/detail";
     }
 

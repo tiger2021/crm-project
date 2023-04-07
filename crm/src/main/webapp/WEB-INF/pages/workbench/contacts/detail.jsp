@@ -318,34 +318,38 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			}
 		});
 
-		//给所有”删除交易图标“添加单击事件
+		//给所有”删除交易“添加单击事件
 		$("#transactionTBody").on("click","a[name=transactionDeleteA]",function (){
-			var id=$(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
-			//向后台发送Ajax请求
-			$.ajax({
-				url:"workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
-				type: "post",
-				data:{
-					id:id
-				},
-				dataType: "json",
-				success:function (data){
-					if(data.code=='1'){
-						//调用queryTransactionByContactsId()
-						queryTransactionByContactsId()
+			//提示用户是否确定要删除这些数据
+			if(window.confirm("确定要删除吗？")==true){
+				var id=$(this).attr("deleteTransactionId");  //this代表正在被点击的dom对象
+				//向后台发送Ajax请求
+				$.ajax({
+					url:"workbench/transaction/deleteTransactionAndTransactionRemarkByTransactionId.do",
+					type: "post",
+					data:{
+						id:id
+					},
+					dataType: "json",
+					success:function (data){
+						if(data.code=='1'){
+							//调用queryTransactionByContactsId()
+							queryTransactionByContactsId()
 
-					}else{
-						alert(data.message);
+						}else{
+							alert(data.message);
+						}
 					}
-				}
 
-			})
+				})
+			}
+
 		})
 
 
 	});
 
-	//定义查询交易和联系人的函数
+	//定义查询交易的函数
 	function queryTransactionByContactsId(){
 		//收集参数
 		var contactsId="${contact.id}";
